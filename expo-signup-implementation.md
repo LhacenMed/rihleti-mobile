@@ -31,7 +31,10 @@ const passwordSchema = z
 
 export const signupSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  email: z.string().min(1, { message: "Email is required" }).email({ message: "Invalid email address" }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
   password: passwordSchema,
 });
 
@@ -49,11 +52,11 @@ export type VerifyOtpFormData = z.infer<typeof verifyOtpSchema>;
 Create `utils/auth-helpers.ts`:
 
 ```typescript
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from './supabase'; // Your existing supabase config
-import Toast from 'react-native-toast-message';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { supabase } from "./supabase"; // Your existing supabase config
+import Toast from "react-native-toast-message";
 
-const API_BASE_URL = 'https://rihleti.vercel.app';
+const API_BASE_URL = "https://rihleti.vercel.app";
 
 interface EmailVerificationResult {
   is_deliverable: boolean;
@@ -65,43 +68,49 @@ interface EmailVerificationResult {
 export async function verifyEmail(email: string): Promise<{ isValid: boolean; error?: string }> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/reoon?email=${encodeURIComponent(email)}`, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' },
+      method: "GET",
+      headers: { Accept: "application/json" },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to verify email');
+      throw new Error("Failed to verify email");
     }
 
     const data: EmailVerificationResult = await response.json();
 
     if (!data.is_deliverable) {
-      return { isValid: false, error: 'This email address appears to be invalid or undeliverable.' };
+      return {
+        isValid: false,
+        error: "This email address appears to be invalid or undeliverable.",
+      };
     }
 
     if (data.is_disposable) {
-      return { isValid: false, error: 'Disposable email addresses are not allowed.' };
+      return { isValid: false, error: "Disposable email addresses are not allowed." };
     }
 
-    if (data.status !== 'safe') {
-      return { isValid: false, error: 'This email address appears to be risky or invalid.' };
+    if (data.status !== "safe") {
+      return { isValid: false, error: "This email address appears to be risky or invalid." };
     }
 
     return { isValid: true };
   } catch (error) {
-    console.error('Email verification error:', error);
-    return { isValid: false, error: 'Failed to verify email address. Please try again.' };
+    console.error("Email verification error:", error);
+    return { isValid: false, error: "Failed to verify email address. Please try again." };
   }
 }
 
 // Send verification email using the deployed API
-export async function sendVerificationEmail(email: string, password: string): Promise<{ success: boolean; tokenData?: any; error?: string }> {
+export async function sendVerificationEmail(
+  email: string,
+  password: string
+): Promise<{ success: boolean; tokenData?: any; error?: string }> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/resend`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        type: 'verification',
+        type: "verification",
         email,
         password,
         isPasswordReset: false,
@@ -110,30 +119,34 @@ export async function sendVerificationEmail(email: string, password: string): Pr
     });
 
     const responseData = await response.json();
-    
+
     if (!response.ok || responseData.error) {
       throw new Error(
-        typeof responseData.error === 'string'
+        typeof responseData.error === "string"
           ? responseData.error
-          : responseData.error?.message || 'Failed to send verification email'
+          : responseData.error?.message || "Failed to send verification email"
       );
     }
 
     return { success: true, tokenData: responseData.tokenData };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An error occurred during signup';
+    const errorMessage = error instanceof Error ? error.message : "An error occurred during signup";
     return { success: false, error: errorMessage };
   }
 }
 
 // Verify OTP using the deployed API
-export async function verifyOtp(email: string, otp: string, name: string): Promise<{ success: boolean; error?: string }> {
+export async function verifyOtp(
+  email: string,
+  otp: string,
+  name: string
+): Promise<{ success: boolean; error?: string }> {
   // Input validation
-  if (!email || !email.includes('@')) {
-    return { success: false, error: 'Invalid email format' };
+  if (!email || !email.includes("@")) {
+    return { success: false, error: "Invalid email format" };
   }
   if (!otp || otp.length !== 6 || !/^\d+$/.test(otp)) {
-    return { success: false, error: 'Invalid verification code format' };
+    return { success: false, error: "Invalid verification code format" };
   }
 
   try {
@@ -141,22 +154,22 @@ export async function verifyOtp(email: string, otp: string, name: string): Promi
     const { data, error } = await supabase.auth.verifyOtp({
       token: otp,
       email,
-      type: 'signup',
+      type: "signup",
     });
 
     if (error) throw error;
 
     const userId = data.user?.id;
-    if (!userId) throw new Error('User ID not found');
+    if (!userId) throw new Error("User ID not found");
 
     // Update user metadata using the deployed API
     const updateResponse = await fetch(`${API_BASE_URL}/api/auth/update-user-metadata`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId,
         metadata: {
-          role: 'agency', // Default role
+          role: "client", // Default role
           name,
           onboarded: false,
           email_verified: true,
@@ -167,16 +180,16 @@ export async function verifyOtp(email: string, otp: string, name: string): Promi
 
     const result = await updateResponse.json();
     if (!updateResponse.ok) {
-      throw new Error(result.error || 'Failed to update user metadata');
+      throw new Error(result.error || "Failed to update user metadata");
     }
 
     // Clear stored verification data
-    await AsyncStorage.removeItem('verificationEmail');
-    await AsyncStorage.removeItem('verificationTokenData');
-    
+    await AsyncStorage.removeItem("verificationEmail");
+    await AsyncStorage.removeItem("verificationTokenData");
+
     return { success: true };
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Verification failed';
+    const errorMessage = error instanceof Error ? error.message : "Verification failed";
     return { success: false, error: errorMessage };
   }
 }
@@ -222,7 +235,7 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
 
   const onSubmit = async (data: SignupFormData) => {
     setLoading(true);
-    
+
     try {
       // Step 1: Verify email
       const emailVerification = await verifyEmail(data.email);
@@ -255,7 +268,7 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
 
       setEmail(data.email);
       setShowVerification(true);
-      
+
       Toast.show({
         type: 'success',
         text1: 'Verification Email Sent',
@@ -263,9 +276,9 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
       });
 
       // Navigate to OTP verification screen
-      navigation.navigate('VerifyOTP', { 
+      navigation.navigate('VerifyOTP', {
         email: data.email,
-        name: data.name 
+        name: data.name
       });
 
     } catch (error) {
@@ -280,14 +293,14 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.form}>
           <Text style={styles.title}>Create Account</Text>
-          
+
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Name</Text>
             <Controller
@@ -497,7 +510,7 @@ export default function VerifyOTPScreen({ route, navigation }: VerifyOTPScreenPr
 
   const handleVerifyOtp = async () => {
     const otpString = otp.join('');
-    
+
     if (otpString.length !== 6) {
       Toast.show({
         type: 'error',
@@ -508,17 +521,17 @@ export default function VerifyOTPScreen({ route, navigation }: VerifyOTPScreenPr
     }
 
     setLoading(true);
-    
+
     try {
       const result = await verifyOtp(email, otpString, name);
-      
+
       if (result.success) {
         Toast.show({
           type: 'success',
           text1: 'Account Created',
           text2: 'Your account has been successfully verified',
         });
-        
+
         // Navigate to your app's main flow (e.g., onboarding or dashboard)
         navigation.navigate('Onboarding'); // or wherever you want to navigate
       } else {
@@ -720,4 +733,4 @@ export default function App() {
 - Input validation and sanitization
 - Error handling and user feedback
 
-This implementation reuses all the backend logic from your deployed app while adapting the frontend for React Native! 
+This implementation reuses all the backend logic from your deployed app while adapting the frontend for React Native!

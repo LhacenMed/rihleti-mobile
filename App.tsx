@@ -6,6 +6,7 @@ import { createStackNavigator, TransitionPresets } from "@react-navigation/stack
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 
 // Auth Context and Components
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -15,6 +16,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import WelcomeScreen from "./app/auth/WelcomeScreen";
 import LoginScreen from "./app/auth/LoginScreen";
 import SignupScreen from "./app/auth/SignupScreen";
+import VerifyOTPScreen from "./app/auth/VerifyOTPScreen";
 
 // App Screens
 import Home from "./app/tabs/Index";
@@ -24,19 +26,35 @@ import Settings from "app/tabs/Settings";
 import Account from "./app/screens/Account";
 import CustomTabBar from "./components/TabBar";
 
+type AuthStackParamList = {
+  Welcome: undefined;
+  Login: undefined;
+  SignUp: undefined;
+  VerifyOTP: {
+    email: string;
+    name: string;
+  };
+};
+
+type AppStackParamList = {
+  MainTabs: undefined;
+  Account: undefined;
+};
+
 const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator();
+const AuthStack = createStackNavigator<AuthStackParamList>();
+const AppStackNavigator = createStackNavigator<AppStackParamList>();
 
 // Auth Stack for unauthenticated users
-const AuthStack = () => {
+const AuthStackScreen = () => {
   return (
-    <Stack.Navigator
+    <AuthStack.Navigator
       screenOptions={{
         headerShown: false,
       }}
       initialRouteName="Welcome"
     >
-      <Stack.Screen
+      <AuthStack.Screen
         name="Welcome"
         component={WelcomeScreen}
         options={{
@@ -44,7 +62,7 @@ const AuthStack = () => {
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />
-      <Stack.Screen
+      <AuthStack.Screen
         name="Login"
         component={LoginScreen}
         options={{
@@ -52,7 +70,7 @@ const AuthStack = () => {
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />
-      <Stack.Screen
+      <AuthStack.Screen
         name="SignUp"
         component={SignupScreen}
         options={{
@@ -60,20 +78,28 @@ const AuthStack = () => {
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />
-    </Stack.Navigator>
+      <AuthStack.Screen
+        name="VerifyOTP"
+        component={VerifyOTPScreen}
+        options={{
+          headerShown: false,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+    </AuthStack.Navigator>
   );
 };
 
 // App Stack for authenticated users
 const AppStack = () => {
   return (
-    <Stack.Navigator
+    <AppStackNavigator.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="MainTabs" component={MyTab} />
-      <Stack.Screen
+      <AppStackNavigator.Screen name="MainTabs" component={MyTab} />
+      <AppStackNavigator.Screen
         name="Account"
         component={Account}
         options={{
@@ -81,7 +107,7 @@ const AppStack = () => {
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />
-    </Stack.Navigator>
+    </AppStackNavigator.Navigator>
   );
 };
 
@@ -93,7 +119,7 @@ const AppNavigator = () => {
     return <LoadingScreen />;
   }
 
-  return <NavigationContainer>{user ? <AppStack /> : <AuthStack />}</NavigationContainer>;
+  return <NavigationContainer>{user ? <AppStack /> : <AuthStackScreen />}</NavigationContainer>;
 };
 
 // Main App Component
@@ -103,6 +129,7 @@ export default function App() {
       <StatusBar style="auto" />
       <AuthProvider>
         <AppNavigator />
+        <Toast />
       </AuthProvider>
     </SafeAreaProvider>
   );

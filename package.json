@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.3.0",
+    "@hookform/resolvers": "^5.2.1",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-navigation/bottom-tabs": "^7.3.12",
     "@react-navigation/material-top-tabs": "^7.3.6",
@@ -28,11 +29,14 @@
     "expo-system-ui": "~5.0.10",
     "nativewind": "latest",
     "react": "19.0.0",
+    "react-hook-form": "^7.62.0",
     "react-native": "0.79.5",
     "react-native-event-listeners": "^1.0.7",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-svg": "15.11.2"
+    "react-native-svg": "15.11.2",
+    "react-native-toast-message": "^2.3.3",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

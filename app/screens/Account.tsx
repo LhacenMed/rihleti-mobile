@@ -1,7 +1,17 @@
-import { ScrollView, StyleSheet, Text, View, Button } from "react-native";
+import { ScrollView, StyleSheet, Text, View, Button, Alert } from "react-native";
 import React from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Account({ navigation }: { navigation: any }) {
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = () => {
+    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Sign Out", style: "destructive", onPress: signOut },
+    ]);
+  };
+
   return (
     <ScrollView style={{ backgroundColor: "#fefae0" }}>
       <View style={styles.container}>
@@ -9,17 +19,23 @@ export default function Account({ navigation }: { navigation: any }) {
         <Text style={styles.subtitle}>Manage your account settings</Text>
 
         <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Email: user@example.com</Text>
-          <Text style={styles.infoText}>Username: Lhacen Med</Text>
-          <Text style={styles.infoText}>Member since: 2024</Text>
+          <Text style={styles.infoText}>Email: {user?.email || "Not available"}</Text>
+          <Text style={styles.infoText}>User ID: {user?.id || "Not available"}</Text>
+          <Text style={styles.infoText}>
+            Member since:{" "}
+            {user?.created_at ? new Date(user.created_at).getFullYear() : "Not available"}
+          </Text>
+          <Text style={styles.infoText}>
+            Email verified: {user?.email_confirmed_at ? "Yes" : "No"}
+          </Text>
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button
-            title="Back to Settings"
-            onPress={() => navigation.goBack()}
-            color="#606c38"
-          />
+          <Button title="Back to Settings" onPress={() => navigation.goBack()} color="#606c38" />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button title="Sign Out" onPress={handleSignOut} color="#dc3545" />
         </View>
       </View>
     </ScrollView>

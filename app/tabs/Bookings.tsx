@@ -1,16 +1,15 @@
-import { Text, StyleSheet, View } from 'react-native';
-import React from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
+import { Text, View } from "react-native";
+import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Page = () => {
+const Bookings = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View className="flex-1 justify-center items-center bg-slate-900">
+    <View className="flex-1 items-center justify-center bg-slate-900">
       <Text className="text-xl text-white">Bookings Screen</Text>
     </View>
   );
 };
 
-export default Page;
+export default Bookings;

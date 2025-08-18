@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useCallback } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 
 interface Props {
@@ -15,13 +15,13 @@ const WelcomeScreen = ({ navigation }: Props) => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  // const handleSheetChanges = useCallback((index: number) => {
+  //   console.log("handleSheetChanges", index);
+  // }, []);
 
-  const handleDismiss = useCallback(() => {
-    console.log("Bottom sheet dismissed");
-  }, []);
+  // const handleDismiss = useCallback(() => {
+  //   console.log("Bottom sheet dismissed");
+  // }, []);
 
   // Render backdrop
   const renderBackdrop = useCallback(
@@ -38,33 +38,36 @@ const WelcomeScreen = ({ navigation }: Props) => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome to Rihleti</Text>
-        <Text style={styles.subtitle}>Your travel companion app</Text>
+    <View className="flex-1 bg-[#fefae0]">
+      <View className="flex-1 items-center justify-center p-5">
+        <Text className="mb-2 text-center text-4xl font-bold text-black">Welcome to Rihleti</Text>
+        <Text className="mb-15 text-center text-lg text-gray-600">Your travel companion app</Text>
 
-        <View style={styles.iconContainer}>
-          <Text style={styles.icon}>✈️</Text>
+        <View className="mb-15">
+          <Text className="text-center text-8xl py-8">✈️</Text>
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View className="w-full gap-4">
           <TouchableOpacity
-            style={styles.primaryButton}
+            className="items-center rounded-lg bg-[#606c38] py-4"
             onPress={() => navigation.navigate("Login")}
           >
-            <Text style={styles.primaryButtonText}>Sign In</Text>
+            <Text className="text-lg font-semibold text-white">Sign In</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.secondaryButton}
+            className="items-center rounded-lg border-2 border-[#606c38] bg-transparent py-4"
             onPress={() => navigation.navigate("SignUp")}
           >
-            <Text style={styles.secondaryButtonText}>Create Account</Text>
+            <Text className="text-lg font-semibold text-[#606c38]">Create Account</Text>
           </TouchableOpacity>
 
           {/* Bottom Sheet Trigger Button */}
-          <TouchableOpacity style={styles.infoButton} onPress={handlePresentModalPress}>
-            <Text style={styles.infoButtonText}>Learn More</Text>
+          <TouchableOpacity
+            className="mt-2 items-center rounded-lg bg-transparent py-3"
+            onPress={handlePresentModalPress}
+          >
+            <Text className="text-base font-medium text-[#606c38] underline">Learn More</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -72,29 +75,29 @@ const WelcomeScreen = ({ navigation }: Props) => {
       {/* Bottom Sheet Modal */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        onChange={handleSheetChanges}
-        onDismiss={handleDismiss}
+        // onChange={handleSheetChanges}
+        // onDismiss={handleDismiss}
         enableDismissOnClose={true}
         backdropComponent={renderBackdrop}
       >
-        <BottomSheetView style={styles.contentContainer}>
-          <Text style={styles.modalTitle}>About Rihleti ✈️</Text>
-          <Text style={styles.modalText}>
+        <BottomSheetView className="flex-1 items-center p-6">
+          <Text className="mb-4 text-center text-2xl font-bold text-black">About Rihleti ✈️</Text>
+          <Text className="mb-4 text-center text-base leading-6 text-gray-600">
             Rihleti is your ultimate travel companion, designed to make your journeys seamless and
             memorable.
           </Text>
-          <Text style={styles.modalText}>
+          <Text className="mb-4 text-center text-base leading-6 text-gray-600">
             • Plan your trips with ease{"\n"}• Discover hidden gems{"\n"}• Connect with fellow
             travelers{"\n"}• Track your adventures
           </Text>
           <TouchableOpacity
-            style={styles.modalButton}
+            className="mt-4 rounded-lg bg-[#606c38] px-6 py-3"
             onPress={() => {
               bottomSheetModalRef.current?.dismiss();
               navigation.navigate("SignUp");
             }}
           >
-            <Text style={styles.modalButtonText}>Get Started</Text>
+            <Text className="text-base font-semibold text-white">Get Started</Text>
           </TouchableOpacity>
         </BottomSheetView>
       </BottomSheetModal>
@@ -102,110 +105,103 @@ const WelcomeScreen = ({ navigation }: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fefae0",
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    color: "#000",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 60,
-  },
-  iconContainer: {
-    marginBottom: 60,
-  },
-  icon: {
-    fontSize: 80,
-    textAlign: "center",
-  },
-  buttonContainer: {
-    width: "100%",
-    gap: 16,
-  },
-  primaryButton: {
-    backgroundColor: "#606c38",
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  primaryButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  secondaryButton: {
-    backgroundColor: "transparent",
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#606c38",
-  },
-  secondaryButtonText: {
-    color: "#606c38",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  infoButton: {
-    backgroundColor: "transparent",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  infoButtonText: {
-    color: "#606c38",
-    fontSize: 16,
-    fontWeight: "500",
-    textDecorationLine: "underline",
-  },
-  // Bottom Sheet Modal Styles
-  contentContainer: {
-    flex: 1,
-    padding: 24,
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#000",
-    textAlign: "center",
-  },
-  modalText: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 16,
-    color: "#666",
-    lineHeight: 24,
-  },
-  modalButton: {
-    backgroundColor: "#606c38",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    marginTop: 16,
-  },
-  modalButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-});
-
 export default WelcomeScreen;
+
+
+
+// import {
+//   View,
+//   Text,
+//   Image,
+//   TouchableOpacity,
+//   StatusBar,
+//   SafeAreaView,
+//   Dimensions,
+// } from "react-native";
+// import { LinearGradient } from "expo-linear-gradient";
+
+// const { height } = Dimensions.get("window");
+
+// export default function App() {
+//   return (
+//     <SafeAreaView className="flex-1 bg-black">
+//       <StatusBar barStyle="light-content" />
+
+//       {/* Cancel Button */}
+//       <View className="absolute right-4 top-12 z-10">
+//         <TouchableOpacity>
+//           <Text className="text-base font-medium text-white">Cancel</Text>
+//         </TouchableOpacity>
+//       </View>
+
+//       {/* Main Content */}
+//       <View className="flex-1">
+//         {/* Top Half - Background Image */}
+//         <View className="relative flex-1">
+//           <Image
+//             source={{
+//               uri: "https://ieasxblluboxxzobeznz.supabase.co/storage/v1/object/public/images/logos/p1to0gr3pse-1754095383333.jpg",
+//             }}
+//             className="h-full w-full"
+//             resizeMode="cover"
+//           />
+
+//           {/* Gradient Overlay */}
+//           <LinearGradient
+//             colors={["transparent", "rgba(0,0,0,0.3)", "rgba(0,0,0,0.8)", "#000000"]}
+//             locations={[0, 0.6, 0.8, 1]}
+//             className="absolute inset-0"
+//           />
+//         </View>
+
+//         {/* Logo Section */}
+//         <View className="absolute bottom-80 left-0 right-0 z-10 items-center">
+//           {/* Logo Icon */}
+//           <View className="mb-4">
+//             <View className="h-12 w-12 items-center justify-center">
+//               <View className="relative h-8 w-8">
+//                 {/* Perplexity Logo - Simplified geometric design */}
+//                 <View className="absolute inset-0 rotate-45 transform border-2 border-white" />
+//                 <View className="absolute bottom-1 left-1 right-1 top-1 -rotate-45 transform border border-white" />
+//                 <View className="absolute bottom-2 left-2 right-2 top-2 rotate-45 transform bg-white" />
+//               </View>
+//             </View>
+//           </View>
+
+//           {/* Brand Name */}
+//           <Text className="text-3xl font-light tracking-wide text-white">rihleti</Text>
+//         </View>
+
+//         {/* Bottom Half - Authentication Buttons */}
+//         <View className="bg-black px-6 pb-8 pt-4">
+//           {/* Google Button */}
+//           <TouchableOpacity className="mb-4 flex-row items-center justify-center rounded-full bg-white px-6 py-4">
+//             <Text className="ml-2 text-base font-medium text-black">Continue with Google</Text>
+//           </TouchableOpacity>
+
+//           {/* Email Button */}
+//           <TouchableOpacity className="mb-4 rounded-full bg-gray-800 px-6 py-4">
+//             <Text className="text-center text-base font-medium text-white">
+//               Continue with Email
+//             </Text>
+//           </TouchableOpacity>
+
+//           {/* SSO Button */}
+//           <TouchableOpacity className="mb-8 rounded-full bg-gray-800 px-6 py-4">
+//             <Text className="text-center text-base font-medium text-white">Continue with SSO</Text>
+//           </TouchableOpacity>
+
+//           {/* Footer Links */}
+//           <View className="mb-4 flex-row justify-center gap-8 space-x-8">
+//             <TouchableOpacity>
+//               <Text className="text-sm text-gray-400">Privacy policy</Text>
+//             </TouchableOpacity>
+//             <TouchableOpacity>
+//               <Text className="text-sm text-gray-400">Terms of service</Text>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+//       </View>
+//     </SafeAreaView>
+//   );
+// }

@@ -38,7 +38,8 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-svg": "15.11.2",
     "react-native-toast-message": "^2.3.3",
-    "zod": "^4.0.17"
+    "zod": "^4.0.17",
+    "expo-linear-gradient": "~14.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

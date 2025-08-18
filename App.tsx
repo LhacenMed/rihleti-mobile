@@ -9,22 +9,22 @@ import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 
 // Auth Context and Components
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import LoadingScreen from "./components/LoadingScreen";
+import { AuthProvider, useAuth } from "@contexts/AuthContext";
+import LoadingScreen from "@components/LoadingScreen";
 
 // Auth Screens
-import WelcomeScreen from "./app/auth/WelcomeScreen";
-import LoginScreen from "./app/auth/LoginScreen";
-import SignupScreen from "./app/auth/SignupScreen";
-import VerifyOTPScreen from "./app/auth/VerifyOTPScreen";
+import WelcomeScreen from "@screens/auth/WelcomeScreen";
+import LoginScreen from "@screens/auth/LoginScreen";
+import SignupScreen from "@screens/auth/SignupScreen";
+import VerifyOTPScreen from "@screens/auth/VerifyOTPScreen";
 
 // App Screens
-import Home from "./app/tabs/Index";
-import Explore from "app/tabs/Explore";
-import Bookings from "app/tabs/Bookings";
-import Settings from "app/tabs/Settings";
-import Account from "./app/screens/Account";
-import CustomTabBar from "./components/TabBar";
+import Home from "@screens/tabs/Index";
+import Explore from "@screens/tabs/Explore";
+import Bookings from "@screens/tabs/Bookings";
+import Settings from "@screens/tabs/Settings";
+import Account from "@screens/screens/Account";
+import CustomTabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -63,13 +63,20 @@ const AppNavigator = () => {
         {user ? (
           // Authenticated screens
           <>
-            <RootStack.Screen name="MainTabs" component={MyTab} />
+            <RootStack.Screen
+              name="MainTabs"
+              component={MyTab}
+              options={{
+                headerShown: false,
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            />
             <RootStack.Screen
               name="Account"
               component={Account}
               options={{
                 headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
+                ...TransitionPresets.ModalPresentationIOS,
               }}
             />
           </>

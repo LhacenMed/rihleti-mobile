@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const Bookings = () => {
   const insets = useSafeAreaInsets();
 
+  // TODO: fix the tailwind css configuration
   return (
     <View className="flex-1 items-center justify-center bg-slate-900">
       <Text className="text-xl text-white">Bookings Screen</Text>

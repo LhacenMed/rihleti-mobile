@@ -1,114 +1,3 @@
-// import React, { useRef, useMemo, useCallback } from "react";
-// import { View, Text, TouchableOpacity } from "react-native";
-// import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-
-// interface Props {
-//   navigation: any;
-// }
-
-// const WelcomeScreen = ({ navigation }: Props) => {
-//   // BottomSheet ref
-//   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-//   // Callbacks - addressing missing handlers from roadmap
-//   const handlePresentModalPress = useCallback(() => {
-//     bottomSheetModalRef.current?.present();
-//   }, []);
-
-//   // const handleSheetChanges = useCallback((index: number) => {
-//   //   console.log("handleSheetChanges", index);
-//   // }, []);
-
-//   // const handleDismiss = useCallback(() => {
-//   //   console.log("Bottom sheet dismissed");
-//   // }, []);
-
-//   // Render backdrop
-//   const renderBackdrop = useCallback(
-//     (props: any) => (
-//       <BottomSheetBackdrop
-//         {...props}
-//         disappearsOnIndex={-1}
-//         appearsOnIndex={0}
-//         opacity={0.5}
-//         enableTouchThrough={false}
-//       />
-//     ),
-//     []
-//   );
-
-//   return (
-//     <View className="flex-1 bg-[#fefae0]">
-//       <View className="flex-1 items-center justify-center p-5">
-//         <Text className="mb-2 text-center text-4xl font-bold text-black">Welcome to Rihleti</Text>
-//         <Text className="mb-15 text-center text-lg text-gray-600">Your travel companion app</Text>
-
-//         <View className="mb-15">
-//           <Text className="text-center text-8xl py-8">✈️</Text>
-//         </View>
-
-//         <View className="w-full gap-4">
-//           <TouchableOpacity
-//             className="items-center rounded-lg bg-[#606c38] py-4"
-//             onPress={() => navigation.navigate("Login")}
-//           >
-//             <Text className="text-lg font-semibold text-white">Sign In</Text>
-//           </TouchableOpacity>
-
-//           <TouchableOpacity
-//             className="items-center rounded-lg border-2 border-[#606c38] bg-transparent py-4"
-//             onPress={() => navigation.navigate("SignUp")}
-//           >
-//             <Text className="text-lg font-semibold text-[#606c38]">Create Account</Text>
-//           </TouchableOpacity>
-
-//           {/* Bottom Sheet Trigger Button */}
-//           <TouchableOpacity
-//             className="mt-2 items-center rounded-lg bg-transparent py-3"
-//             onPress={handlePresentModalPress}
-//           >
-//             <Text className="text-base font-medium text-[#606c38] underline">Learn More</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-
-//       {/* Bottom Sheet Modal */}
-//       <BottomSheetModal
-//         ref={bottomSheetModalRef}
-//         // onChange={handleSheetChanges}
-//         // onDismiss={handleDismiss}
-//         enableDismissOnClose={true}
-//         backdropComponent={renderBackdrop}
-//       >
-//         <BottomSheetView className="flex-1 items-center p-6">
-//           <Text className="mb-4 text-center text-2xl font-bold text-black">About Rihleti ✈️</Text>
-//           <Text className="mb-4 text-center text-base leading-6 text-gray-600">
-//             Rihleti is your ultimate travel companion, designed to make your journeys seamless and
-//             memorable.
-//           </Text>
-//           <Text className="mb-4 text-center text-base leading-6 text-gray-600">
-//             • Plan your trips with ease{"\n"}• Discover hidden gems{"\n"}• Connect with fellow
-//             travelers{"\n"}• Track your adventures
-//           </Text>
-//           <TouchableOpacity
-//             className="mt-4 rounded-lg bg-[#606c38] px-6 py-3"
-//             onPress={() => {
-//               bottomSheetModalRef.current?.dismiss();
-//               navigation.navigate("SignUp");
-//             }}
-//           >
-//             <Text className="text-base font-semibold text-white">Get Started</Text>
-//           </TouchableOpacity>
-//         </BottomSheetView>
-//       </BottomSheetModal>
-//     </View>
-//   );
-// };
-
-// export default WelcomeScreen;
-
-
-
 import React, { useRef, useMemo, useCallback } from "react";
 import {
   View,
@@ -121,6 +10,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import EmailBottomSheet from "../../components/EmailBottomSheet";
 
 interface Props {
   navigation: any;
@@ -129,13 +19,28 @@ interface Props {
 const { height } = Dimensions.get("window");
 
 export default function WelcomeScreen({ navigation }: Props) {
-  // BottomSheet ref
+  // BottomSheet refs
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const emailBottomSheetRef = useRef<BottomSheetModal>(null);
 
   // Callbacks - addressing missing handlers from roadmap
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+
+  const handlePresentEmailModal = useCallback(() => {
+    emailBottomSheetRef.current?.present();
+  }, []);
+
+  const handleEmailSubmit = useCallback(
+    (email: string) => {
+      console.log("Email submitted:", email);
+      emailBottomSheetRef.current?.dismiss();
+      // Navigate to next screen or handle email submission
+      navigation.navigate("SignUp", { email });
+    },
+    [navigation]
+  );
 
   // const handleSheetChanges = useCallback((index: number) => {
   //   console.log("handleSheetChanges", index);
@@ -216,14 +121,20 @@ export default function WelcomeScreen({ navigation }: Props) {
           </TouchableOpacity>
 
           {/* Email Button */}
-          <TouchableOpacity className="mb-4 rounded-full bg-gray-800 px-6 py-4" onPress={() => navigation.navigate("Login")}>
+          <TouchableOpacity
+            className="mb-4 rounded-full bg-gray-800 px-6 py-4"
+            onPress={handlePresentEmailModal}
+          >
             <Text className="text-center text-base font-medium text-white">
               Continue with Email
             </Text>
           </TouchableOpacity>
 
           {/* SSO Button */}
-          <TouchableOpacity className="mb-8 rounded-full bg-gray-800 px-6 py-4">
+          <TouchableOpacity
+            className="mb-8 rounded-full bg-gray-800 px-6 py-4"
+            onPress={() => navigation.navigate("Login")}
+          >
             <Text className="text-center text-base font-medium text-white">Continue with SSO</Text>
           </TouchableOpacity>
 
@@ -238,7 +149,8 @@ export default function WelcomeScreen({ navigation }: Props) {
           </View>
         </View>
       </View>
-      {/* Bottom Sheet Modal */}
+
+      {/* About Bottom Sheet Modal */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
         // onChange={handleSheetChanges}
@@ -267,6 +179,15 @@ export default function WelcomeScreen({ navigation }: Props) {
           </TouchableOpacity>
         </BottomSheetView>
       </BottomSheetModal>
+
+      {/* Email Bottom Sheet Modal */}
+      <EmailBottomSheet
+        ref={emailBottomSheetRef}
+        onEmailSubmit={handleEmailSubmit}
+        title="Continue with Email"
+        placeholder="Enter your email address"
+        buttonText="Continue"
+      />
     </SafeAreaView>
   );
 }

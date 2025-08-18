@@ -96,7 +96,7 @@ const AppNavigator = () => {
               component={LoginScreen}
               options={{
                 headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
+                ...TransitionPresets.ModalPresentationIOS,
               }}
             />
             <RootStack.Screen

@@ -99,6 +99,71 @@ const AppNavigator = () => {
                 ...TransitionPresets.ModalPresentationIOS,
               }}
             />
+            {/* <RootStack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                headerShown: false,
+                presentation: "modal",
+                gestureEnabled: true,
+                gestureDirection: "vertical",
+                cardStyleInterpolator: ({ current, next, layouts }) => {
+                  const modalHeight = layouts.screen.height * 0.9; // Modal takes 90% of screen
+                  const topOffset = layouts.screen.height * 0.06; // 10% visible background
+
+                  const translateY = current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [layouts.screen.height, topOffset],
+                    extrapolate: "clamp",
+                  });
+
+                  // Background screen moves up slightly
+                  const backgroundTranslateY = next
+                    ? next.progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, -40], // Move background up by 20px
+                        extrapolate: "clamp",
+                      })
+                    : 0;
+
+                  const backgroundScale = next
+                    ? next.progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1, 0.95],
+                        extrapolate: "clamp",
+                      })
+                    : 1;
+
+                  return {
+                    cardStyle: {
+                      height: modalHeight,
+                      borderTopLeftRadius: 20,
+                      borderTopRightRadius: 20,
+                      overflow: "hidden",
+                      transform: [{ translateY }],
+                    },
+                    overlayStyle: {
+                      opacity: current.progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 0.3],
+                      }),
+                      backgroundColor: "black",
+                    },
+                    // This affects the previous screen
+                    ...(next && {
+                      containerStyle: {
+                        transform: [
+                          { translateY: backgroundTranslateY },
+                          { scale: backgroundScale },
+                        ],
+                      },
+                    }),
+                  };
+                },
+                cardOverlayEnabled: true,
+                gestureResponseDistance: 100,
+              }}
+            /> */}
             <RootStack.Screen
               name="SignUp"
               component={SignupScreen}

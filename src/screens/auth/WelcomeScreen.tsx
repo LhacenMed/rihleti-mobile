@@ -11,6 +11,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import EmailBottomSheet from "../../components/EmailBottomSheet";
+import { Button } from "../../components/ui/button";
 
 interface Props {
   navigation: any;
@@ -116,9 +117,9 @@ export default function WelcomeScreen({ navigation }: Props) {
         {/* Bottom Half - Authentication Buttons */}
         <View className="bg-black px-6 pb-8 pt-4">
           {/* Google Button */}
-          <TouchableOpacity className="mb-4 flex-row items-center justify-center rounded-full bg-white px-6 py-4">
+          <Button>
             <Text className="ml-2 text-base font-medium text-black">Continue with Google</Text>
-          </TouchableOpacity>
+          </Button>
 
           {/* Email Button */}
           <TouchableOpacity

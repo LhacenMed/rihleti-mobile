@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
-  StyleSheet,
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../contexts/AuthContext";
+//@ts-ignore
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 
 interface Props {
   navigation: any;
@@ -36,113 +39,94 @@ const LoginScreen = ({ navigation }: Props) => {
     }
   };
 
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
+  const handleContactUs = () => {
+    Alert.alert("Contact Us", "Contact functionality to be implemented");
+  };
+
+  const handleForgotPassword = () => {
+    Alert.alert("Forgot Password", "Forgot password functionality to be implemented");
+  };
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to your account</Text>
-
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            placeholderTextColor="#999"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            placeholderTextColor="#999"
-          />
-
-          <TouchableOpacity
-            style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            <Text style={styles.buttonText}>{loading ? "Signing In..." : "Sign In"}</Text>
+    <View className="flex-1 bg-black">
+      <StatusBar hidden />
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        {/* Header */}
+        <View className="flex-row items-center justify-between px-4 pb-8 pt-12">
+          <TouchableOpacity onPress={handleBack} className="p-2">
+            <Ionicons name="chevron-back" size={28} color="#ffffff" />
           </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.linkContainer}
-            onPress={() => navigation.navigate("SignUp")}
-          >
-            <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+          <TouchableOpacity onPress={handleContactUs}>
+            <Text className="text-lg font-medium text-white">Contact us</Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+
+        {/* Content */}
+        <View className="flex-1 px-6">
+          {/* Title */}
+          <View className="mb-20 mt-16">
+            <Text className="text-center text-3xl font-medium leading-tight text-white">
+              Log in with password
+            </Text>
+          </View>
+
+          {/* Form */}
+          <View className="space-y-6">
+            {/* Email Input */}
+            <View>
+              <Input
+                placeholder="Email / +86 Phone number"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                containerClassName=""
+              />
+            </View>
+
+            {/* Password Input */}
+            <View>
+              <Input
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                isPassword={true}
+                containerClassName=""
+              />
+            </View>
+
+            {/* Forgot Password */}
+            <TouchableOpacity onPress={handleForgotPassword} className="pb-8 pt-2">
+              <Text className="text-lg font-medium text-blue-400">Forgot password?</Text>
+            </TouchableOpacity>
+
+            {/* Login Button */}
+            <TouchableOpacity
+              className={`items-center rounded-xl bg-blue-500 py-6 ${loading ? "opacity-70" : ""}`}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              <Text className="text-lg font-semibold text-white">
+                {loading ? "Logging in..." : "Log in"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Bottom Home Indicator */}
+        <View className="items-center pb-2">
+          <View className="h-1 w-32 rounded-full bg-white opacity-60" />
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fefae0",
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#000",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 40,
-  },
-  form: {
-    width: "100%",
-  },
-  input: {
-    backgroundColor: "white",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 8,
-    fontSize: 16,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-  },
-  button: {
-    backgroundColor: "#606c38",
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  linkContainer: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  linkText: {
-    color: "#606c38",
-    fontSize: 16,
-  },
-});
 
 export default LoginScreen;

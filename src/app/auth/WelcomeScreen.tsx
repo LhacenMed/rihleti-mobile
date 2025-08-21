@@ -1,6 +1,11 @@
 import React, { useRef, useMemo, useCallback } from "react";
 import { View, Text, TouchableOpacity, StatusBar, SafeAreaView } from "react-native";
-import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetBackdrop,
+  TouchableHighlight,
+} from "@gorhom/bottom-sheet";
 import EmailBottomSheet from "../../components/EmailBottomSheet";
 import { Button } from "../../components/ui/button";
 import { RihletiLogo } from "../../components/icons";
@@ -59,17 +64,8 @@ export default function WelcomeScreen({ navigation }: Props) {
       </View>
 
       {/* Main Content - Centered Layout */}
-      <View className="flex-1 items-center justify-center px-6">
-        {/* Logo Section */}
-        <View className="mb-16 items-center">
-          {/* Logo Icon */}
-          <View className="mb-8">
-            <RihletiLogo size={120} />
-          </View>
-
-          {/* Brand Name */}
-          <Text className="text-4xl font-light tracking-wide text-white">rihleti</Text>
-        </View>
+      <View className="flex-1 items-center justify-center">
+        <RihletiLogo size={250} />
       </View>
 
       {/* Bottom Authentication Buttons */}
@@ -79,7 +75,7 @@ export default function WelcomeScreen({ navigation }: Props) {
           <Button
             variant="default"
             size="primary"
-            onPress={handlePresentEmailModal}
+            onPress={() => navigation.navigate("Login")}
             className="bg-white"
           >
             🔒 Continue with Password
@@ -92,6 +88,7 @@ export default function WelcomeScreen({ navigation }: Props) {
             variant="outline"
             size="primary"
             className="border-gray-600 bg-gray-800"
+            onPress={handlePresentEmailModal}
             textClassName="text-white"
           >
             G Continue with Google
@@ -112,19 +109,15 @@ export default function WelcomeScreen({ navigation }: Props) {
         </View>
 
         {/* Terms and Privacy Policy */}
-        <View className="mb-4 flex-row items-center justify-center">
-          <View className="mr-3 h-2 w-2 rounded-full bg-gray-600" />
-          <TouchableOpacity onPress={handlePresentModalPress}>
-            <Text className="mr-4 text-sm text-gray-400">
-              I confirm that I have read and agree to Rihleti's{"\n"}
+        <View className="flex-row items-center justify-center">
+          <TouchableHighlight onPress={handlePresentModalPress}>
+            <Text className="text-center text-sm text-gray-400">
+              I confirm that I have read and agree to Rihleti's{" "}
               <Text className="underline">Terms of Use</Text> and{" "}
               <Text className="underline">Privacy Policy</Text>
             </Text>
-          </TouchableOpacity>
+          </TouchableHighlight>
         </View>
-
-        {/* Bottom indicator line */}
-        <View className="h-1 w-32 self-center rounded-full bg-gray-600" />
       </View>
 
       {/* About Bottom Sheet Modal */}

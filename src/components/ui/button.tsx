@@ -7,6 +7,7 @@ import {
   TextStyle,
   View,
   Text,
+  StyleSheet,
 } from "react-native";
 
 // Button variant configurations using Tailwind-style class names
@@ -163,6 +164,15 @@ export const Button: React.FC<ButtonProps> = ({
         ]}
       >
         {renderContent()}
+        {isPressed && !disabled && (
+          <View
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: "rgba(0, 0, 0, 0.05)",
+              borderRadius: 50,
+            }}
+          />
+        )}
       </Animated.View>
     </TouchableWithoutFeedback>
   );

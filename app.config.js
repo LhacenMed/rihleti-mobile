@@ -19,7 +19,7 @@ export default {
         orientation: "portrait",
         icon: "./src/assets/icon.png",
 
-        userInterfaceStyle: "light",
+        userInterfaceStyle: "automatic",
 
         splash: {
             image: "./src/assets/splash.png",

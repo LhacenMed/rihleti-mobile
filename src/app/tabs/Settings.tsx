@@ -1,13 +1,16 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
+import { ThemeSwitcher } from "../../components/ThemeSwitcher";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Settings = () => {
   const insets = useSafeAreaInsets();
   const { user, signOut } = useAuth();
+  const { isDark } = useTheme();
   const navigation = useNavigation();
 
   const handleSignOut = () => {
@@ -22,190 +25,133 @@ const Settings = () => {
   };
 
   return (
-    <ScrollView style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Settings</Text>
+    <ScrollView className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <View className="p-5">
+        <Text className="mb-8 text-center text-3xl font-bold text-foreground">Settings</Text>
 
-        {/* User Info Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account</Text>
-          <TouchableOpacity style={styles.settingItem} onPress={navigateToAccount}>
-            <View style={styles.settingItemLeft}>
-              <Ionicons name="person-outline" size={24} color="#606c38" />
-              <View style={styles.settingItemText}>
-                <Text style={styles.settingItemTitle}>Account Details</Text>
-                <Text style={styles.settingItemSubtitle}>
+        {/* Theme Section */}
+        <View className="mb-8">
+          <Text className="mb-4 px-1 text-lg font-semibold text-foreground">Appearance</Text>
+          <View className="mb-2 rounded-xl border border-border bg-card p-4">
+            <View className="mb-3 flex-row items-center">
+              <Ionicons name="color-palette-outline" size={24} color={isDark ? "#fff" : "#000"} />
+              <Text className="text-card-foreground ml-4 text-base font-medium">Theme</Text>
+            </View>
+            <ThemeSwitcher />
+          </View>
+        </View>
+
+        {/* Account Section */}
+        <View className="mb-8">
+          <Text className="mb-4 px-1 text-lg font-semibold text-foreground">Account</Text>
+          <TouchableOpacity
+            className="mb-2 flex-row items-center justify-between rounded-xl border border-border bg-card p-4"
+            onPress={navigateToAccount}
+          >
+            <View className="flex-1 flex-row items-center">
+              <Ionicons name="person-outline" size={24} color={isDark ? "#fff" : "#000"} />
+              <View className="ml-4 flex-1">
+                <Text className="text-card-foreground mb-1 text-base font-medium">
+                  Account Details
+                </Text>
+                <Text className="text-muted-foreground text-sm">
                   {user?.email || "View your account information"}
                 </Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
           </TouchableOpacity>
         </View>
 
         {/* App Settings Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>App Settings</Text>
+        <View className="mb-8">
+          <Text className="mb-4 px-1 text-lg font-semibold text-foreground">App Settings</Text>
 
-          <TouchableOpacity style={styles.settingItem}>
-            <View style={styles.settingItemLeft}>
-              <Ionicons name="notifications-outline" size={24} color="#606c38" />
-              <View style={styles.settingItemText}>
-                <Text style={styles.settingItemTitle}>Notifications</Text>
-                <Text style={styles.settingItemSubtitle}>Manage your notifications</Text>
+          <TouchableOpacity className="mb-2 flex-row items-center justify-between rounded-xl border border-border bg-card p-4">
+            <View className="flex-1 flex-row items-center">
+              <Ionicons name="notifications-outline" size={24} color={isDark ? "#fff" : "#000"} />
+              <View className="ml-4 flex-1">
+                <Text className="text-card-foreground mb-1 text-base font-medium">
+                  Notifications
+                </Text>
+                <Text className="text-muted-foreground text-sm">
+                  Manage your notification preferences
+                </Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem}>
-            <View style={styles.settingItemLeft}>
-              <Ionicons name="language-outline" size={24} color="#606c38" />
-              <View style={styles.settingItemText}>
-                <Text style={styles.settingItemTitle}>Language</Text>
-                <Text style={styles.settingItemSubtitle}>English</Text>
+          <TouchableOpacity className="mb-2 flex-row items-center justify-between rounded-xl border border-border bg-card p-4">
+            <View className="flex-1 flex-row items-center">
+              <Ionicons name="shield-outline" size={24} color={isDark ? "#fff" : "#000"} />
+              <View className="ml-4 flex-1">
+                <Text className="text-card-foreground mb-1 text-base font-medium">
+                  Privacy & Security
+                </Text>
+                <Text className="text-muted-foreground text-sm">Manage your privacy settings</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem}>
-            <View style={styles.settingItemLeft}>
-              <Ionicons name="shield-outline" size={24} color="#606c38" />
-              <View style={styles.settingItemText}>
-                <Text style={styles.settingItemTitle}>Privacy</Text>
-                <Text style={styles.settingItemSubtitle}>Privacy settings</Text>
+          <TouchableOpacity className="mb-2 flex-row items-center justify-between rounded-xl border border-border bg-card p-4">
+            <View className="flex-1 flex-row items-center">
+              <Ionicons name="language-outline" size={24} color={isDark ? "#fff" : "#000"} />
+              <View className="ml-4 flex-1">
+                <Text className="text-card-foreground mb-1 text-base font-medium">Language</Text>
+                <Text className="text-muted-foreground text-sm">English</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
           </TouchableOpacity>
         </View>
 
         {/* Support Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Support</Text>
+        <View className="mb-8">
+          <Text className="mb-4 px-1 text-lg font-semibold text-foreground">Support</Text>
 
-          <TouchableOpacity style={styles.settingItem}>
-            <View style={styles.settingItemLeft}>
-              <Ionicons name="help-circle-outline" size={24} color="#606c38" />
-              <View style={styles.settingItemText}>
-                <Text style={styles.settingItemTitle}>Help & Support</Text>
-                <Text style={styles.settingItemSubtitle}>Get help and contact us</Text>
+          <TouchableOpacity className="mb-2 flex-row items-center justify-between rounded-xl border border-border bg-card p-4">
+            <View className="flex-1 flex-row items-center">
+              <Ionicons name="help-circle-outline" size={24} color={isDark ? "#fff" : "#000"} />
+              <View className="ml-4 flex-1">
+                <Text className="text-card-foreground mb-1 text-base font-medium">Help Center</Text>
+                <Text className="text-muted-foreground text-sm">Get help and support</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem}>
-            <View style={styles.settingItemLeft}>
-              <Ionicons name="information-circle-outline" size={24} color="#606c38" />
-              <View style={styles.settingItemText}>
-                <Text style={styles.settingItemTitle}>About</Text>
-                <Text style={styles.settingItemSubtitle}>App version and info</Text>
+          <TouchableOpacity className="mb-2 flex-row items-center justify-between rounded-xl border border-border bg-card p-4">
+            <View className="flex-1 flex-row items-center">
+              <Ionicons name="mail-outline" size={24} color={isDark ? "#fff" : "#000"} />
+              <View className="ml-4 flex-1">
+                <Text className="text-card-foreground mb-1 text-base font-medium">Contact Us</Text>
+                <Text className="text-muted-foreground text-sm">Send us a message</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
           </TouchableOpacity>
         </View>
 
-        {/* Logout Button */}
-        <View style={styles.logoutSection}>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
-            <Ionicons name="log-out-outline" size={24} color="#fff" />
-            <Text style={styles.logoutButtonText}>Sign Out</Text>
+        {/* Logout Section */}
+        <View className="mb-8 mt-5">
+          <TouchableOpacity
+            className="bg-destructive flex-row items-center justify-center rounded-xl p-4"
+            onPress={handleSignOut}
+          >
+            <Ionicons name="log-out-outline" size={20} color="white" />
+            <Text className="text-destructive-foreground ml-2 text-lg font-semibold">Sign Out</Text>
           </TouchableOpacity>
         </View>
 
-        {/* App Version */}
-        <View style={styles.versionSection}>
-          <Text style={styles.versionText}>Rihleti v1.0.0</Text>
+        {/* Version Section */}
+        <View className="mb-8 items-center">
+          <Text className="text-muted-foreground text-sm">Version 1.0.0</Text>
         </View>
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fefae0",
-  },
-  content: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#000",
-    marginBottom: 30,
-    textAlign: "center",
-  },
-  section: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 15,
-    paddingLeft: 5,
-  },
-  settingItem: {
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-  },
-  settingItemLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  settingItemText: {
-    marginLeft: 15,
-    flex: 1,
-  },
-  settingItemTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
-    marginBottom: 2,
-  },
-  settingItemSubtitle: {
-    fontSize: 14,
-    color: "#666",
-  },
-  logoutSection: {
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  logoutButton: {
-    backgroundColor: "#dc3545",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-    borderRadius: 12,
-    gap: 10,
-  },
-  logoutButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  versionSection: {
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  versionText: {
-    fontSize: 14,
-    color: "#999",
-  },
-});
 
 export default Settings;

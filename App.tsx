@@ -1,6 +1,6 @@
 import "./global.css";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -27,6 +27,9 @@ import Account from "@app/screens/Account";
 import CustomTabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+// Theme Context
+import { ThemeProvider } from "@contexts/ThemeContext";
 
 type RootStackParamList = {
   // Auth Screens
@@ -193,11 +196,12 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <BottomSheetModalProvider>
-          <StatusBar style="auto" />
-          <AuthProvider>
-            <AppNavigator />
-            <Toast />
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <AppNavigator />
+              <Toast />
+            </AuthProvider>
+          </ThemeProvider>
         </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

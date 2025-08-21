@@ -11,7 +11,7 @@
       "@contexts/*": ["src/contexts/*"],
       "@lib/*": ["src/lib/*"],
       "@utils/*": ["src/utils/*"],
-      "@screens/*": ["src/screens/*"]
+      "@app/*": ["src/app/*"]
     }
   }
 }

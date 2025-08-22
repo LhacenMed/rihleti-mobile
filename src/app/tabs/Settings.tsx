@@ -85,15 +85,8 @@ const Settings = () => {
         // scrollEnabled
       >
         {/* Theme Section */}
-        <View className="mb-8">
-          <Text className="mb-4 px-1 text-lg font-semibold text-foreground">Appearance</Text>
-          <View className="mb-2 rounded-xl border border-border bg-card p-4">
-            <View className="mb-3 flex-row items-center">
-              <Ionicons name="color-palette-outline" size={24} color={isDark ? "#fff" : "#000"} />
-              <Text className="ml-4 text-base font-medium text-card-foreground">Theme</Text>
-            </View>
-            <ThemeSwitcher />
-          </View>
+        <View className="mb-8 px-4">
+          <ThemeSwitcher />
         </View>
 
         {/* Profile Section */}

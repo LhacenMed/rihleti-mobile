@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptic from "expo-haptics";
+// import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 interface MenuItemProps {
   icon?: string;
@@ -56,8 +57,18 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
   const handlePressIn = () => {
     setIsPressed(true);
+    // const options = {
+    //   enableVibrateFallback: true,
+    //   ignoreAndroidSystemSettings: false,
+    // };
     if (isDanger) {
-      Haptic.selectionAsync();
+      // Use native notification haptic for danger/warning context
+      Haptic.notificationAsync(Haptic.NotificationFeedbackType.Warning);
+      // ReactNativeHapticFeedback.trigger("effectClick");
+      // ReactNativeHapticFeedback.trigger("effectClick", options);
+    } else {
+      // Use native impact haptic for regular interactions
+      // Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
     }
     Animated.timing(fadeAnim, {
       toValue: 1,

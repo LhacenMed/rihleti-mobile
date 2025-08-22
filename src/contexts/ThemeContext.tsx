@@ -2,88 +2,12 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { View, useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import { vars } from "nativewind";
 import type { ThemeMode, ThemeContextType } from "../types/theme";
+import * as SystemUI from "expo-system-ui";
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const THEME_STORAGE_KEY = "@app_theme";
-
-// Define theme variables using NativeWind's vars()
-const themes = {
-  light: vars({
-    "--background": "255 255 255",
-    "--foreground": "10 10 10",
-    "--card": "255 255 255",
-    "--card-foreground": "10 10 10",
-    "--popover": "255 255 255",
-    "--popover-foreground": "10 10 10",
-    "--primary": "10 10 10",
-    "--primary-foreground": "250 250 250",
-    "--secondary": "245 245 245",
-    "--secondary-foreground": "10 10 10",
-    "--muted": "245 245 245",
-    "--muted-foreground": "115 115 115",
-    "--accent": "245 245 245",
-    "--accent-foreground": "10 10 10",
-    "--destructive": "239 68 68",
-    "--destructive-foreground": "250 250 250",
-    "--success": "34 197 94",
-    "--success-foreground": "250 250 250",
-    "--warning": "251 191 36",
-    "--warning-foreground": "10 10 10",
-    "--border": "229 229 229",
-    "--input": "229 229 229",
-    "--ring": "10 10 10",
-    "--radius": "8px",
-    "--sidebar-background": "248 250 252",
-    "--sidebar-foreground": "10 10 10",
-    "--sidebar-primary": "10 10 10",
-    "--sidebar-primary-foreground": "250 250 250",
-    "--sidebar-accent": "241 245 249",
-    "--sidebar-accent-foreground": "10 10 10",
-    "--sidebar-border": "229 229 229",
-    "--seat-window": "59 130 246",
-    "--seat-aisle": "34 197 94",
-    "--seat-middle": "251 191 36",
-  }),
-  dark: vars({
-    "--background": "10 10 10",
-    "--foreground": "250 250 250",
-    "--card": "10 10 10",
-    "--card-foreground": "250 250 250",
-    "--popover": "10 10 10",
-    "--popover-foreground": "250 250 250",
-    "--primary": "250 250 250",
-    "--primary-foreground": "10 10 10",
-    "--secondary": "38 38 38",
-    "--secondary-foreground": "250 250 250",
-    "--muted": "38 38 38",
-    "--muted-foreground": "163 163 163",
-    "--accent": "38 38 38",
-    "--accent-foreground": "250 250 250",
-    "--destructive": "220 38 38",
-    "--destructive-foreground": "250 250 250",
-    "--success": "22 163 74",
-    "--success-foreground": "250 250 250",
-    "--warning": "217 119 6",
-    "--warning-foreground": "250 250 250",
-    "--border": "38 38 38",
-    "--input": "38 38 38",
-    "--ring": "163 163 163",
-    "--radius": "8px",
-    "--sidebar-background": "15 23 42",
-    "--sidebar-foreground": "250 250 250",
-    "--sidebar-primary": "250 250 250",
-    "--sidebar-primary-foreground": "10 10 10",
-    "--sidebar-accent": "30 41 59",
-    "--sidebar-accent-foreground": "250 250 250",
-    "--sidebar-border": "38 38 38",
-    "--seat-window": "59 130 246",
-    "--seat-aisle": "34 197 94",
-    "--seat-middle": "251 191 36",
-  }),
-};
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -91,7 +15,7 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const systemColorScheme = useColorScheme();
-  console.log("System color scheme:", systemColorScheme); 
+  // console.log("System color scheme:", systemColorScheme);
   const [mode, setMode] = useState<ThemeMode>("system");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -100,6 +24,26 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     mode === "system" ? systemColorScheme || "light" : mode === "dark" ? "dark" : "light";
 
   const isDark = currentTheme === "dark";
+
+  // Update root background color when theme changes
+  useEffect(() => {
+    const updateRootBackground = async () => {
+      try {
+        // Use your CSS variables converted to hex colors
+        const backgroundColor = isDark
+          ? "#0a0a0a" // Dark theme (matches hsl(0, 0%, 4%))
+          : "#ffffff"; // Light theme (matches hsl(0, 0%, 100%))
+
+        await SystemUI.setBackgroundColorAsync(backgroundColor);
+      } catch (error) {
+        console.error("Failed to update root background color:", error);
+      }
+    };
+
+    if (!isLoading) {
+      updateRootBackground();
+    }
+  }, [isDark, isLoading]);
 
   // Load saved theme preference on mount
   useEffect(() => {
@@ -140,9 +84,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   return (
     <ThemeContext.Provider value={contextValue}>
-      <View style={themes[isDark ? "dark" : "light"]} className="flex-1">
-        {children}
-      </View>
+      <View className={`flex-1 ${isDark ? "dark" : ""}`}>{children}</View>
       <StatusBar style={isDark ? "light" : "dark"} />
     </ThemeContext.Provider>
   );

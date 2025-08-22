@@ -12,70 +12,74 @@ module.exports = {
         extend: {
             colors: {
                 // Core colors
-                background: "rgb(var(--background))",
-                foreground: "rgb(var(--foreground))",
+                background: "hsl(var(--background))",
+                foreground: "hsl(var(--foreground))",
                 card: {
-                    DEFAULT: "rgb(var(--card))",
-                    foreground: "rgb(var(--card-foreground))",
+                    DEFAULT: "hsl(var(--card))",
+                    foreground: "hsl(var(--card-foreground))",
                 },
                 popover: {
-                    DEFAULT: "rgb(var(--popover))",
-                    foreground: "rgb(var(--popover-foreground))",
+                    DEFAULT: "hsl(var(--popover))",
+                    foreground: "hsl(var(--popover-foreground))",
                 },
 
                 // Brand colors
                 primary: {
-                    DEFAULT: "rgb(var(--primary))",
-                    foreground: "rgb(var(--primary-foreground))",
+                    DEFAULT: "hsl(var(--primary))",
+                    foreground: "hsl(var(--primary-foreground))",
                 },
                 secondary: {
-                    DEFAULT: "rgb(var(--secondary))",
-                    foreground: "rgb(var(--secondary-foreground))",
+                    DEFAULT: "hsl(var(--secondary))",
+                    foreground: "hsl(var(--secondary-foreground))",
                 },
                 muted: {
-                    DEFAULT: "rgb(var(--muted))",
-                    foreground: "rgb(var(--muted-foreground))",
+                    DEFAULT: "hsl(var(--muted))",
+                    foreground: "hsl(var(--muted-foreground))",
                 },
                 accent: {
-                    DEFAULT: "rgb(var(--accent))",
-                    foreground: "rgb(var(--accent-foreground))",
+                    DEFAULT: "hsl(var(--accent))",
+                    foreground: "hsl(var(--accent-foreground))",
                 },
 
                 // State colors
                 destructive: {
-                    DEFAULT: "rgb(var(--destructive))",
-                    foreground: "rgb(var(--destructive-foreground))",
+                    DEFAULT: "hsl(var(--destructive))",
+                    foreground: "hsl(var(--destructive-foreground))",
                 },
                 success: {
-                    DEFAULT: "rgb(var(--success))",
-                    foreground: "rgb(var(--success-foreground))",
+                    DEFAULT: "hsl(var(--success))",
+                    foreground: "hsl(var(--success-foreground))",
                 },
                 warning: {
-                    DEFAULT: "rgb(var(--warning))",
-                    foreground: "rgb(var(--warning-foreground))",
+                    DEFAULT: "hsl(var(--warning))",
+                    foreground: "hsl(var(--warning-foreground))",
+                },
+                info: {
+                    DEFAULT: "hsl(var(--info))",
+                    foreground: "hsl(var(--info-foreground))",
                 },
 
                 // UI elements
-                border: "rgb(var(--border))",
-                input: "rgb(var(--input))",
-                ring: "rgb(var(--ring))",
+                border: "hsl(var(--border))",
+                input: "hsl(var(--input))",
+                ring: "hsl(var(--ring))",
 
                 // Specialized components
                 sidebar: {
-                    DEFAULT: "rgb(var(--sidebar-background))",
-                    foreground: "rgb(var(--sidebar-foreground))",
-                    primary: "rgb(var(--sidebar-primary))",
-                    "primary-foreground": "rgb(var(--sidebar-primary-foreground))",
-                    accent: "rgb(var(--sidebar-accent))",
-                    "accent-foreground": "rgb(var(--sidebar-accent-foreground))",
-                    border: "rgb(var(--sidebar-border))",
+                    DEFAULT: "hsl(var(--sidebar-background))",
+                    foreground: "hsl(var(--sidebar-foreground))",
+                    primary: "hsl(var(--sidebar-primary))",
+                    "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+                    accent: "hsl(var(--sidebar-accent))",
+                    "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+                    border: "hsl(var(--sidebar-border))",
                 },
 
                 // Custom app colors
                 seat: {
-                    window: "rgb(var(--seat-window))",
-                    aisle: "rgb(var(--seat-aisle))",
-                    middle: "rgb(var(--seat-middle))",
+                    window: "hsl(var(--seat-window))",
+                    aisle: "hsl(var(--seat-aisle))",
+                    middle: "hsl(var(--seat-middle))",
                 },
             },
             borderRadius: {

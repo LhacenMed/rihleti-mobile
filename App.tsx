@@ -1,4 +1,5 @@
 import "./global.css";
+import { View, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,6 +8,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 // Auth Context and Components
 import { AuthProvider, useAuth } from "@contexts/AuthContext";
@@ -24,12 +26,12 @@ import Explore from "@app/tabs/Explore";
 import Bookings from "@app/tabs/Bookings";
 import Settings from "@app/tabs/Settings";
 import Account from "@app/screens/Account";
-import CustomTabBar from "@components/TabBar";
+import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Theme Context
-import { ThemeProvider } from "@contexts/ThemeContext";
+import { ThemeProvider, useTheme } from "@contexts/ThemeContext";
 
 type RootStackParamList = {
   // Auth Screens
@@ -41,16 +43,69 @@ type RootStackParamList = {
     name: string;
   };
   // App Screens
-  MainTabs: undefined;
+  MainApp: undefined;
   Account: undefined;
 };
 
 const Tab = createMaterialTopTabNavigator();
 const RootStack = createStackNavigator<RootStackParamList>();
 
+// Material Top Tabs Navigator (nested inside Stack)
+const TopTabsNavigator = () => {
+  return (
+    <Tab.Navigator
+      tabBarPosition="bottom"
+      initialRouteName="Home"
+      // comment if you want to use the default tab bar
+      tabBar={(props) => <TabBar {...props} />}
+      screenOptions={{
+        tabBarStyle: { position: "relative", paddingBottom: 15 },
+        tabBarActiveTintColor: "black",
+        tabBarLabelStyle: { fontSize: 20 },
+        tabBarShowIcon: true,
+        tabBarShowLabel: false,
+        tabBarIndicatorStyle: { display: "none" },
+        tabBarPressColor: "transparent",
+        swipeEnabled: true, // Keep swipe animation enabled
+        animationEnabled: false, // Make swipe animation disabled when pressing a tab
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: "Home",
+        }}
+      />
+      <Tab.Screen
+        name="Explore"
+        component={Explore}
+        options={{
+          tabBarLabel: "Explore",
+        }}
+      />
+      <Tab.Screen
+        name="Bookings"
+        component={Bookings}
+        options={{
+          tabBarLabel: "Bookings",
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          tabBarLabel: "Settings",
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
 // Main Navigation Component
 const AppNavigator = () => {
   const { user, loading } = useAuth();
+  const { isDark } = useTheme();
 
   if (loading) {
     return <LoadingScreen />;
@@ -67,11 +122,43 @@ const AppNavigator = () => {
           // Authenticated screens
           <>
             <RootStack.Screen
-              name="MainTabs"
-              component={MyTab}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
+              name="MainApp"
+              component={TopTabsNavigator}
+              options={({ route }: any) => {
+                // Get the focused route name from the nested tab navigator
+                const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
+
+                return {
+                  headerShown: true,
+                  headerTitle: routeName,
+                  headerTitleStyle: {
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: isDark ? "#ffffff" : "#000000",
+                  },
+                  headerStyle: {
+                    backgroundColor: isDark ? "#000" : "#fff",
+                    elevation: 0,
+                    shadowOpacity: 0,
+                    borderBottomWidth: 1,
+                    borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                  },
+                  headerRight: () => (
+                    <View className="mr-4 flex-row items-center space-x-3">
+                      <TouchableOpacity className="p-2">
+                        <Ionicons name="search" size={24} color={isDark ? "#ffffff" : "#000000"} />
+                      </TouchableOpacity>
+                      <TouchableOpacity className="p-2">
+                        <Ionicons
+                          name="ellipsis-vertical"
+                          size={24}
+                          color={isDark ? "#ffffff" : "#000000"}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  ),
+                  ...TransitionPresets.SlideFromRightIOS,
+                };
               }}
             />
             <RootStack.Screen
@@ -91,7 +178,7 @@ const AppNavigator = () => {
               component={WelcomeScreen}
               options={{
                 headerShown: false,
-                ...TransitionPresets.ModalSlideFromBottomIOS,
+                ...TransitionPresets.SlideFromRightIOS,
               }}
             />
             <RootStack.Screen
@@ -190,71 +277,19 @@ const AppNavigator = () => {
   );
 };
 
-// Main App Component
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <BottomSheetModalProvider>
+        <AuthProvider>
           <ThemeProvider>
-            <AuthProvider>
+            <BottomSheetModalProvider>
               <AppNavigator />
               <Toast />
-            </AuthProvider>
+            </BottomSheetModalProvider>
           </ThemeProvider>
-        </BottomSheetModalProvider>
+        </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
-
-const MyTab = () => {
-  return (
-    <Tab.Navigator
-      tabBarPosition="bottom"
-      initialRouteName="Home"
-      // comment if you want to use the default tab bar
-      tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{
-        tabBarStyle: { position: "relative", paddingBottom: 15 },
-        tabBarActiveTintColor: "black",
-        tabBarLabelStyle: { fontSize: 20 },
-        tabBarShowIcon: true,
-        tabBarShowLabel: false,
-        tabBarIndicatorStyle: { display: "none" },
-        tabBarPressColor: "transparent",
-        swipeEnabled: true, // Keep swipe animation enabled
-        animationEnabled: false, // Make swipe animation disabled when pressing a tab
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
-        }}
-      />
-      <Tab.Screen
-        name="Explore"
-        component={Explore}
-        options={{
-          tabBarIcon: ({ color }) => <Ionicons name="call" size={24} color={color} />,
-        }}
-      />
-      <Tab.Screen
-        name="Bookings"
-        component={Bookings}
-        options={{
-          tabBarIcon: ({ color }) => <Ionicons name="call" size={24} color={color} />,
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          tabBarIcon: ({ color }) => <Ionicons name="settings" size={24} color={color} />,
-        }}
-      />
-    </Tab.Navigator>
-  );
-};

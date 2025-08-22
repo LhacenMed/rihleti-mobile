@@ -2,13 +2,12 @@ import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "@contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeSwitcher } from "../../components/ThemeSwitcher";
-import { useTheme } from "../../contexts/ThemeContext";
+import { ThemeSwitcher } from "@components/ThemeSwitcher";
+import { useTheme } from "@contexts/ThemeContext";
 
 const Settings = () => {
-  const insets = useSafeAreaInsets();
   const { user, signOut } = useAuth();
   const { isDark } = useTheme();
   const navigation = useNavigation();
@@ -25,17 +24,15 @@ const Settings = () => {
   };
 
   return (
-    <ScrollView className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <ScrollView className="flex-1 bg-background">
       <View className="p-5">
-        <Text className="mb-8 text-center text-3xl font-bold text-foreground">Settings</Text>
-
         {/* Theme Section */}
         <View className="mb-8">
           <Text className="mb-4 px-1 text-lg font-semibold text-foreground">Appearance</Text>
           <View className="mb-2 rounded-xl border border-border bg-card p-4">
             <View className="mb-3 flex-row items-center">
               <Ionicons name="color-palette-outline" size={24} color={isDark ? "#fff" : "#000"} />
-              <Text className="text-card-foreground ml-4 text-base font-medium">Theme</Text>
+              <Text className="ml-4 text-base font-medium text-card-foreground">Theme</Text>
             </View>
             <ThemeSwitcher />
           </View>
@@ -51,10 +48,10 @@ const Settings = () => {
             <View className="flex-1 flex-row items-center">
               <Ionicons name="person-outline" size={24} color={isDark ? "#fff" : "#000"} />
               <View className="ml-4 flex-1">
-                <Text className="text-card-foreground mb-1 text-base font-medium">
+                <Text className="mb-1 text-base font-medium text-card-foreground">
                   Account Details
                 </Text>
-                <Text className="text-muted-foreground text-sm">
+                <Text className="text-sm text-muted-foreground">
                   {user?.email || "View your account information"}
                 </Text>
               </View>
@@ -71,10 +68,10 @@ const Settings = () => {
             <View className="flex-1 flex-row items-center">
               <Ionicons name="notifications-outline" size={24} color={isDark ? "#fff" : "#000"} />
               <View className="ml-4 flex-1">
-                <Text className="text-card-foreground mb-1 text-base font-medium">
+                <Text className="mb-1 text-base font-medium text-card-foreground">
                   Notifications
                 </Text>
-                <Text className="text-muted-foreground text-sm">
+                <Text className="text-sm text-muted-foreground">
                   Manage your notification preferences
                 </Text>
               </View>
@@ -86,10 +83,10 @@ const Settings = () => {
             <View className="flex-1 flex-row items-center">
               <Ionicons name="shield-outline" size={24} color={isDark ? "#fff" : "#000"} />
               <View className="ml-4 flex-1">
-                <Text className="text-card-foreground mb-1 text-base font-medium">
+                <Text className="mb-1 text-base font-medium text-card-foreground">
                   Privacy & Security
                 </Text>
-                <Text className="text-muted-foreground text-sm">Manage your privacy settings</Text>
+                <Text className="text-sm text-muted-foreground">Manage your privacy settings</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
@@ -99,8 +96,8 @@ const Settings = () => {
             <View className="flex-1 flex-row items-center">
               <Ionicons name="language-outline" size={24} color={isDark ? "#fff" : "#000"} />
               <View className="ml-4 flex-1">
-                <Text className="text-card-foreground mb-1 text-base font-medium">Language</Text>
-                <Text className="text-muted-foreground text-sm">English</Text>
+                <Text className="mb-1 text-base font-medium text-card-foreground">Language</Text>
+                <Text className="text-sm text-muted-foreground">English</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
@@ -115,8 +112,8 @@ const Settings = () => {
             <View className="flex-1 flex-row items-center">
               <Ionicons name="help-circle-outline" size={24} color={isDark ? "#fff" : "#000"} />
               <View className="ml-4 flex-1">
-                <Text className="text-card-foreground mb-1 text-base font-medium">Help Center</Text>
-                <Text className="text-muted-foreground text-sm">Get help and support</Text>
+                <Text className="mb-1 text-base font-medium text-card-foreground">Help Center</Text>
+                <Text className="text-sm text-muted-foreground">Get help and support</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
@@ -126,8 +123,8 @@ const Settings = () => {
             <View className="flex-1 flex-row items-center">
               <Ionicons name="mail-outline" size={24} color={isDark ? "#fff" : "#000"} />
               <View className="ml-4 flex-1">
-                <Text className="text-card-foreground mb-1 text-base font-medium">Contact Us</Text>
-                <Text className="text-muted-foreground text-sm">Send us a message</Text>
+                <Text className="mb-1 text-base font-medium text-card-foreground">Contact Us</Text>
+                <Text className="text-sm text-muted-foreground">Send us a message</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={20} color={isDark ? "#999" : "#666"} />
@@ -137,17 +134,17 @@ const Settings = () => {
         {/* Logout Section */}
         <View className="mb-8 mt-5">
           <TouchableOpacity
-            className="bg-destructive flex-row items-center justify-center rounded-xl p-4"
+            className="flex-row items-center justify-center rounded-xl bg-destructive p-4"
             onPress={handleSignOut}
           >
             <Ionicons name="log-out-outline" size={20} color="white" />
-            <Text className="text-destructive-foreground ml-2 text-lg font-semibold">Sign Out</Text>
+            <Text className="ml-2 text-lg font-semibold text-destructive-foreground">Sign Out</Text>
           </TouchableOpacity>
         </View>
 
         {/* Version Section */}
         <View className="mb-8 items-center">
-          <Text className="text-muted-foreground text-sm">Version 1.0.0</Text>
+          <Text className="text-sm text-muted-foreground">Version 1.0.0</Text>
         </View>
       </View>
     </ScrollView>

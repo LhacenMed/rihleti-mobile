@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Animated,
+  ScrollView,
 } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 // import LocationInputs from "../components/LocationInputs";
@@ -72,22 +73,7 @@ export default function Page() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
-      <StatusBar barStyle="light-content" />
-
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Hey there</Text>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="notifications-outline" size={24} color="#fff" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.profileButton}>
-            <Ionicons name="person" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
+    <ScrollView className="flex-1 bg-background">
       {/* Navigation Icons */}
       <View style={styles.navContainer}>
         <TouchableOpacity style={[styles.navItem, styles.activeNavItem]}>
@@ -199,7 +185,7 @@ export default function Page() {
         onCitySelect={onCitySelect}
         type={activeInput}
       /> */}
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -239,6 +225,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 24,
+    marginTop: 24,
   },
   navItem: {
     alignItems: "center",

@@ -1,12 +1,7 @@
 import React from "react";
-import {
-  View,
-  // Text,
-  TouchableOpacity,
-  StyleSheet,
-  Animated,
-} from "react-native";
+import { View, Text, TouchableOpacity, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@contexts/ThemeContext";
 
 interface TabBarProps {
   state: any;
@@ -14,14 +9,13 @@ interface TabBarProps {
   navigation: any;
 }
 
-const CustomTabBar: React.FC<TabBarProps> = ({
+const TabBar: React.FC<TabBarProps> = ({
   state,
   // descriptors,
   navigation,
 }) => {
-  const animatedValues = React.useRef(
-    state.routes.map(() => new Animated.Value(0))
-  ).current;
+  const { isDark } = useTheme();
+  const animatedValues = React.useRef(state.routes.map(() => new Animated.Value(0))).current;
 
   const animateTab = (index: number, focused: boolean) => {
     Animated.spring(animatedValues[index], {
@@ -40,7 +34,7 @@ const CustomTabBar: React.FC<TabBarProps> = ({
   }, [state.index]);
 
   return (
-    <View style={styles.container}>
+    <View className="flex-row border-t border-border bg-background pb-2.5 pt-2.5">
       {state.routes.map((route: any, index: number) => {
         // const { options } = descriptors[route.key];
         const isFocused = state.index === index;
@@ -58,44 +52,40 @@ const CustomTabBar: React.FC<TabBarProps> = ({
         };
 
         const iconName =
-          route.name === "Home"
-            ? "home"
-            : route.name === "Settings"
-            ? "settings"
-            : "call";
+          route.name === "Home" ? "home" : route.name === "Settings" ? "settings" : "call";
+
+        const iconColor = isFocused
+          ? isDark
+            ? "#ffffff"
+            : "#000000"
+          : isDark
+            ? "#9ca3af"
+            : "#6b7280";
 
         return (
           <TouchableOpacity
             key={route.key}
             onPress={onPress}
-            style={styles.tab}
+            className="flex-1 items-center justify-center py-2"
             activeOpacity={1}
           >
             <Animated.View
-              style={[
-                styles.iconContainer,
-                {
-                  transform: [{ translateY: animatedValues[index] }],
-                },
-              ]}
+              className="items-center justify-center"
+              style={{
+                transform: [{ translateY: animatedValues[index] }],
+              }}
             >
-              <Ionicons
-                name={iconName as any}
-                size={24}
-                color={isFocused ? "#000" : "#666"}
-              />
+              <Ionicons name={iconName as any} size={24} color={iconColor} />
             </Animated.View>
 
             <Animated.Text
-              style={[
-                styles.label,
-                {
-                  opacity: animatedValues[index].interpolate({
-                    inputRange: [-8, 0],
-                    outputRange: [1, 0],
-                  }),
-                },
-              ]}
+              className="text-center text-xs font-medium text-foreground"
+              style={{
+                opacity: animatedValues[index].interpolate({
+                  inputRange: [-8, 0],
+                  outputRange: [1, 0],
+                }),
+              }}
             >
               {route.name}
             </Animated.Text>
@@ -106,31 +96,4 @@ const CustomTabBar: React.FC<TabBarProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    paddingBottom: 10,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
-  },
-  tab: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 8,
-  },
-  iconContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  label: {
-    fontSize: 12,
-    color: "#000",
-    fontWeight: "500",
-    textAlign: "center",
-  },
-});
-
-export default CustomTabBar;
+export default TabBar;

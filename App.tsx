@@ -26,6 +26,7 @@ import Explore from "@app/tabs/Explore";
 import Bookings from "@app/tabs/Bookings";
 import Settings from "@app/tabs/Settings";
 import Account from "@app/screens/Account";
+import SettingsTest from "@app/screens/SettingsTest";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -45,6 +46,7 @@ type RootStackParamList = {
   // App Screens
   MainApp: undefined;
   Account: undefined;
+  SettingsTest: undefined;
 };
 
 const Tab = createMaterialTopTabNavigator();
@@ -169,6 +171,14 @@ const AppNavigator = () => {
                 ...TransitionPresets.ModalPresentationIOS,
               }}
             />
+            <RootStack.Screen
+              name="SettingsTest"
+              component={SettingsTest}
+              options={{
+                headerShown: false,
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            />
           </>
         ) : (
           // Unauthenticated screens
@@ -178,7 +188,7 @@ const AppNavigator = () => {
               component={WelcomeScreen}
               options={{
                 headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
+                ...TransitionPresets.ModalSlideFromBottomIOS,
               }}
             />
             <RootStack.Screen

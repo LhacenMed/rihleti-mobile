@@ -20,7 +20,7 @@ const Page = ({ navigation }: RouterProps) => {
     navigation.navigate("LoginScreenTest");
   };
   const navigateToSettingsScreenTest = () => {
-    navigation.navigate("SettingsScreen");
+    navigation.navigate("SettingsTest");
   };
   const navigateToTrips = () => {
     navigation.navigate("TripsScreen");

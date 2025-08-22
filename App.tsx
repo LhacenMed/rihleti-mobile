@@ -167,7 +167,20 @@ const AppNavigator = () => {
               name="Account"
               component={Account}
               options={{
-                headerShown: false,
+                headerShown: true,
+                headerTitle: "Account",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: isDark ? "#ffffff" : "#000000",
+                },
+                headerStyle: {
+                  backgroundColor: isDark ? "#000" : "#fff",
+                  elevation: 0,
+                  shadowOpacity: 0,
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                },
                 ...TransitionPresets.ModalPresentationIOS,
               }}
             />
@@ -175,7 +188,20 @@ const AppNavigator = () => {
               name="SettingsTest"
               component={SettingsTest}
               options={{
-                headerShown: false,
+                headerShown: true,
+                headerTitle: "Settings",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: isDark ? "#ffffff" : "#000000",
+                },
+                headerStyle: {
+                  backgroundColor: isDark ? "#000" : "#fff",
+                  elevation: 0,
+                  shadowOpacity: 0,
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                },
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
@@ -196,7 +222,7 @@ const AppNavigator = () => {
               component={LoginScreen}
               options={{
                 headerShown: false,
-                ...TransitionPresets.ModalPresentationIOS,
+                ...TransitionPresets.SlideFromRightIOS,
               }}
             />
             {/* <RootStack.Screen
@@ -291,14 +317,14 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <AuthProvider>
-          <ThemeProvider>
+        <ThemeProvider>
+          <AuthProvider>
             <BottomSheetModalProvider>
               <AppNavigator />
               <Toast />
             </BottomSheetModalProvider>
-          </ThemeProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

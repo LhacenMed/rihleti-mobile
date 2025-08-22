@@ -15,13 +15,13 @@
  */
 
 // Icon exports
-export { default as RihletiLogo } from "./RihletiLogo";
+export { default as RihletiLogo } from "@components/icons/app-icons/RihletiLogo";
 
 // Re-export existing icons for consistency
-export { default as HomeIcon } from "~/components/icons/HomeIcon";
-export { default as ExploreIcon } from "~/components/icons/ExploreIcon";
-export { default as BookingsIcon } from "~/components/icons/BookingsIcon";
-export { default as SettingsIcon } from "~/components/icons/SettingsIcon";
+export { default as HomeIcon } from "@components/icons/tab-icons/HomeIcon";
+export { default as ExploreIcon } from "@components/icons/tab-icons/ExploreIcon";
+export { default as BookingsIcon } from "@components/icons/tab-icons/BookingsIcon";
+export { default as SettingsIcon } from "@components/icons/tab-icons/SettingsIcon";
 
 // Export icon types
 export type { IconProps } from "./types";

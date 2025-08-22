@@ -1,5 +1,5 @@
 import React from "react";
-import { LogoProps } from "./types";
+import { LogoProps } from "../types";
 import RihletiLogoSvg from "@assets/icons/rihleti-logo.svg";
 
 const RihletiLogo: React.FC<LogoProps> = ({

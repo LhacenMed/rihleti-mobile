@@ -23,8 +23,8 @@ import { Ionicons } from "@expo/vector-icons";
 const Settings = () => {
   // const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
   const insets = useSafeAreaInsets();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   // const themes = useContext(ThemeContext);
   // const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -82,10 +82,10 @@ const Settings = () => {
         style={[styles.scrollViewContainer, { backgroundColor }]}
         contentContainerStyle={{ paddingTop: 20 }}
         showsVerticalScrollIndicator={false}
-        scrollEnabled={!modalVisible}
+        // scrollEnabled
       >
         {/* Theme Section */}
-        {/* <View className="mb-8">
+        <View className="mb-8">
           <Text className="mb-4 px-1 text-lg font-semibold text-foreground">Appearance</Text>
           <View className="mb-2 rounded-xl border border-border bg-card p-4">
             <View className="mb-3 flex-row items-center">
@@ -94,7 +94,7 @@ const Settings = () => {
             </View>
             <ThemeSwitcher />
           </View>
-        </View> */}
+        </View>
 
         {/* Profile Section */}
         <Text style={[styles.firstSectionTitle, { color: sectionTitleColor }]}>Profile</Text>
@@ -154,7 +154,7 @@ const Settings = () => {
             isLast={false}
             showValue={true}
             showChevron={true}
-            onPress={() => setModalVisible(true)}
+            // onPress={() => setModalVisible(true)}
           />
           <MenuItem
             icon="earth"
@@ -164,7 +164,7 @@ const Settings = () => {
             isLast
             showValue={true}
             showChevron={true}
-            onPress={() => setLanguageModalVisible(true)}
+            // onPress={() => setLanguageModalVisible(true)}
           />
         </View>
         {/* Contact Section */}

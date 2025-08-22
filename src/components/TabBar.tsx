@@ -1,10 +1,10 @@
 import React from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
-import { useTheme } from "@contexts/ThemeContext";
-import HomeIcon from "@components/icons/HomeIcon";
-import ExploreIcon from "@components/icons/ExploreIcon";
-import BookingsIcon from "@components/icons/BookingsIcon";
-import SettingsIcon from "@components/icons/SettingsIcon";
+// import { useTheme } from "@contexts/ThemeContext";
+import HomeIcon from "~/components/icons/tab-icons/HomeIcon";
+import ExploreIcon from "~/components/icons/tab-icons/ExploreIcon";
+import BookingsIcon from "~/components/icons/tab-icons/BookingsIcon";
+import SettingsIcon from "~/components/icons/tab-icons/SettingsIcon";
 
 interface TabBarProps {
   state: any;
@@ -17,7 +17,7 @@ const TabBar: React.FC<TabBarProps> = ({
   // descriptors,
   navigation,
 }) => {
-  const { isDark } = useTheme();
+  // const { isDark } = useTheme();
   const animatedValues = React.useRef(state.routes.map(() => new Animated.Value(0))).current;
 
   const animateTab = (index: number, focused: boolean) => {

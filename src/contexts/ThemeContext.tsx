@@ -4,10 +4,91 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import type { ThemeMode, ThemeContextType } from "../types/theme";
 import * as SystemUI from "expo-system-ui";
+import { vars } from "nativewind";
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const THEME_STORAGE_KEY = "@app_theme";
+
+// Define theme variables using NativeWind's vars() function
+const themes = {
+  light: vars({
+    "--background": "0 0% 100%",
+    "--foreground": "0 0% 4%",
+    "--card": "0 0% 100%",
+    "--card-foreground": "0 0% 4%",
+    "--popover": "0 0% 100%",
+    "--popover-foreground": "0 0% 4%",
+    "--primary": "0 0% 4%",
+    "--primary-foreground": "0 0% 98%",
+    "--secondary": "0 0% 96%",
+    "--secondary-foreground": "0 0% 4%",
+    "--muted": "0 0% 96%",
+    "--muted-foreground": "0 0% 45%",
+    "--accent": "0 0% 96%",
+    "--accent-foreground": "0 0% 4%",
+    "--destructive": "0 84% 60%",
+    "--destructive-foreground": "0 0% 98%",
+    "--success": "142 76% 36%",
+    "--success-foreground": "0 0% 98%",
+    "--warning": "48 96% 56%",
+    "--warning-foreground": "0 0% 4%",
+    "--info": "200 98% 39%",
+    "--info-foreground": "0 0% 98%",
+    "--border": "0 0% 90%",
+    "--input": "0 0% 90%",
+    "--ring": "0 0% 4%",
+    "--radius": "8px",
+    "--sidebar-background": "210 40% 98%",
+    "--sidebar-foreground": "0 0% 4%",
+    "--sidebar-primary": "0 0% 4%",
+    "--sidebar-primary-foreground": "0 0% 98%",
+    "--sidebar-accent": "210 40% 96%",
+    "--sidebar-accent-foreground": "0 0% 4%",
+    "--sidebar-border": "0 0% 90%",
+    "--seat-window": "217 91% 60%",
+    "--seat-aisle": "142 76% 36%",
+    "--seat-middle": "48 96% 56%",
+  }),
+  dark: vars({
+    "--background": "0 0% 4%",
+    "--foreground": "0 0% 98%",
+    "--card": "0 0% 4%",
+    "--card-foreground": "0 0% 98%",
+    "--popover": "0 0% 4%",
+    "--popover-foreground": "0 0% 98%",
+    "--primary": "0 0% 98%",
+    "--primary-foreground": "0 0% 4%",
+    "--secondary": "0 0% 15%",
+    "--secondary-foreground": "0 0% 98%",
+    "--muted": "0 0% 15%",
+    "--muted-foreground": "0 0% 64%",
+    "--accent": "0 0% 15%",
+    "--accent-foreground": "0 0% 98%",
+    "--destructive": "0 63% 51%",
+    "--destructive-foreground": "0 0% 98%",
+    "--success": "142 70% 45%",
+    "--success-foreground": "0 0% 98%",
+    "--warning": "32 95% 44%",
+    "--warning-foreground": "0 0% 98%",
+    "--info": "200 98% 48%",
+    "--info-foreground": "0 0% 98%",
+    "--border": "0 0% 15%",
+    "--input": "0 0% 15%",
+    "--ring": "0 0% 64%",
+    "--radius": "8px",
+    "--sidebar-background": "222 84% 5%",
+    "--sidebar-foreground": "0 0% 98%",
+    "--sidebar-primary": "0 0% 98%",
+    "--sidebar-primary-foreground": "0 0% 4%",
+    "--sidebar-accent": "215 28% 17%",
+    "--sidebar-accent-foreground": "0 0% 98%",
+    "--sidebar-border": "0 0% 15%",
+    "--seat-window": "217 91% 60%",
+    "--seat-aisle": "142 76% 36%",
+    "--seat-middle": "48 96% 56%",
+  }),
+};
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -15,7 +96,6 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const systemColorScheme = useColorScheme();
-  // console.log("System color scheme:", systemColorScheme);
   const [mode, setMode] = useState<ThemeMode>("system");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -84,7 +164,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   return (
     <ThemeContext.Provider value={contextValue}>
-      <View className={`flex-1 ${isDark ? "dark" : ""}`}>{children}</View>
+      <View style={themes[currentTheme]} className="flex-1">
+        {children}
+      </View>
       <StatusBar style={isDark ? "light" : "dark"} />
     </ThemeContext.Provider>
   );

@@ -8,13 +8,8 @@ interface HomeIconProps {
   height?: number;
 }
 
-const HomeIcon: React.FC<HomeIconProps> = ({
-  isFocused,
-  width = 24,
-  height = 24,
-  ...props
-}) => {
-  const isDark = useTheme();
+const HomeIcon: React.FC<HomeIconProps> = ({ isFocused, width = 24, height = 24, ...props }) => {
+  const { isDark } = useTheme();
   const fillColor = isDark ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
   const strokeColor = "rgb(124, 124, 124)";
   return (

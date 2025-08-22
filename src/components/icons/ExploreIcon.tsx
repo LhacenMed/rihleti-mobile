@@ -17,7 +17,7 @@ const ExploreIcon: React.FC<ExploreIconProps> = ({
   height = 24,
   ...props
 }) => {
-  const isDark = useTheme();
+  const { isDark } = useTheme();
   const fillColor = isDark ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
   const strokeColor = "rgb(124, 124, 124)";
   return (

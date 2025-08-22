@@ -20,6 +20,7 @@ interface MenuItemProps {
   isLast?: boolean;
   isDanger?: boolean;
   onPress?: () => void;
+  disabled?: boolean;
   showValue?: boolean;
   showChevron?: boolean;
   loading?: boolean;
@@ -34,6 +35,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
   isLast,
   isDanger,
   onPress,
+  disabled,
   showValue = true,
   showChevron = true,
   loading = false,
@@ -41,7 +43,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
   const [isPressed, setIsPressed] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // const themes = useContext(ThemeContext);
-  const isDark = useTheme();
+  const { isDark } = useTheme();
 
   const backgroundColor = isDark ? "#1E1E1E" : "#ffffff";
   const dimBackgroundColor = isDark ? "#2A2A2A" : "rgb(241, 241, 241)";
@@ -96,7 +98,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       onPress={onPress}
-      disabled={loading}
+      disabled={loading || disabled}
     >
       <Animated.View style={containerStyle}>
         <View style={styles.menuItemLeft}>

@@ -18,10 +18,10 @@
 export { default as RihletiLogo } from "./RihletiLogo";
 
 // Re-export existing icons for consistency
-export { default as HomeIcon } from "@assets/icons/HomeIcon";
-export { default as ExploreIcon } from "@assets/icons/ExploreIcon";
-export { default as BookingsIcon } from "@assets/icons/BookingsIcon";
-export { default as SettingsIcon } from "@assets/icons/SettingsIcon";
+export { default as HomeIcon } from "~/components/icons/HomeIcon";
+export { default as ExploreIcon } from "~/components/icons/ExploreIcon";
+export { default as BookingsIcon } from "~/components/icons/BookingsIcon";
+export { default as SettingsIcon } from "~/components/icons/SettingsIcon";
 
 // Export icon types
 export type { IconProps } from "./types";

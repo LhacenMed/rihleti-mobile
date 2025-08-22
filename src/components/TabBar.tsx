@@ -1,10 +1,10 @@
 import React from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
 import { useTheme } from "@contexts/ThemeContext";
-import HomeIcon from "@assets/icons/HomeIcon";
-import ExploreIcon from "@assets/icons/ExploreIcon";
-import BookingsIcon from "@assets/icons/BookingsIcon";
-import SettingsIcon from "@assets/icons/SettingsIcon";
+import HomeIcon from "@components/icons/HomeIcon";
+import ExploreIcon from "@components/icons/ExploreIcon";
+import BookingsIcon from "@components/icons/BookingsIcon";
+import SettingsIcon from "@components/icons/SettingsIcon";
 
 interface TabBarProps {
   state: any;

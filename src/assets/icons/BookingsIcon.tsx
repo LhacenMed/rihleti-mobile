@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import Svg, { Path } from "react-native-svg";
-// import { ThemeContext } from "../../context/ThemeContext";
+import { useTheme } from "@contexts/ThemeContext";
 
 interface BookingsIconProps {
   isFocused: boolean;
@@ -15,11 +15,8 @@ const BookingsIcon: React.FC<BookingsIconProps> = ({
   height = 24,
   ...props
 }) => {
-  // const { theme } = useContext(ThemeContext);
-  // const fillColor = theme === "dark" ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
-  const fillColor = "rgb(0, 0, 0)";
-  // const strokeColor =
-  //   theme === "dark" ? "rgb(124, 124, 124)" : "rgb(124, 124, 124)";
+  const isDark = useTheme();
+  const fillColor = isDark ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
   const strokeColor = "rgb(124, 124, 124)";
   return (
     <>

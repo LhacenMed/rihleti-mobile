@@ -1,7 +1,10 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Animated } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, TouchableOpacity, Animated } from "react-native";
 import { useTheme } from "@contexts/ThemeContext";
+import HomeIcon from "@assets/icons/HomeIcon";
+import ExploreIcon from "@assets/icons/ExploreIcon";
+import BookingsIcon from "@assets/icons/BookingsIcon";
+import SettingsIcon from "@assets/icons/SettingsIcon";
 
 interface TabBarProps {
   state: any;
@@ -33,6 +36,23 @@ const TabBar: React.FC<TabBarProps> = ({
     });
   }, [state.index]);
 
+  const renderIcon = (routeName: string, isFocused: boolean) => {
+    const iconProps = { isFocused, width: 24, height: 24 };
+
+    switch (routeName) {
+      case "Home":
+        return <HomeIcon {...iconProps} />;
+      case "Explore":
+        return <ExploreIcon {...iconProps} />;
+      case "Bookings":
+        return <BookingsIcon {...iconProps} />;
+      case "Settings":
+        return <SettingsIcon {...iconProps} />;
+      default:
+        return <HomeIcon {...iconProps} />;
+    }
+  };
+
   return (
     <View className="flex-row border-t border-border bg-background pb-2.5 pt-2.5">
       {state.routes.map((route: any, index: number) => {
@@ -51,17 +71,6 @@ const TabBar: React.FC<TabBarProps> = ({
           }
         };
 
-        const iconName =
-          route.name === "Home" ? "home" : route.name === "Settings" ? "settings" : "call";
-
-        const iconColor = isFocused
-          ? isDark
-            ? "#ffffff"
-            : "#000000"
-          : isDark
-            ? "#9ca3af"
-            : "#6b7280";
-
         return (
           <TouchableOpacity
             key={route.key}
@@ -75,7 +84,7 @@ const TabBar: React.FC<TabBarProps> = ({
                 transform: [{ translateY: animatedValues[index] }],
               }}
             >
-              <Ionicons name={iconName as any} size={24} color={iconColor} />
+              {renderIcon(route.name, isFocused)}
             </Animated.View>
 
             <Animated.Text

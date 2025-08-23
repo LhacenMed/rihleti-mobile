@@ -13,13 +13,13 @@ const THEME_STORAGE_KEY = "@app_theme";
 // Define theme variables using NativeWind's vars() function
 const themes = {
   light: vars({
-    "--background": "0 0% 100%",
+    "--background": "13 25% 97%",
     "--foreground": "0 0% 4%",
     "--card": "0 0% 100%",
     "--card-foreground": "0 0% 4%",
     "--popover": "0 0% 100%",
     "--popover-foreground": "0 0% 4%",
-    "--primary": "0 0% 4%",
+    "--primary": "15 87% 56%",
     "--primary-foreground": "0 0% 98%",
     "--secondary": "0 0% 96%",
     "--secondary-foreground": "0 0% 4%",
@@ -51,13 +51,13 @@ const themes = {
     "--seat-middle": "48 96% 56%",
   }),
   dark: vars({
-    "--background": "0 0% 4%",
+    "--background": "13 54% 4%",
     "--foreground": "0 0% 98%",
     "--card": "0 0% 4%",
     "--card-foreground": "0 0% 98%",
     "--popover": "0 0% 4%",
     "--popover-foreground": "0 0% 98%",
-    "--primary": "0 0% 98%",
+    "--primary": "15 87% 56%",
     "--primary-foreground": "0 0% 4%",
     "--secondary": "0 0% 15%",
     "--secondary-foreground": "0 0% 98%",

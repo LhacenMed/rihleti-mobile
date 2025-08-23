@@ -1,28 +1,47 @@
-import React, { useRef, useMemo, useCallback } from "react";
-import { View, Text, TouchableOpacity, StatusBar, SafeAreaView } from "react-native";
+import React, { useRef, useCallback, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+  SafeAreaView,
+  // TouchableWithoutFeedback,
+  Pressable,
+} from "react-native";
 import {
   BottomSheetModal,
-  BottomSheetView,
-  BottomSheetBackdrop,
-  TouchableHighlight,
+  // BottomSheetView,
+  // BottomSheetBackdrop,
+  // TouchableHighlight,
 } from "@gorhom/bottom-sheet";
-import EmailBottomSheet from "../../components/EmailBottomSheet";
-import { Button } from "../../components/ui/button";
-import { RihletiLogo } from "../../components/icons";
+import EmailBottomSheet from "@components/EmailBottomSheet";
+import { Button } from "@components/ui/button";
+import { GoogleLogo, RihletiLogo } from "@components/icons";
+// import { Ionicons } from "@expo/vector-icons";
+import { LoaderFive, LoaderOne } from "@components/ui/loader";
 
 interface Props {
   navigation: any;
 }
 
-export default function WelcomeScreen({ navigation }: Props) {
-  // BottomSheet refs
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const emailBottomSheetRef = useRef<BottomSheetModal>(null);
+const LinkText = ({ children, onPress }: { children: React.ReactNode; onPress: () => void }) => {
+  const [pressed, setPressed] = useState(false);
 
-  // Callbacks - addressing missing handlers from roadmap
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
+  return (
+    <Pressable
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onPress={onPress}
+    >
+      <Text className={`text-sm underline ${pressed ? "text-primary/50" : "text-primary"}`}>
+        {children}
+      </Text>
+    </Pressable>
+  );
+};
+
+export default function WelcomeScreen({ navigation }: Props) {
+  const emailBottomSheetRef = useRef<BottomSheetModal>(null);
 
   const handlePresentEmailModal = useCallback(() => {
     emailBottomSheetRef.current?.present();
@@ -38,28 +57,12 @@ export default function WelcomeScreen({ navigation }: Props) {
     [navigation]
   );
 
-  // Render backdrop
-  const renderBackdrop = useCallback(
-    (props: any) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        opacity={0.5}
-        enableTouchThrough={false}
-      />
-    ),
-    []
-  );
-
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      <StatusBar barStyle="light-content" />
-
+    <SafeAreaView className="flex-1 bg-background">
       {/* Contact us Button */}
       <View className="absolute right-4 top-12 z-10">
         <TouchableOpacity>
-          <Text className="text-base font-medium text-gray-400">Contact us</Text>
+          <Text className="text-base font-medium text-muted-foreground">Contact us</Text>
         </TouchableOpacity>
       </View>
 
@@ -70,15 +73,10 @@ export default function WelcomeScreen({ navigation }: Props) {
 
       {/* Bottom Authentication Buttons */}
       <View className="px-6 pb-12">
-        {/* Continue with Password Button */}
+        {/* Sign up free Button */}
         <View className="mb-4">
-          <Button
-            variant="default"
-            size="primary"
-            onPress={() => navigation.navigate("Login")}
-            className="bg-white"
-          >
-            🔒 Continue with Password
+          <Button variant="default" onPress={() => navigation.navigate("Login")}>
+            <Text className="text-md text-white">Sign up free</Text>
           </Button>
         </View>
 
@@ -86,67 +84,59 @@ export default function WelcomeScreen({ navigation }: Props) {
         <View className="mb-4">
           <Button
             variant="outline"
-            size="primary"
             className="border-gray-600 bg-gray-800"
             onPress={handlePresentEmailModal}
             textClassName="text-white"
           >
-            G Continue with Google
+            <GoogleLogo size={20} />
+            <Text className="ml-4 text-md text-foreground">Continue with Google</Text>
           </Button>
         </View>
 
-        {/* Sign up Button */}
+        {/* Continue with email Button */}
         <View className="mb-8">
           <Button
             variant="outline"
-            size="primary"
             onPress={() => navigation.navigate("SignUp")}
             className="border-gray-600 bg-gray-800"
             textClassName="text-white"
           >
-            Sign up
+            {/* <LoaderFive text="loading..." /> */}
+            {/* <LoaderOne /> */}
+            <Text className="ml-4 text-md text-foreground">Continue with email</Text>
           </Button>
         </View>
 
         {/* Terms and Privacy Policy */}
-        <View className="flex-row items-center justify-center">
-          <TouchableHighlight onPress={handlePresentModalPress}>
-            <Text className="text-center text-sm text-gray-400">
+        <View className="items-center justify-center px-4">
+          <View className="flex-row flex-wrap justify-center">
+            <Text className="text-center text-sm leading-5 text-gray-400">
               I confirm that I have read and agree to Rihleti's{" "}
-              <Text className="underline">Terms of Use</Text> and{" "}
-              <Text className="underline">Privacy Policy</Text>
             </Text>
-          </TouchableHighlight>
+            <LinkText
+              onPress={() =>
+                navigation.navigate("WebView", {
+                  link: "https://rihleti.vercel.app/legal/terms-of-service",
+                  title: "Terms of Use",
+                })
+              }
+            >
+              Terms of Use
+            </LinkText>
+            <Text className="text-center text-sm leading-5 text-gray-400"> and </Text>
+            <LinkText
+              onPress={() =>
+                navigation.navigate("WebView", {
+                  link: "https://rihleti.vercel.app/legal/privacy-policy",
+                  title: "Privacy Policy",
+                })
+              }
+            >
+              Privacy Policy
+            </LinkText>
+          </View>
         </View>
       </View>
-
-      {/* About Bottom Sheet Modal */}
-      <BottomSheetModal
-        ref={bottomSheetModalRef}
-        enableDismissOnClose={true}
-        backdropComponent={renderBackdrop}
-      >
-        <BottomSheetView className="flex-1 items-center p-6">
-          <Text className="mb-4 text-center text-2xl font-bold text-black">About Rihleti ✈️</Text>
-          <Text className="mb-4 text-center text-base leading-6 text-gray-600">
-            Rihleti is your ultimate travel companion, designed to make your journeys seamless and
-            memorable.
-          </Text>
-          <Text className="mb-4 text-center text-base leading-6 text-gray-600">
-            • Plan your trips with ease{"\n"}• Discover hidden gems{"\n"}• Connect with fellow
-            travelers{"\n"}• Track your adventures
-          </Text>
-          <TouchableOpacity
-            className="mt-4 rounded-lg bg-[#606c38] px-6 py-3"
-            onPress={() => {
-              bottomSheetModalRef.current?.dismiss();
-              navigation.navigate("SignUp");
-            }}
-          >
-            <Text className="text-base font-semibold text-white">Get Started</Text>
-          </TouchableOpacity>
-        </BottomSheetView>
-      </BottomSheetModal>
 
       {/* Email Bottom Sheet Modal */}
       <EmailBottomSheet

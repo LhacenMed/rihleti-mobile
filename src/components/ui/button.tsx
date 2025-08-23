@@ -13,7 +13,7 @@ import {
 // Button variant configurations using Tailwind-style class names
 const buttonVariants = {
   variant: {
-    default: "bg-white border border-gray-200",
+    default: "bg-primary border border-primary",
     primary: "bg-blue-500 border border-blue-500",
     destructive: "bg-red-500 border border-red-500",
     outline: "bg-transparent border border-gray-200",
@@ -22,7 +22,7 @@ const buttonVariants = {
     link: "bg-transparent border border-transparent",
   },
   size: {
-    default: "h-9 px-4 py-2 rounded-md",
+    default: "h-[42px] px-4 py-2 w-full rounded-lg",
     sm: "h-8 px-3 py-1.5 rounded-md text-xs",
     lg: "h-10 px-8 py-2.5 rounded-md text-base",
     xl: "h-12 px-10 py-3 rounded-md text-lg",
@@ -30,13 +30,13 @@ const buttonVariants = {
     primary: "h-[42px] px-4 py-2 rounded-full w-full",
   },
   textVariant: {
-    default: "text-black font-medium",
-    primary: "text-white font-medium",
-    destructive: "text-white font-medium",
-    outline: "text-gray-700 font-medium",
-    secondary: "text-gray-700 font-medium",
-    ghost: "text-gray-700 font-medium",
-    link: "text-blue-500 font-medium underline",
+    default: "text-white text-md",
+    primary: "text-white font-medium text-md",
+    destructive: "text-white font-medium text-md",
+    outline: "text-gray-700 text-lg",
+    secondary: "text-gray-700 font-medium text-md",
+    ghost: "text-gray-700 font-medium text-md",
+    link: "text-blue-500 font-medium underline text-md",
   },
 };
 

@@ -9,10 +9,10 @@ import {
   StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "@contexts/AuthContext";
 //@ts-ignore
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
+import { Input } from "@components/ui/input";
+import { Button } from "@components/ui/button";
 
 interface Props {
   navigation: any;
@@ -53,7 +53,6 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <View className="flex-1 bg-black">
-      <StatusBar hidden />
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}

@@ -73,10 +73,7 @@ const EmailBottomSheet = forwardRef<BottomSheetModal, EmailBottomSheetProps>(
         keyboardBehavior="extend"
         keyboardBlurBehavior="restore"
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="flex-1"
-        >
+        <View className="flex-1">
           <BottomSheetView className="flex-1 px-6 py-8">
             <Text className="mb-6 text-center text-2xl font-bold text-black">{title}</Text>
 
@@ -98,7 +95,7 @@ const EmailBottomSheet = forwardRef<BottomSheetModal, EmailBottomSheetProps>(
                 autoCorrect={false}
                 autoComplete="email"
               />
-              <BottomSheetTextInput value="Awesome 🎉" style={styles.textInput} />
+              <BottomSheetTextInput value="Awesome 🎉" />
               {email.length > 0 && !isValidEmail && (
                 <Text className="mt-2 text-sm text-red-500">
                   Please enter a valid email address
@@ -120,7 +117,7 @@ const EmailBottomSheet = forwardRef<BottomSheetModal, EmailBottomSheetProps>(
               </Text>
             </TouchableOpacity>
           </BottomSheetView>
-        </KeyboardAvoidingView>
+        </View>
       </BottomSheetModal>
     );
   }

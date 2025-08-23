@@ -16,6 +16,7 @@
 
 // Icon exports
 export { default as RihletiLogo } from "@components/icons/app-icons/RihletiLogo";
+export { default as GoogleLogo } from "@components/icons/app-icons/GoogleLogo";
 
 // Re-export existing icons for consistency
 export { default as HomeIcon } from "@components/icons/tab-icons/HomeIcon";

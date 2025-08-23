@@ -27,6 +27,7 @@ import Bookings from "@app/tabs/Bookings";
 import Settings from "@app/tabs/Settings";
 import Account from "@app/screens/Account";
 import SettingsTest from "@app/screens/SettingsTest";
+import WebViewScreen from "@app/screens/WebViewScreen";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
@@ -48,6 +49,10 @@ type RootStackParamList = {
   MainApp: undefined;
   Account: undefined;
   SettingsTest: undefined;
+  WebView: {
+    link: string;
+    title?: string;
+  };
 };
 
 const Tab = createMaterialTopTabNavigator();
@@ -206,6 +211,14 @@ const AppNavigator = () => {
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
+            <RootStack.Screen
+              name="WebView"
+              component={WebViewScreen}
+              options={{
+                headerShown: false,
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            />
           </>
         ) : (
           // Unauthenticated screens
@@ -307,6 +320,14 @@ const AppNavigator = () => {
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
+            <RootStack.Screen
+              name="WebView"
+              component={WebViewScreen}
+              options={{
+                headerShown: false,
+                ...TransitionPresets.ModalPresentationIOS,
+              }}
+            />
           </>
         )}
       </RootStack.Navigator>
@@ -322,6 +343,7 @@ export default function App() {
           <AuthProvider>
             <ModalPresenterParent>
               <BottomSheetModalProvider>
+                <StatusBar style="auto" />
                 <AppNavigator />
                 <Toast />
               </BottomSheetModalProvider>

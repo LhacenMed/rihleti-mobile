@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from "react-native";
-import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 
 interface EmailBottomSheetProps {
   onEmailSubmit: (email: string) => void;
@@ -97,6 +98,7 @@ const EmailBottomSheet = forwardRef<BottomSheetModal, EmailBottomSheetProps>(
                 autoCorrect={false}
                 autoComplete="email"
               />
+              <BottomSheetTextInput value="Awesome 🎉" style={styles.textInput} />
               {email.length > 0 && !isValidEmail && (
                 <Text className="mt-2 text-sm text-red-500">
                   Please enter a valid email address
@@ -123,6 +125,28 @@ const EmailBottomSheet = forwardRef<BottomSheetModal, EmailBottomSheetProps>(
     );
   }
 );
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "grey",
+  },
+  textInput: {
+    alignSelf: "stretch",
+    marginHorizontal: 12,
+    marginBottom: 12,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: "grey",
+    color: "white",
+    textAlign: "center",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+});
 
 EmailBottomSheet.displayName = "EmailBottomSheet";
 

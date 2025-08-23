@@ -1,15 +1,44 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, TouchableOpacity, StatusBar } from "react-native";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { FIREBASE_AUTH } from "../../FirebaseConfig";
+import { Text, View, Button, TouchableOpacity } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuth } from "@contexts/AuthContext";
+import { showModal } from "@whitespectre/rn-modal-presenter";
+import Modal from "~/components/ui/modal";
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
 }
 
+// Helper function to show the logout confirmation modal
+const showLogoutModal = (onConfirmLogout: () => void) => {
+  return showModal(Modal, {
+    children: (
+      <View className="px-4 py-5">
+        <Text className="mb-3 text-center text-lg font-semibold text-foreground">
+          Confirm log out?
+        </Text>
+        <Text className="text-center text-sm leading-5 text-muted-foreground">
+          Logging out won't delete any data. You can sign back into this account anytime.
+        </Text>
+      </View>
+    ),
+    buttons: [
+      {
+        text: "Cancel",
+        style: "cancel" as const,
+      },
+      {
+        text: "Log out",
+        style: "destructive" as const,
+        onPress: onConfirmLogout,
+      },
+    ],
+  });
+};
+
 const Page = ({ navigation }: RouterProps) => {
+  const { signOut } = useAuth();
+
   const navigateToSplash = () => {
     navigation.navigate("Splash");
   };
@@ -37,6 +66,7 @@ const Page = ({ navigation }: RouterProps) => {
     try {
       // await FIREBASE_AUTH.signOut();
       // await AsyncStorage.setItem("@viewedOnboarding", "true");
+      await signOut();
       navigation.reset({
         index: 0,
         routes: [{ name: "WelcomeScreen" }],
@@ -44,6 +74,10 @@ const Page = ({ navigation }: RouterProps) => {
     } catch (error) {
       console.error("Error during logout", error);
     }
+  };
+
+  const showLogoutConfirmation = () => {
+    showLogoutModal(handleLogout);
   };
 
   return (
@@ -61,37 +95,11 @@ const Page = ({ navigation }: RouterProps) => {
         >
           <Text className="text-center text-destructive-foreground">Clear Onboarding</Text>
         </TouchableOpacity>
-        <Button onPress={handleLogout} title="Logout" />
+        <Button onPress={showLogoutConfirmation} title="Logout" />
+        <Button onPress={showLogoutConfirmation} title="Open Modal" />
       </View>
     </View>
   );
 };
 
 export default Page;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    paddingTop: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: "600",
-  },
-  clearOnboarding: {
-    backgroundColor: "red",
-    borderRadius: 6,
-    marginTop: 50,
-    padding: 10,
-  },
-});

@@ -41,7 +41,6 @@ const MenuItem: React.FC<MenuItemProps> = ({
   showChevron = true,
   loading = false,
 }) => {
-  const [isPressed, setIsPressed] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // const themes = useContext(ThemeContext);
   const { isDark } = useTheme();
@@ -56,19 +55,19 @@ const MenuItem: React.FC<MenuItemProps> = ({
   const chevronColor = isDark ? "#666666" : "rgb(142, 142, 142)";
 
   const handlePressIn = () => {
-    setIsPressed(true);
+
     // const options = {
     //   enableVibrateFallback: true,
     //   ignoreAndroidSystemSettings: false,
     // };
+
     if (isDanger) {
       // Use native notification haptic for danger/warning context
-      Haptic.notificationAsync(Haptic.NotificationFeedbackType.Warning);
+      Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
       // ReactNativeHapticFeedback.trigger("effectClick");
       // ReactNativeHapticFeedback.trigger("effectClick", options);
     } else {
       // Use native impact haptic for regular interactions
-      // Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
     }
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -78,7 +77,6 @@ const MenuItem: React.FC<MenuItemProps> = ({
   };
 
   const handlePressOut = () => {
-    setIsPressed(false);
     Animated.timing(fadeAnim, {
       toValue: 0,
       useNativeDriver: false,

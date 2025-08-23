@@ -29,6 +29,7 @@ import Account from "@app/screens/Account";
 import SettingsTest from "@app/screens/SettingsTest";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Theme Context
@@ -319,10 +320,12 @@ export default function App() {
       <SafeAreaProvider>
         <ThemeProvider>
           <AuthProvider>
-            <BottomSheetModalProvider>
-              <AppNavigator />
-              <Toast />
-            </BottomSheetModalProvider>
+            <ModalPresenterParent>
+              <BottomSheetModalProvider>
+                <AppNavigator />
+                <Toast />
+              </BottomSheetModalProvider>
+            </ModalPresenterParent>
           </AuthProvider>
         </ThemeProvider>
       </SafeAreaProvider>

@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, StatusBar, ScrollView, Alert } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+// import { useSafeAreaInsets } from "react-native-safe-area-context";
 // import { NavigationProp, useNavigation } from "@react-navigation/native";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import MenuItem from "@components/MenuItem";
@@ -10,7 +10,9 @@ import { useTheme } from "@contexts/ThemeContext";
 import { useAuth } from "@contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeSwitcher } from "~/components/ThemeSwitcher";
-import { Ionicons } from "@expo/vector-icons";
+// import { Ionicons } from "@expo/vector-icons";
+import { showModal } from "@whitespectre/rn-modal-presenter";
+import Modal from "@components/ui/modal";
 // import { translations as en } from "../translations/en";
 // import { translations as fr } from "../translations/fr";
 // import { translations as ar } from "../translations/ar";
@@ -22,14 +24,14 @@ import { Ionicons } from "@expo/vector-icons";
 
 const Settings = () => {
   // const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
-  const insets = useSafeAreaInsets();
+  // const insets = useSafeAreaInsets();
   // const [modalVisible, setModalVisible] = useState(false);
   // const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   // const themes = useContext(ThemeContext);
   // const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { isDark } = useTheme();
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const navigation = useNavigation();
 
   // const translationsMap: Record<string, typeof en> = {
@@ -44,7 +46,7 @@ const Settings = () => {
   // const selectedTranslations = translationsMap[selectedLanguage];
 
   const backgroundColor = isDark ? "#171717" : "rgb(249, 249, 249)";
-  const headerTextColor = isDark ? "rgb(249, 249, 249)" : "#171717";
+  // const headerTextColor = isDark ? "rgb(249, 249, 249)" : "#171717";
   const sectionBackgroundColor = isDark ? "#2A2A2A" : "#ffffff";
   const sectionTitleColor = "#666666";
 
@@ -63,17 +65,40 @@ const Settings = () => {
   };
 
   const handleLogout = async () => {
-    setLogoutLoading(true);
-    try {
-      Alert.alert("Sign Out", "Are you sure you want to sign out?", [
-        { text: "Cancel", style: "cancel" },
-        { text: "Sign Out", style: "destructive", onPress: signOut },
-      ]);
-    } catch (error) {
-      console.error("Error during logout", error);
-    } finally {
-      setLogoutLoading(false);
-    }
+    const handleSignOut = async () => {
+      setLogoutLoading(true);
+      try {
+        await signOut();
+      } catch (error) {
+        console.error("Error during logout", error);
+      } finally {
+        setLogoutLoading(false);
+      }
+    };
+
+    showModal(Modal, {
+      children: (
+        <View className="px-4 py-5">
+          <Text className="mb-3 text-center text-lg font-semibold text-card-foreground">
+            Sign Out
+          </Text>
+          <Text className="text-center text-sm leading-5 text-muted-foreground">
+            Are you sure you want to sign out?
+          </Text>
+        </View>
+      ),
+      buttons: [
+        {
+          text: "Cancel",
+          style: "cancel" as const,
+        },
+        {
+          text: "Sign Out",
+          style: "destructive" as const,
+          onPress: handleSignOut,
+        },
+      ],
+    });
   };
 
   return (

@@ -1,7 +1,16 @@
 import React, { useRef, useEffect } from "react";
-import { Text, View, Animated, TouchableWithoutFeedback, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  Animated,
+  TouchableWithoutFeedback,
+  // Pressable,
+  BackHandler,
+} from "react-native";
 import { ModalContentProps } from "@whitespectre/rn-modal-presenter";
 import { useTheme } from "@contexts/ThemeContext";
+import * as Haptic from "expo-haptics";
+// import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 interface ModalButton {
   text: string;
@@ -26,6 +35,13 @@ const Modal = ({
   const { isDark } = useTheme();
 
   useEffect(() => {
+    // Trigger light haptic feedback when modal appears
+    // TODO: change to ReactNativeHapticFeedback.trigger("effectClick"); when on production or running development build
+    // Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+    // ReactNativeHapticFeedback.trigger("effectClick");
+    // ReactNativeHapticFeedback.trigger("effectClick", options);
+    Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+
     // Slide up animation on mount
     Animated.parallel([
       Animated.timing(slideAnim, {
@@ -39,6 +55,16 @@ const Modal = ({
         useNativeDriver: true,
       }),
     ]).start();
+  }, []);
+
+  useEffect(() => {
+    // Handle native back button
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+      handleDismiss();
+      return true; // Prevent default back behavior
+    });
+
+    return () => backHandler.remove();
   }, []);
 
   const handleDismiss = () => {

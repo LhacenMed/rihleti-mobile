@@ -25,13 +25,13 @@ const showLogoutModal = (onConfirmLogout: () => void) => {
     buttons: [
       {
         text: "Cancel",
-        style: "cancel" as const,
+        // style: "cancel" as const,
       },
-      {
-        text: "Log out",
-        style: "destructive" as const,
-        onPress: onConfirmLogout,
-      },
+      // {
+      //   text: "Log out",
+      //   style: "destructive" as const,
+      //   onPress: onConfirmLogout,
+      // },
     ],
   });
 };

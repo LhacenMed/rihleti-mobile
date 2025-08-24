@@ -19,6 +19,7 @@ import { Button } from "@components/ui/button";
 import { GoogleLogo, RihletiLogo } from "@components/icons";
 // import { Ionicons } from "@expo/vector-icons";
 import { LoaderFive, LoaderOne } from "@components/ui/loader";
+import SafeContainer from "~/components/SafeContainer";
 
 interface Props {
   navigation: any;
@@ -58,7 +59,7 @@ export default function WelcomeScreen({ navigation }: Props) {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeContainer>
       {/* Contact us Button */}
       <View className="absolute right-4 top-12 z-10">
         <TouchableOpacity>
@@ -75,7 +76,7 @@ export default function WelcomeScreen({ navigation }: Props) {
       <View className="px-6 pb-12">
         {/* Sign up free Button */}
         <View className="mb-4">
-          <Button variant="default" onPress={() => navigation.navigate("Login")}>
+          <Button variant="default" onPress={() => navigation.navigate("SignUp")}>
             <Text className="text-md text-white">Sign up free</Text>
           </Button>
         </View>
@@ -89,7 +90,7 @@ export default function WelcomeScreen({ navigation }: Props) {
             textClassName="text-white"
           >
             <GoogleLogo size={20} />
-            <Text className="ml-4 text-md text-foreground">Continue with Google</Text>
+            <Text className="text-md ml-4 text-foreground">Continue with Google</Text>
           </Button>
         </View>
 
@@ -97,13 +98,13 @@ export default function WelcomeScreen({ navigation }: Props) {
         <View className="mb-8">
           <Button
             variant="outline"
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => navigation.navigate("Login")}
             className="border-gray-600 bg-gray-800"
             textClassName="text-white"
           >
             {/* <LoaderFive text="loading..." /> */}
             {/* <LoaderOne /> */}
-            <Text className="ml-4 text-md text-foreground">Continue with email</Text>
+            <Text className="text-md ml-4 text-foreground">Continue with email</Text>
           </Button>
         </View>
 
@@ -146,6 +147,6 @@ export default function WelcomeScreen({ navigation }: Props) {
         placeholder="Enter your email address"
         buttonText="Continue"
       />
-    </SafeAreaView>
+    </SafeContainer>
   );
 }

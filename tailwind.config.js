@@ -81,6 +81,13 @@ module.exports = {
                     aisle: "hsl(var(--seat-aisle))",
                     middle: "hsl(var(--seat-middle))",
                 },
+                modal: {
+                    background: "hsl(var(--modal-background))",
+                    foreground: "hsl(var(--modal-foreground))",
+                    border: "hsl(var(--modal-border))",
+                    input: "hsl(var(--modal-input))",
+                    ring: "hsl(var(--modal-ring))",
+                },
             },
             borderRadius: {
                 lg: "var(--radius)",

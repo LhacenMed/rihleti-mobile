@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 15,
-    backgroundColor: "#2A2A2A",
+    backgroundColor: "hsl(var(--modal-background))",
     borderBottomWidth: 1,
   },
   menuItemLeft: {

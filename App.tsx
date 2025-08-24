@@ -150,16 +150,17 @@ const AppNavigator = () => {
                     shadowOpacity: 0,
                     borderBottomWidth: 1,
                     borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                    height: 90,
                   },
                   headerRight: () => (
                     <View className="mr-4 flex-row items-center space-x-3">
                       <TouchableOpacity className="p-2">
-                        <Ionicons name="search" size={24} color={isDark ? "#ffffff" : "#000000"} />
+                        <Ionicons name="search" size={22} color={isDark ? "#ffffff" : "#000000"} />
                       </TouchableOpacity>
                       <TouchableOpacity className="p-2">
                         <Ionicons
                           name="ellipsis-vertical"
-                          size={24}
+                          size={22}
                           color={isDark ? "#ffffff" : "#000000"}
                         />
                       </TouchableOpacity>

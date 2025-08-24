@@ -1,26 +1,26 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-  SafeAreaView,
-  Platform,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 import { Input } from "~/components/ui/input";
+import SafeContainer from "~/components/SafeContainer";
+import { supabase } from "~/lib/supabase";
+import { verifyEmail } from "~/utils/auth-helpers";
+import * as z from "zod";
 
 interface Props {
   navigation?: any;
 }
 
+// Login validation schemas
+const emailSchema = z.string().email({ message: "Invalid email address" });
+const passwordSchema = z.string().min(1, { message: "Password is required" });
+
 const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPasswordScreen, setShowPasswordScreen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const keyboard = useAnimatedKeyboard();
 
@@ -28,26 +28,86 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
     paddingBottom: Math.max(40, keyboard.height.value + 20),
   }));
 
+  // Login with email and password
+  const handleLogin = async (): Promise<void> => {
+    setLoading(true);
+
+    try {
+      // Validate inputs
+      emailSchema.parse(email);
+      passwordSchema.parse(password);
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        Alert.alert("Login Failed", error.message);
+        return;
+      }
+
+      // Navigation will be handled by auth context
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        Alert.alert("Validation Error", error.message);
+      } else {
+        Alert.alert("Error", "Login failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Send OTP email (structure prepared)
+  const handleSendOTP = async (): Promise<void> => {
+    setLoading(true);
+
+    try {
+      // Validate email
+      emailSchema.parse(email);
+
+      // Verify email deliverability
+      const emailVerification = await verifyEmail(email);
+      if (!emailVerification.isValid) {
+        Alert.alert("Invalid Email", emailVerification.error || "Email is not valid");
+        return;
+      }
+
+      // TODO: Implement OTP sending logic here
+      // This will call your sendVerificationEmail function
+      console.log("Send OTP to:", email);
+
+      // Navigate to OTP verification screen
+      // navigation?.navigate("VerifyOTP", { email });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        Alert.alert("Validation Error", error.message);
+      } else {
+        Alert.alert("Error", "Failed to send verification code. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleContinue = (): void => {
-    // Handle continue logic here
-    console.log("Email:", email);
     if (showPasswordScreen) {
-      console.log("Password:", password);
+      handleLogin();
+    } else {
+      handleSendOTP();
     }
   };
 
   const handleLoginWithPassword = (): void => {
-    // Show password screen
     setShowPasswordScreen(true);
   };
 
   const handleLoginWithEmail = (): void => {
-    // Handle login with email logic here
     setShowPasswordScreen(false);
   };
 
   const handleBackPress = (): void => {
-    // Handle back navigation
     if (showPasswordScreen) {
       setShowPasswordScreen(false);
     } else if (navigation) {
@@ -55,99 +115,93 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const isFormValid = email && (showPasswordScreen ? password : true);
+
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.safeAreaContainer}>
-        {/* Header with back button */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </TouchableOpacity>
+    <SafeContainer>
+      {/* Header with back button */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Main content */}
+      <View style={styles.content}>
+        <Text style={styles.title}>
+          {showPasswordScreen ? "Log in to Rihleti" : "What's your email?"}
+        </Text>
+
+        <View style={styles.inputContainer}>
+          <Input
+            style={styles.textInput}
+            placeholder="Email address"
+            placeholderTextColor="#666666"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            editable={!loading}
+          />
         </View>
 
-        {/* Main content */}
-        <View style={styles.content}>
-          <Text style={styles.title}>
-            {showPasswordScreen ? "Log in to Rihleti" : "What's your email?"}
-          </Text>
-
+        {showPasswordScreen && (
           <View style={styles.inputContainer}>
             <Input
               style={styles.textInput}
-              placeholder="Email address"
+              placeholder="Password"
               placeholderTextColor="#666666"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
+              value={password}
+              onChangeText={setPassword}
+              isPassword
+              autoCapitalize="sentences"
               autoCorrect={false}
+              editable={!loading}
             />
           </View>
+        )}
 
-          {showPasswordScreen && (
-            <View style={styles.inputContainer}>
-              <Input
-                style={styles.textInput}
-                placeholder="Password"
-                placeholderTextColor="#666666"
-                value={password}
-                onChangeText={setPassword}
-                // secureTextEntry={!showPassword}
-                isPassword
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
-          )}
+        {!showPasswordScreen && (
+          <Text style={styles.subtitle}>We'll send you a confirmation code.</Text>
+        )}
+      </View>
 
-          {!showPasswordScreen && (
-            <Text style={styles.subtitle}>We'll send you a confirmation code.</Text>
-          )}
-        </View>
-
-        {/* Bottom buttons */}
-        <Animated.View style={[styles.bottomContainer, animatedStyle]}>
-          <TouchableOpacity
+      {/* Bottom buttons */}
+      <Animated.View style={[styles.bottomContainer, animatedStyle]}>
+        <TouchableOpacity
+          style={[
+            styles.continueButton,
+            (!isFormValid || loading) && styles.continueButtonDisabled,
+          ]}
+          onPress={handleContinue}
+          disabled={!isFormValid || loading}
+        >
+          <Text
             style={[
-              styles.continueButton,
-              (!email || (showPasswordScreen && !password)) && styles.continueButtonDisabled,
+              styles.continueButtonText,
+              (!isFormValid || loading) && styles.continueButtonTextDisabled,
             ]}
-            onPress={handleContinue}
-            disabled={!email || (showPasswordScreen && !password)}
           >
-            <Text
-              style={[
-                styles.continueButtonText,
-                (!email || (showPasswordScreen && !password)) && styles.continueButtonTextDisabled,
-              ]}
-            >
-              Continue
-            </Text>
-          </TouchableOpacity>
+            {loading ? "Loading..." : "Continue"}
+          </Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={showPasswordScreen ? handleLoginWithEmail : handleLoginWithPassword}
-          >
-            <Text style={styles.loginButtonText}>
-              {showPasswordScreen ? "Log in with email" : "Log in with password"}
-            </Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </SafeAreaView>
-    </View>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={showPasswordScreen ? handleLoginWithEmail : handleLoginWithPassword}
+          disabled={loading}
+        >
+          <Text style={styles.loginButtonText}>
+            {showPasswordScreen ? "Log in with email" : "Log in with password"}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </SafeContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000000",
-  },
-  safeAreaContainer: {
-    flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
   header: {
     paddingHorizontal: 16,
     paddingTop: 8,
@@ -182,26 +236,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#ffffff",
     backgroundColor: "transparent",
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#333333",
-    borderRadius: 8,
-    backgroundColor: "transparent",
-  },
-  passwordInput: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    fontSize: 16,
-    color: "#ffffff",
-    backgroundColor: "transparent",
-  },
-  eyeButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 18,
   },
   subtitle: {
     fontSize: 14,

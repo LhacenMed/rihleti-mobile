@@ -77,16 +77,8 @@ const Settings = () => {
     };
 
     showModal(Modal, {
-      children: (
-        <View className="px-4 py-5">
-          <Text className="mb-3 text-center text-lg font-semibold text-card-foreground">
-            Sign Out
-          </Text>
-          <Text className="text-center text-sm leading-5 text-muted-foreground">
-            Are you sure you want to sign out?
-          </Text>
-        </View>
-      ),
+      title: "Confirm log out?",
+      subtitle: "Logging out won't delete any data. You can sign back into this account anytime.",
       buttons: [
         {
           text: "Cancel",

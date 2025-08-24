@@ -18,15 +18,37 @@ interface ModalButton {
   style?: "default" | "destructive" | "cancel";
 }
 
-interface ModalProps {
+// Base properties shared by both modal states
+interface BaseModalProps {
   header?: string;
-  children: React.ReactNode;
   buttons: ModalButton[];
 }
+
+// Modal with header - requires children
+interface ModalWithHeaderProps extends BaseModalProps {
+  hasHeader: true;
+  children: React.ReactNode;
+  title?: never;
+  subtitle?: never;
+}
+
+// Modal without header - requires title and subtitle
+interface ModalWithoutHeaderProps extends BaseModalProps {
+  hasHeader?: false | undefined;
+  children?: never;
+  title: string;
+  subtitle: string;
+}
+
+// Union type for the modal props
+type ModalProps = ModalWithHeaderProps | ModalWithoutHeaderProps;
 
 const Modal = ({
   dismiss,
   header,
+  title,
+  subtitle,
+  hasHeader,
   children,
   buttons = [{ text: "OK" }],
 }: ModalProps & ModalContentProps) => {
@@ -108,11 +130,11 @@ const Modal = ({
     }
   };
 
-  const getButtonTextWeight = (style?: string) => {
-    return style === "cancel" ? "normal" : "600";
-  };
+  // const getButtonTextWeight = (style?: string) => {
+  //   return style === "cancel" ? "normal" : "normal";
+  // };
 
-  const backgroundColor = isDark ? "#1E1E1E" : "#ffffff";
+  // const backgroundColor = isDark ? "#1E1E1E" : "#ffffff";
   const dimBackgroundColor = isDark ? "#2A2A2A" : "rgb(241, 241, 241)";
   const dangerDimBackgroundColor = isDark ? "#2A1F1F" : "#FFE8E8";
 
@@ -151,7 +173,7 @@ const Modal = ({
     });
 
     const buttonStyle = {
-      paddingVertical: 16,
+      paddingVertical: 10,
       backgroundColor: animatedBackgroundColor,
       // ...(isFullWidth ? {} : { flex: 1 }),
     };
@@ -167,7 +189,7 @@ const Modal = ({
             <Text
               className="text-center text-lg"
               style={{
-                fontWeight: getButtonTextWeight(button.style),
+                fontWeight: "normal",
                 color: getButtonTextColor(button.style),
               }}
             >
@@ -193,7 +215,7 @@ const Modal = ({
       >
         <TouchableWithoutFeedback onPress={() => {}}>
           <Animated.View
-            className="w-full max-w-xs overflow-hidden rounded-2xl bg-card"
+            className="bg-modal-background w-full max-w-[250px] overflow-hidden rounded-3xl"
             style={{
               transform: [{ translateY }],
             }}
@@ -208,7 +230,19 @@ const Modal = ({
             )}
 
             {/* Body */}
-            <View>{children}</View>
+            {/* <View>{children}</View> */}
+            {hasHeader ? (
+              <View className="px-4 py-5">{children}</View>
+            ) : (
+              <View className="px-4 py-5">
+                <Text className="mb-3 text-center text-lg font-semibold text-card-foreground">
+                  {title}
+                </Text>
+                <Text className="text-md text-center leading-5 text-muted-foreground">
+                  {subtitle}
+                </Text>
+              </View>
+            )}
 
             {/* Footer - Action Buttons */}
             <View className="border-t border-border">

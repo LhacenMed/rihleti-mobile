@@ -1,4 +1,3 @@
-// src/types/theme.ts
 export type ThemeMode = "light" | "dark" | "system";
 
 export interface ThemeContextType {

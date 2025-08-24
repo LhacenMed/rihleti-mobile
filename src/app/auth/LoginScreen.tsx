@@ -6,6 +6,7 @@ import { Input } from "~/components/ui/input";
 import SafeContainer from "~/components/SafeContainer";
 import { supabase } from "~/lib/supabase";
 import { verifyEmail } from "~/utils/auth-helpers";
+import { LoaderOne } from "~/components/ui/loader";
 import * as z from "zod";
 
 interface Props {
@@ -177,14 +178,18 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleContinue}
           disabled={!isFormValid || loading}
         >
-          <Text
-            style={[
-              styles.continueButtonText,
-              (!isFormValid || loading) && styles.continueButtonTextDisabled,
-            ]}
-          >
-            {loading ? "Loading..." : "Continue"}
-          </Text>
+          {loading ? (
+            <LoaderOne />
+          ) : (
+            <Text
+              style={[
+                styles.continueButtonText,
+                (!isFormValid || loading) && styles.continueButtonTextDisabled,
+              ]}
+            >
+              Continue
+            </Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -251,6 +256,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingVertical: 16,
     alignItems: "center",
+    justifyContent: "center", // Added to center the loader
+    minHeight: 56, // Added minimum height to prevent button height changes
   },
   continueButtonDisabled: {
     backgroundColor: "#333333",

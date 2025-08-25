@@ -1,7 +1,6 @@
 import "./global.css";
 import { View, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -28,6 +27,7 @@ import Settings from "@app/tabs/Settings";
 import Account from "@app/screens/Account";
 import SettingsTest from "@app/screens/SettingsTest";
 import WebViewScreen from "@app/screens/WebViewScreen";
+import Messages from "@app/screens/Messages";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
@@ -53,6 +53,7 @@ type RootStackParamList = {
     link: string;
     title?: string;
   };
+  Messages: undefined;
 };
 
 const Tab = createMaterialTopTabNavigator();
@@ -217,6 +218,27 @@ const AppNavigator = () => {
               component={WebViewScreen}
               options={{
                 headerShown: false,
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            />
+            <RootStack.Screen
+              name="Messages"
+              component={Messages}
+              options={{
+                headerShown: true,
+                headerTitle: "Messages",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: isDark ? "#ffffff" : "#000000",
+                },
+                headerStyle: {
+                  backgroundColor: isDark ? "#000" : "#fff",
+                  elevation: 0,
+                  shadowOpacity: 0,
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                },
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />

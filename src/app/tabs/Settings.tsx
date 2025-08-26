@@ -82,11 +82,11 @@ const Settings = () => {
       buttons: [
         {
           text: "Cancel",
-          style: "cancel" as const,
+          style: "cancel",
         },
         {
           text: "Sign Out",
-          style: "destructive" as const,
+          style: "destructive",
           onPress: handleSignOut,
         },
       ],

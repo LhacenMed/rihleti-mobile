@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeSwitcher } from "@components/ThemeSwitcher";
 import { useTheme } from "@contexts/ThemeContext";
+import { Button } from "react-native-paper";
 
 const Settings = () => {
   const { user, signOut } = useAuth();
@@ -141,6 +142,15 @@ const Settings = () => {
             <Text className="ml-2 text-lg font-semibold text-destructive-foreground">Sign Out</Text>
           </TouchableOpacity>
         </View>
+
+        <Button
+          icon="camera"
+          mode="outlined"
+          onPress={() => {}}
+          textColor="white"
+        >
+          Press me
+        </Button>
 
         {/* Version Section */}
         <View className="mb-8 items-center">

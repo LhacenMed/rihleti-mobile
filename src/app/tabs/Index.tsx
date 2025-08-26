@@ -22,7 +22,7 @@ export default function Page() {
   };
 
   return (
-    <SafeContainer className="flex-1 bg-[#171717] px-5">
+    <SafeContainer className="px-5">
       {/* Location Inputs */}
       <LocationInputs
       onDeparturePress={handleDeparturePress}

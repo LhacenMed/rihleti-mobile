@@ -7,7 +7,7 @@ interface SafeContainerProps {
   className?: string;
 }
 
-const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, className = "bg-background" }) => (
+const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, className }) => (
   <View
     style={[
       {
@@ -16,7 +16,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
       },
       style,
     ]}
-    className={className}
+    className={`bg-background ${className}`}
   >
     {children}
   </View>

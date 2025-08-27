@@ -7,6 +7,7 @@ import SafeContainer from "~/components/SafeContainer";
 import { supabase } from "~/lib/supabase";
 import { verifyEmail } from "~/utils/auth-helpers";
 import Loader from "~/components/ui/loader";
+import Button from "~/components/ui/button";
 import * as z from "zod";
 
 interface Props {
@@ -26,10 +27,7 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
   const keyboard = useAnimatedKeyboard();
 
   const animatedStyle = useAnimatedStyle(() => ({
-    paddingBottom: Math.max(
-      40,
-      keyboard.height.value + (Platform.OS === "android" ? 20 : 0)
-    ),
+    paddingBottom: Math.max(40, keyboard.height.value + (Platform.OS === "android" ? 20 : 0)),
   }));
 
   // Login with email and password
@@ -173,37 +171,31 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Bottom buttons */}
       <Animated.View style={[styles.bottomContainer, animatedStyle]}>
-        <TouchableOpacity
+        <Button
+          variant="ghost"
           style={[
             styles.continueButton,
             (!isFormValid || loading) && styles.continueButtonDisabled,
           ]}
+          textStyle={[
+            styles.continueButtonText,
+            (!isFormValid || loading) && styles.continueButtonTextDisabled,
+          ]}
           onPress={handleContinue}
           disabled={!isFormValid || loading}
         >
-          {loading ? (
-            <Loader />
-          ) : (
-            <Text
-              style={[
-                styles.continueButtonText,
-                (!isFormValid || loading) && styles.continueButtonTextDisabled,
-              ]}
-            >
-              Continue
-            </Text>
-          )}
-        </TouchableOpacity>
+          {loading ? <Loader /> : "Continue"}
+        </Button>
 
-        <TouchableOpacity
+        <Button
+          variant="outline"
           style={styles.loginButton}
+          textStyle={styles.loginButtonText}
           onPress={showPasswordScreen ? handleLoginWithEmail : handleLoginWithPassword}
           disabled={loading}
         >
-          <Text style={styles.loginButtonText}>
-            {showPasswordScreen ? "Log in with email" : "Log in with password"}
-          </Text>
-        </TouchableOpacity>
+          {showPasswordScreen ? "Log in with email" : "Log in with password"}
+        </Button>
       </Animated.View>
     </SafeContainer>
   );

@@ -36,7 +36,7 @@ export const storeLoaderInSupabase = async () => {
       border-top: 2px solid var(--color, #FFF);
       border-right: 2px solid transparent;
       box-sizing: border-box;
-      animation: rotation .5s linear infinite;
+      animation: rotation .3s linear infinite;
     }
     @keyframes rotation {
       0% { transform: rotate(0deg); }

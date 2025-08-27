@@ -30,6 +30,7 @@ import Account from "@app/screens/Account";
 import SettingsTest from "@app/screens/SettingsTest";
 import WebViewScreen from "@app/screens/WebViewScreen";
 import Messages from "@app/screens/Messages";
+import Preferences from "@app/screens/Preferences";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
@@ -37,6 +38,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Theme Context
 import { ThemeProvider, useTheme } from "@contexts/ThemeContext";
+import { FeaturesProvider, useFeatures } from "@contexts/FeaturesContext";
 
 // Loader functions
 import { storeLoaderInSupabase, loadLoaderFromSupabase } from "@components/ui/loader";
@@ -59,6 +61,7 @@ type RootStackParamList = {
     title?: string;
   };
   Messages: undefined;
+  Preferences: undefined;
 };
 
 const Tab = createMaterialTopTabNavigator();
@@ -66,6 +69,7 @@ const RootStack = createStackNavigator<RootStackParamList>();
 
 // Material Top Tabs Navigator (nested inside Stack)
 const TopTabsNavigator = () => {
+  const { swipeEnabled } = useFeatures();
   return (
     <Tab.Navigator
       tabBarPosition="bottom"
@@ -80,7 +84,7 @@ const TopTabsNavigator = () => {
         tabBarShowLabel: false,
         tabBarIndicatorStyle: { display: "none" },
         tabBarPressColor: "transparent",
-        swipeEnabled: true, // Keep swipe animation enabled
+        swipeEnabled, // Controlled by FeaturesContext
         animationEnabled: false, // Make swipe animation disabled when pressing a tab
       }}
     >
@@ -193,6 +197,7 @@ const AppNavigator = () => {
                   shadowOpacity: 0,
                   borderBottomWidth: 1,
                   borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                  height: 90,
                 },
                 ...TransitionPresets.ModalPresentationIOS,
               }}
@@ -214,6 +219,29 @@ const AppNavigator = () => {
                   shadowOpacity: 0,
                   borderBottomWidth: 1,
                   borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                  height: 90,
+                },
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            />
+            <RootStack.Screen
+              name="Preferences"
+              component={Preferences}
+              options={{
+                headerShown: true,
+                headerTitle: "App Functionality",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: isDark ? "#ffffff" : "#000000",
+                },
+                headerStyle: {
+                  backgroundColor: isDark ? "#000" : "#fff",
+                  elevation: 0,
+                  shadowOpacity: 0,
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                  height: 90,
                 },
                 ...TransitionPresets.SlideFromRightIOS,
               }}
@@ -243,6 +271,7 @@ const AppNavigator = () => {
                   shadowOpacity: 0,
                   borderBottomWidth: 1,
                   borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                  height: 90,
                 },
                 ...TransitionPresets.SlideFromRightIOS,
               }}
@@ -389,17 +418,19 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <ThemeProvider>
-          <AuthProvider>
-            <PaperProvider>
-              <ModalPresenterParent>
-                <BottomSheetModalProvider>
-                  <StatusBar style="auto" />
-                  <AppInitializer />
-                  <Toast />
-                </BottomSheetModalProvider>
-              </ModalPresenterParent>
-            </PaperProvider>
-          </AuthProvider>
+          <FeaturesProvider>
+            <AuthProvider>
+              <PaperProvider>
+                <ModalPresenterParent>
+                  <BottomSheetModalProvider>
+                    <StatusBar style="auto" />
+                    <AppInitializer />
+                    <Toast />
+                  </BottomSheetModalProvider>
+                </ModalPresenterParent>
+              </PaperProvider>
+            </AuthProvider>
+          </FeaturesProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

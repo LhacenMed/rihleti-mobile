@@ -65,6 +65,10 @@ const Settings = () => {
     navigation.navigate("Account" as never);
   };
 
+  const navigateToPreferences = () => {
+    navigation.navigate("Preferences" as never);
+  };
+
   const handleLogout = async () => {
     const handleSignOut = async () => {
       setLogoutLoading(true);
@@ -188,6 +192,16 @@ const Settings = () => {
             showValue={true}
             showChevron={true}
             // onPress={() => setModalVisible(true)}
+          />
+          <MenuItem
+            icon="options-outline"
+            title="Preferences"
+            value="Controls"
+            isFirst={false}
+            isLast={false}
+            showValue={true}
+            showChevron={true}
+            onPress={navigateToPreferences}
           />
           <MenuItem
             icon="earth"

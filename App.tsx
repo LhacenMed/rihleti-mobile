@@ -8,6 +8,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { useEffect } from "react";
 
 // Auth Context and Components
 import { AuthProvider, useAuth } from "@contexts/AuthContext";
@@ -36,6 +37,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Theme Context
 import { ThemeProvider, useTheme } from "@contexts/ThemeContext";
+
+// Loader functions
+import { storeLoaderInSupabase, loadLoaderFromSupabase } from "@components/ui/loader";
 
 type RootStackParamList = {
   // Auth Screens
@@ -359,6 +363,27 @@ const AppNavigator = () => {
   );
 };
 
+// App Initialization Component
+const AppInitializer = () => {
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        // Load cached loader from Supabase
+        await loadLoaderFromSupabase();
+
+        // Store/update loader in Supabase (only runs if needed)
+        await storeLoaderInSupabase();
+      } catch (error) {
+        console.error("Error initializing loader:", error);
+      }
+    };
+
+    initializeApp();
+  }, []);
+
+  return <AppNavigator />;
+};
+
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -369,7 +394,7 @@ export default function App() {
             <ModalPresenterParent>
               <BottomSheetModalProvider>
                 <StatusBar style="auto" />
-                <AppNavigator />
+                <AppInitializer />
                 <Toast />
               </BottomSheetModalProvider>
             </ModalPresenterParent>

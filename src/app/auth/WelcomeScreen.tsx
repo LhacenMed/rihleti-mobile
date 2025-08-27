@@ -18,7 +18,6 @@ import EmailBottomSheet from "@components/EmailBottomSheet";
 import { Button } from "@components/ui/button";
 import { GoogleLogo, RihletiLogo } from "@components/icons";
 // import { Ionicons } from "@expo/vector-icons";
-import { LoaderFive, LoaderOne } from "@components/ui/loader";
 import SafeContainer from "~/components/SafeContainer";
 
 interface Props {
@@ -102,8 +101,6 @@ export default function WelcomeScreen({ navigation }: Props) {
             className="border-gray-600 bg-gray-800"
             textClassName="text-white"
           >
-            {/* <LoaderFive text="loading..." /> */}
-            {/* <LoaderOne /> */}
             <Text className="text-md ml-4 text-foreground">Continue with email</Text>
           </Button>
         </View>

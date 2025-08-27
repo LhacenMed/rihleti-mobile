@@ -6,7 +6,7 @@ import { Input } from "~/components/ui/input";
 import SafeContainer from "~/components/SafeContainer";
 import { supabase } from "~/lib/supabase";
 import { verifyEmail } from "~/utils/auth-helpers";
-import { LoaderOne } from "~/components/ui/loader";
+import Loader from "~/components/ui/loader";
 import * as z from "zod";
 
 interface Props {
@@ -182,7 +182,7 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
           disabled={!isFormValid || loading}
         >
           {loading ? (
-            <LoaderOne />
+            <Loader />
           ) : (
             <Text
               style={[

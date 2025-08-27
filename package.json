@@ -49,7 +49,8 @@
     "react-native-svg": "15.11.2",
     "react-native-toast-message": "^2.3.3",
     "react-native-webview": "13.13.5",
-    "zod": "^4.0.17"
+    "zod": "^4.0.17",
+    "@shopify/react-native-skia": "v2.0.0-next.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

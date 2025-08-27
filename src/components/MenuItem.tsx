@@ -3,7 +3,7 @@ import React from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
-import { LoaderOne } from "./ui/loader";
+import Loader from "./ui/loader";
 
 interface MenuItemProps {
   icon?: string;
@@ -114,7 +114,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
               //   color={chevronColor}
               //   style={styles.loadingIndicator}
               // />
-              <LoaderOne style={styles.loadingIndicator} dotColor="red" />
+              <Loader style={{ marginRight: 5 }} color={chevronColor} size={15} />
             ) : showChevron ? (
               <Ionicons name="chevron-forward" size={20} color={chevronColor} />
             ) : null}

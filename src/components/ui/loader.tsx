@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, AppState } from "react-native";
+import { View, Text, AppState, ViewStyle, TextStyle } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -17,7 +17,19 @@ import Svg, { Path } from "react-native-svg";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-export const LoaderOne = () => {
+interface LoaderOneProps {
+  style?: ViewStyle;
+  dotColor?: string;
+  // dotBorderColor?: string;
+  dotSize?: number;
+}
+
+export const LoaderOne = ({
+  style,
+  dotColor = "#d4d4d4",
+  // dotBorderColor = "#a3a3a3",
+  dotSize = 4,
+}: LoaderOneProps) => {
   const translateY1 = useSharedValue(0);
   const translateY2 = useSharedValue(0);
   const translateY3 = useSharedValue(0);
@@ -55,17 +67,17 @@ export const LoaderOne = () => {
   }));
 
   const dotStyle = {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: "#d4d4d4",
-    borderWidth: 0.5,
-    borderColor: "#a3a3a3",
-    marginHorizontal: 1,
+    width: dotSize,
+    height: dotSize,
+    borderRadius: dotSize / 2,
+    backgroundColor: dotColor,
+    // borderWidth: 0.5,
+    // borderColor: dotBorderColor,
+    marginHorizontal: 2,
   };
 
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
       <Animated.View style={[dotStyle, animatedStyle1]} />
       <Animated.View style={[dotStyle, animatedStyle2]} />
       <Animated.View style={[dotStyle, animatedStyle3]} />
@@ -73,7 +85,13 @@ export const LoaderOne = () => {
   );
 };
 
-export const LoaderTwo = () => {
+interface LoaderTwoProps {
+  style?: ViewStyle;
+  circleColor?: string;
+  circleSize?: number;
+}
+
+export const LoaderTwo = ({ style, circleColor = "#e5e5e5", circleSize = 16 }: LoaderTwoProps) => {
   const translateX1 = useSharedValue(0);
   const translateX2 = useSharedValue(0);
   const translateX3 = useSharedValue(0);
@@ -111,10 +129,10 @@ export const LoaderTwo = () => {
   }));
 
   const circleStyle = {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: "#e5e5e5",
+    width: circleSize,
+    height: circleSize,
+    borderRadius: circleSize / 2,
+    backgroundColor: circleColor,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -122,16 +140,32 @@ export const LoaderTwo = () => {
     elevation: 5,
   };
 
+  const overlap = circleSize / 2;
+
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
       <Animated.View style={[circleStyle, animatedStyle1]} />
-      <Animated.View style={[circleStyle, { marginLeft: -8 }, animatedStyle2]} />
-      <Animated.View style={[circleStyle, { marginLeft: -8 }, animatedStyle3]} />
+      <Animated.View style={[circleStyle, { marginLeft: -overlap }, animatedStyle2]} />
+      <Animated.View style={[circleStyle, { marginLeft: -overlap }, animatedStyle3]} />
     </View>
   );
 };
 
-export const LoaderThree = () => {
+interface LoaderThreeProps {
+  style?: ViewStyle;
+  size?: number;
+  strokeColor?: string;
+  fillColor?: string;
+  strokeWidth?: number;
+}
+
+export const LoaderThree = ({
+  style,
+  size = 80,
+  strokeColor = "#737373",
+  fillColor = "#fbbf24",
+  strokeWidth = 1,
+}: LoaderThreeProps) => {
   const progress = useSharedValue(0);
 
   useEffect(() => {
@@ -154,12 +188,12 @@ export const LoaderThree = () => {
   });
 
   return (
-    <View style={{ alignItems: "center", justifyContent: "center" }}>
-      <Svg width="80" height="80" viewBox="0 0 24 24">
+    <View style={[{ alignItems: "center", justifyContent: "center" }, style]}>
+      <Svg width={size} height={size} viewBox="0 0 24 24">
         <Path
           d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"
-          stroke="#737373"
-          strokeWidth="1"
+          stroke={strokeColor}
+          strokeWidth={strokeWidth}
           fill="transparent"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -167,7 +201,7 @@ export const LoaderThree = () => {
         <AnimatedPath
           d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"
           stroke="none"
-          fill="#fbbf24"
+          fill={fillColor}
           animatedProps={animatedProps}
         />
       </Svg>
@@ -175,7 +209,21 @@ export const LoaderThree = () => {
   );
 };
 
-export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
+interface LoaderFourProps {
+  text?: string;
+  style?: ViewStyle;
+  textStyle?: TextStyle;
+  glitchColor1?: string;
+  glitchColor2?: string;
+}
+
+export const LoaderFour = ({
+  text = "Loading...",
+  style,
+  textStyle,
+  glitchColor1 = "#00e571",
+  glitchColor2 = "#8b00ff",
+}: LoaderFourProps) => {
   const skewX = useSharedValue(0);
   const scaleX = useSharedValue(1);
   const glitchX = useSharedValue(0);
@@ -282,30 +330,26 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
     opacity: purpleOpacity.value,
   }));
 
+  const defaultTextStyle = {
+    fontSize: 16,
+    fontWeight: "bold" as const,
+    color: "#000",
+  };
+
   return (
-    <View style={{ position: "relative" }}>
-      <Animated.Text
-        style={[
-          {
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "#000",
-            zIndex: 20,
-          },
-          mainTextStyle,
-        ]}
-      >
+    <View style={[{ position: "relative" }, style]}>
+      <Animated.Text style={[defaultTextStyle, { zIndex: 20 }, textStyle, mainTextStyle]}>
         {text}
       </Animated.Text>
       <Animated.Text
         style={[
           {
             position: "absolute",
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "#00e571",
+            ...defaultTextStyle,
+            color: glitchColor1,
             zIndex: 10,
           },
+          textStyle,
           greenTextStyle,
         ]}
       >
@@ -315,11 +359,11 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
         style={[
           {
             position: "absolute",
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "#8b00ff",
+            ...defaultTextStyle,
+            color: glitchColor2,
             zIndex: 5,
           },
+          textStyle,
           purpleTextStyle,
         ]}
       >
@@ -329,7 +373,13 @@ export const LoaderFour = ({ text = "Loading..." }: { text?: string }) => {
   );
 };
 
-export const LoaderFive = ({ text }: { text: string }) => {
+interface LoaderFiveProps {
+  text: string;
+  style?: ViewStyle;
+  textStyle?: TextStyle;
+}
+
+export const LoaderFive = ({ text, style, textStyle }: LoaderFiveProps) => {
   const chars = text.split("");
   const animatedValues = chars.map(() => ({
     scale: useSharedValue(1),
@@ -368,8 +418,14 @@ export const LoaderFive = ({ text }: { text: string }) => {
     animateChars();
   }, [text]);
 
+  const defaultTextStyle = {
+    fontSize: 16,
+    fontWeight: "bold" as const,
+    color: "#fff",
+  };
+
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
       {chars.map((char, index) => {
         const animatedStyle = useAnimatedStyle(() => ({
           transform: [{ scale: animatedValues[index].scale.value }],
@@ -377,17 +433,7 @@ export const LoaderFive = ({ text }: { text: string }) => {
         }));
 
         return (
-          <Animated.Text
-            key={index}
-            style={[
-              {
-                fontSize: 16,
-                fontWeight: "bold",
-                color: "#fff",
-              },
-              animatedStyle,
-            ]}
-          >
+          <Animated.Text key={index} style={[defaultTextStyle, textStyle, animatedStyle]}>
             {char === " " ? "\u00A0" : char}
           </Animated.Text>
         );

@@ -25,7 +25,7 @@ interface ModalProps {
 const ANIMATION_DURATION = 150;
 const DISMISS_DURATION = 100;
 const BUTTON_COLORS = {
-  destructive: "#FF4545",
+  destructive: "red",
   cancel: "#8E8E93",
   default: "#007AFF",
 };

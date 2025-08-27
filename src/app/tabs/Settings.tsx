@@ -135,7 +135,7 @@ const Settings = () => {
           <MenuItem
             icon="mail-outline"
             title="Email"
-            value="217acenmed653@gmail.com"
+            value="2l7acenmed653@gmail.com"
             isFirst
             isLast={false}
             showValue

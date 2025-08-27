@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useEffect } from "react";
+import { PaperProvider } from "react-native-paper";
 
 // Auth Context and Components
 import { AuthProvider, useAuth } from "@contexts/AuthContext";
@@ -33,7 +34,6 @@ import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-// import { PaperProvider } from "react-native-paper";
 
 // Theme Context
 import { ThemeProvider, useTheme } from "@contexts/ThemeContext";
@@ -390,15 +390,15 @@ export default function App() {
       <SafeAreaProvider>
         <ThemeProvider>
           <AuthProvider>
-            {/* <PaperProvider> */}
-            <ModalPresenterParent>
-              <BottomSheetModalProvider>
-                <StatusBar style="auto" />
-                <AppInitializer />
-                <Toast />
-              </BottomSheetModalProvider>
-            </ModalPresenterParent>
-            {/* </PaperProvider> */}
+            <PaperProvider>
+              <ModalPresenterParent>
+                <BottomSheetModalProvider>
+                  <StatusBar style="auto" />
+                  <AppInitializer />
+                  <Toast />
+                </BottomSheetModalProvider>
+              </ModalPresenterParent>
+            </PaperProvider>
           </AuthProvider>
         </ThemeProvider>
       </SafeAreaProvider>

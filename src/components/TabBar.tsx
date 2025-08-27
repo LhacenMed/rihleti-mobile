@@ -1,5 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
+import { Tooltip } from "react-native-paper";
 // import { useTheme } from "@contexts/ThemeContext";
 import HomeIcon from "~/components/icons/tab-icons/HomeIcon";
 import ExploreIcon from "~/components/icons/tab-icons/ExploreIcon";
@@ -38,7 +39,6 @@ const TabBar: React.FC<TabBarProps> = ({
 
   const renderIcon = (routeName: string, isFocused: boolean) => {
     const iconProps = { isFocused, width: 24, height: 24 };
-
     switch (routeName) {
       case "Home":
         return <HomeIcon {...iconProps} />;
@@ -50,6 +50,21 @@ const TabBar: React.FC<TabBarProps> = ({
         return <SettingsIcon {...iconProps} />;
       default:
         return <HomeIcon {...iconProps} />;
+    }
+  };
+
+  const getTooltipText = (routeName: string) => {
+    switch (routeName) {
+      case "Home":
+        return "Home";
+      case "Explore":
+        return "Explore";
+      case "Bookings":
+        return "Bookings";
+      case "Settings":
+        return "Settings";
+      default:
+        return routeName;
     }
   };
 
@@ -65,40 +80,45 @@ const TabBar: React.FC<TabBarProps> = ({
             target: route.key,
             canPreventDefault: true,
           });
-
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name);
           }
         };
 
         return (
-          <TouchableOpacity
-            key={route.key}
-            onPress={onPress}
-            className="flex-1 items-center justify-center py-2"
-            activeOpacity={1}
-          >
-            <Animated.View
-              className="items-center justify-center"
-              style={{
-                transform: [{ translateY: animatedValues[index] }],
-              }}
+          <View key={route.key} style={{ flex: 1, paddingVertical: 10, alignItems: "center" , justifyContent: "center"}}>
+            <Tooltip
+              title={getTooltipText(route.name)}
+              enterTouchDelay={500}
+              leaveTouchDelay={1000}
             >
-              {renderIcon(route.name, isFocused)}
-            </Animated.View>
-
-            <Animated.Text
-              className="text-center text-xs font-medium text-foreground"
-              style={{
-                opacity: animatedValues[index].interpolate({
-                  inputRange: [-8, 0],
-                  outputRange: [1, 0],
-                }),
-              }}
-            >
-              {route.name}
-            </Animated.Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onPress}
+                // className="flex-1 items-center justify-center py-2"
+                activeOpacity={1}
+              >
+                <Animated.View
+                  className="items-center justify-center"
+                  style={{
+                    transform: [{ translateY: animatedValues[index] }],
+                  }}
+                >
+                  {renderIcon(route.name, isFocused)}
+                </Animated.View>
+                <Animated.Text
+                  className="text-center text-xs font-medium text-foreground"
+                  style={{
+                    opacity: animatedValues[index].interpolate({
+                      inputRange: [-8, 0],
+                      outputRange: [1, 0],
+                    }),
+                  }}
+                >
+                  {route.name}
+                </Animated.Text>
+              </TouchableOpacity>
+            </Tooltip>
+          </View>
         );
       })}
     </View>

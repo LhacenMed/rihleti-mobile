@@ -1,16 +1,7 @@
 import { useTheme } from "@contexts/ThemeContext";
 import React, { useContext, useState, useRef } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Animated,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-// import * as Haptic from "expo-haptics";
-// import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 interface MenuItemProps {
   icon?: string;
@@ -41,8 +32,6 @@ const MenuItem: React.FC<MenuItemProps> = ({
   showChevron = true,
   loading = false,
 }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  // const themes = useContext(ThemeContext);
   const { isDark } = useTheme();
 
   const backgroundColor = isDark ? "#1E1E1E" : "#ffffff";
@@ -54,42 +43,6 @@ const MenuItem: React.FC<MenuItemProps> = ({
   const valueTextColor = isDark ? "#666666" : "rgb(142, 142, 142)";
   const chevronColor = isDark ? "#666666" : "rgb(142, 142, 142)";
 
-  const handlePressIn = () => {
-
-    // const options = {
-    //   enableVibrateFallback: true,
-    //   ignoreAndroidSystemSettings: false,
-    // };
-
-    if (isDanger) {
-      // Use native notification haptic for danger/warning context
-      // TODO: change to ReactNativeHapticFeedback.trigger("effectClick"); when on production or running development build
-      // Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
-      // ReactNativeHapticFeedback.trigger("effectClick");
-      // ReactNativeHapticFeedback.trigger("effectClick", options);
-    } else {
-      // Use native impact haptic for regular interactions
-    }
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      useNativeDriver: false,
-      duration: 0,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      useNativeDriver: false,
-      duration: 200,
-    }).start();
-  };
-
-  const animatedBackgroundColor = fadeAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [backgroundColor, isDanger ? dangerDimBackgroundColor : dimBackgroundColor],
-  });
-
   const containerStyle = {
     ...styles.menuItem,
     borderTopLeftRadius: isFirst ? 17 : 0,
@@ -98,59 +51,80 @@ const MenuItem: React.FC<MenuItemProps> = ({
     borderBottomRightRadius: isLast ? 17 : 0,
     borderBottomWidth: isLast ? 0 : 1,
     borderBottomColor: borderBottomColor,
-    backgroundColor: animatedBackgroundColor,
+    backgroundColor: backgroundColor,
   };
 
   const textColor = isDanger ? dangerTextColor : normalTextColor;
+  const rippleColor = isDanger ? dangerDimBackgroundColor : dimBackgroundColor;
 
   return (
-    <TouchableWithoutFeedback
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      onPress={onPress}
-      disabled={loading || disabled}
-    >
-      <Animated.View style={containerStyle}>
-        <View style={styles.menuItemLeft}>
-          <View style={styles.iconContainer}>
-            <Ionicons name={(icon as any) || ""} size={20} color={textColor} style={styles.icon} />
+    <View style={containerStyle}>
+      <Pressable
+        onPress={onPress}
+        disabled={loading || disabled}
+        style={styles.pressable}
+        android_ripple={{
+          color: rippleColor,
+          borderless: false,
+        }}
+      >
+        <View style={styles.menuItemContent}>
+          <View style={styles.menuItemLeft}>
+            <View style={styles.iconContainer}>
+              <Ionicons
+                name={(icon as any) || ""}
+                size={20}
+                color={textColor}
+                style={styles.icon}
+              />
+            </View>
+            <View>
+              <Text style={[styles.menuItemTitle, { color: textColor }]}>{title}</Text>
+              {subtitle && <Text style={styles.menuItemSubtitle}>{subtitle}</Text>}
+            </View>
           </View>
-          <View>
-            <Text style={[styles.menuItemTitle, { color: textColor }]}>{title}</Text>
-            {subtitle && <Text style={styles.menuItemSubtitle}>{subtitle}</Text>}
+          <View style={styles.menuItemRight}>
+            {showValue && value && (
+              <Text style={[styles.menuItemValue, { color: valueTextColor }]}>{value}</Text>
+            )}
+            {showChevron ? (
+              <Ionicons name="chevron-forward" size={20} color={chevronColor} />
+            ) : loading ? (
+              <ActivityIndicator size="small" color={chevronColor} />
+            ) : null}
           </View>
         </View>
-        <View style={styles.menuItemRight}>
-          {showValue && value && (
-            <Text style={[styles.menuItemValue, { color: valueTextColor }]}>{value}</Text>
-          )}
-          {showChevron ? (
-            <Ionicons name="chevron-forward" size={20} color={chevronColor} />
-          ) : loading ? (
-            <ActivityIndicator size="small" color={chevronColor} />
-          ) : null}
-        </View>
-      </Animated.View>
-    </TouchableWithoutFeedback>
+      </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   menuItem: {
+    backgroundColor: "hsl(var(--modal-background))",
+    borderBottomWidth: 1,
+    overflow: "hidden", // Ensures the ripple effect respects border radius
+  },
+  pressable: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    minHeight: 50,
+  },
+  menuItemContent: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 15,
-    backgroundColor: "hsl(var(--modal-background))",
-    borderBottomWidth: 1,
+    width: "100%",
   },
   menuItemLeft: {
     flexDirection: "row",
     alignItems: "center",
+    flex: 1,
   },
   menuItemRight: {
     flexDirection: "row",
     alignItems: "center",
+    marginRight: -5,
   },
   icon: {
     marginRight: 12,
@@ -169,10 +143,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   iconContainer: {
-    width: 40,
+    width: 32,
     height: 20,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
 });
 

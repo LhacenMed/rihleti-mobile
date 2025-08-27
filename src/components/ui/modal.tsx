@@ -25,7 +25,7 @@ interface ModalProps {
 const ANIMATION_DURATION = 150;
 const DISMISS_DURATION = 100;
 const BUTTON_COLORS = {
-  destructive: "#FF453A",
+  destructive: "#FF4545",
   cancel: "#8E8E93",
   default: "#007AFF",
 };
@@ -176,10 +176,10 @@ const ModalFooter = ({
   buttons: ModalButton[];
   onButtonPress: (button: ModalButton) => void;
 }) => {
-  console.log("ModalFooter rendered with buttons:", buttons);
+  // console.log("ModalFooter rendered with buttons:", buttons);
 
   if (!buttons || buttons.length === 0) {
-    console.log("No buttons to render");
+    // console.log("No buttons to render");
     return null;
   }
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 import { Input } from "~/components/ui/input";
@@ -26,7 +26,10 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
   const keyboard = useAnimatedKeyboard();
 
   const animatedStyle = useAnimatedStyle(() => ({
-    paddingBottom: Math.max(40, keyboard.height.value + 20),
+    paddingBottom: Math.max(
+      40,
+      keyboard.height.value + (Platform.OS === "android" ? 20 : 0)
+    ),
   }));
 
   // Login with email and password

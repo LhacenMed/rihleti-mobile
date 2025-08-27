@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Platform, Alert } from "react-native";
 // import { useSafeAreaInsets } from "react-native-safe-area-context";
 // import { NavigationProp, useNavigation } from "@react-navigation/native";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,6 +21,7 @@ import Modal from "@components/ui/modal";
 // import { translations as it } from "../translations/it";
 // import { FIREBASE_AUTH } from "../../FirebaseConfig";
 // import { RootStackParamList } from "../types";
+import * as Haptic from "expo-haptics";
 
 const Settings = () => {
   // const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
@@ -76,21 +77,43 @@ const Settings = () => {
       }
     };
 
-    showModal(Modal, {
-      title: "Confirm log out?",
-      subtitle: "Logging out won't delete any data. You can sign back into this account anytime.",
-      buttons: [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Sign Out",
-          style: "destructive",
-          onPress: handleSignOut,
-        },
-      ],
-    });
+    if (Platform.OS === "ios") {
+      // Use native iOS Alert
+      Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+      Alert.alert(
+        "Confirm log out?",
+        "Logging out won't delete any data. You can sign back into this account anytime.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Sign Out",
+            style: "destructive",
+            onPress: handleSignOut,
+          },
+        ],
+        { cancelable: true }
+      );
+    } else {
+      // Use custom modal component for Android
+      showModal(Modal, {
+        title: "Confirm log out?",
+        subtitle: "Logging out won't delete any data. You can sign back into this account anytime.",
+        buttons: [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Sign Out",
+            style: "destructive",
+            onPress: handleSignOut,
+          },
+        ],
+      });
+    }
   };
 
   return (

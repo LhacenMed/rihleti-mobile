@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ViewStyle, Platform, StatusBar } from "react-native";
+import { View, ViewStyle, Platform, StatusBar, SafeAreaView } from "react-native";
 
 interface SafeContainerProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface SafeContainerProps {
 }
 
 const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, className }) => (
-  <View
+  <SafeAreaView
     style={[
       {
         flex: 1,
@@ -19,7 +19,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
     className={`bg-background ${className}`}
   >
     {children}
-  </View>
+  </SafeAreaView>
 );
 
 export default SafeContainer;

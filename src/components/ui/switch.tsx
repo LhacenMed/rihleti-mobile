@@ -175,8 +175,12 @@ export const Switch: React.FC<SwitchProps> = ({
         />
         <Animated.View style={[styles.thumb, thumbAnimatedStyle]}>
           {computedLoading && (
+            // <ActivityIndicator
+            //   size="small"
+            //   color={isOn ? trackColor.true : "#666666"}
+            //   style={styles.activityIndicator}
+            // />
             <Loader
-              // size="small"
               color={isOn ? trackColor.true : "#666666"}
               style={styles.activityIndicator}
             />

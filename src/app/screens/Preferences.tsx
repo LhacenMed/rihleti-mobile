@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Button, Pressable } from "react-native";
 import { Switch } from "@components/ui/switch";
+import MenuItem from "@components/MenuItem";
 import { useTheme } from "@contexts/ThemeContext";
 import { useFeatures } from "@contexts/FeaturesContext";
 
@@ -32,7 +33,7 @@ export default function Preferences() {
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <Text style={[styles.sectionTitle, { color: sectionTitleColor }]}>Tabs</Text>
-      <View style={[styles.section, { backgroundColor: sectionBackgroundColor }]}>
+      {/* <View style={[styles.section, { backgroundColor: sectionBackgroundColor }]}>
         <Pressable
           style={styles.row}
           onPress={triggerFromButton}
@@ -48,8 +49,26 @@ export default function Preferences() {
           <Switch value={swipeEnabled} onValueChange={handleSwitchChange} loading={switchLoading} />
         </Pressable>
 
-        {/* The entire row is pressable; secondary button removed */}
-      </View>
+      </View> */}
+      <MenuItem
+        title="Swipe Between Tabs"
+        subtitle="Allow horizontal tab swipes"
+        onPress={triggerFromButton}
+        disabled={switchLoading}
+        isLast
+        isFirst
+        style={{ paddingVertical: 10 }}
+        containerStyle={{ marginHorizontal: 20 }}
+        rightAction={
+          <Switch
+            value={swipeEnabled}
+            onValueChange={handleSwitchChange}
+            loading={switchLoading}
+            style={{ marginRight: 10 }}
+          />
+        }
+        disableRipple
+      />
     </View>
   );
 }

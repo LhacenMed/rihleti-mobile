@@ -17,7 +17,7 @@ export default function Preferences() {
 
   // Switch tap still shows loading by itself
   const handleSwitchChange = async (newValue: boolean) => {
-    await new Promise((r) => setTimeout(r, 1000));
+    // await new Promise((r) => setTimeout(r, 1000));
     setSwipeEnabled(newValue);
   };
 
@@ -25,7 +25,7 @@ export default function Preferences() {
   const triggerFromButton = async () => {
     if (switchLoading) return;
     setSwitchLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
+    // await new Promise((r) => setTimeout(r, 1000));
     setSwipeEnabled(!swipeEnabled);
     setSwitchLoading(false);
   };

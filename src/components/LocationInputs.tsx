@@ -3,12 +3,16 @@ import { StyleSheet, View, Pressable, Animated, ActivityIndicator, Text } from "
 import { MaterialIcons } from "@expo/vector-icons";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LocationBottomSheet from "./LocationBottomSheet";
+import { Location } from "../types/location";
 
 type LocationInputsProps = {
   onDeparturePress?: () => void;
   selectedDepartureCity?: string | null;
   onDestinationPress?: () => void;
   selectedDestinationCity?: string | null;
+  onDepartureLocationSelect?: (location: Location) => void;
+  onDestinationLocationSelect?: (location: Location) => void;
 };
 
 const LocationInputs = ({
@@ -16,15 +20,21 @@ const LocationInputs = ({
   selectedDepartureCity,
   onDestinationPress,
   selectedDestinationCity,
+  onDepartureLocationSelect,
+  onDestinationLocationSelect,
 }: LocationInputsProps) => {
   const animatedBgFrom = useRef(new Animated.Value(0)).current;
   const animatedBgTo = useRef(new Animated.Value(0)).current;
-  const [departureCityName, setDepartureCityName] = useState<string | null>(selectedDepartureCity ?? null);
+  const [departureCityName, setDepartureCityName] = useState<string | null>(
+    selectedDepartureCity ?? null
+  );
   const [destinationCityName, setDestinationCityName] = useState<string | null>(
     selectedDestinationCity ?? null
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [isSwapPressed, setIsSwapPressed] = useState<boolean>(false);
+  const [isLocationModalVisible, setIsLocationModalVisible] = useState<boolean>(false);
+  const [activeInput, setActiveInput] = useState<"departure" | "destination">("departure");
 
   const interpolatedBgFrom = animatedBgFrom.interpolate({
     inputRange: [0, 1],
@@ -146,11 +156,33 @@ const LocationInputs = ({
   }, [departureCityName, destinationCityName]);
 
   const handleDepartureInputPress = () => {
+    setActiveInput("departure");
+    setIsLocationModalVisible(true);
     onDeparturePress?.();
   };
 
   const handleDestinationInputPress = () => {
+    setActiveInput("destination");
+    setIsLocationModalVisible(true);
     onDestinationPress?.();
+  };
+
+  const handleLocationSelect = (location: Location) => {
+    if (activeInput === "departure") {
+      setDepartureCityName(location.city);
+      onDepartureLocationSelect?.(location);
+      // Store as recent departure location
+      AsyncStorage.setItem("recentDepartureLocation", JSON.stringify(location));
+    } else {
+      setDestinationCityName(location.city);
+      onDestinationLocationSelect?.(location);
+      // Store as recent destination location
+      AsyncStorage.setItem("recentDestinationLocation", JSON.stringify(location));
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsLocationModalVisible(false);
   };
 
   const handleSwapPressIn = () => {
@@ -210,6 +242,14 @@ const LocationInputs = ({
       >
         <MaterialIcons name="swap-vert" size={24} color="#fff" />
       </Pressable>
+
+      {/* Location Selection Bottom Sheet */}
+      <LocationBottomSheet
+        isVisible={isLocationModalVisible}
+        onClose={handleCloseModal}
+        onLocationSelect={handleLocationSelect}
+        title={activeInput === "departure" ? "Select Departure City" : "Select Destination City"}
+      />
     </View>
   );
 };

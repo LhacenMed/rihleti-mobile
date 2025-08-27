@@ -18,6 +18,7 @@ module.exports = function(api) {
                         "@lib": ["./src/lib"],
                         "@utils": ["./src/utils"],
                         "@screens": ["./src/screens"],
+                        "@types": ["src/types"],
                     },
                 },
             ],

@@ -24,8 +24,8 @@ interface SwitchProps {
 export const Switch: React.FC<SwitchProps> = ({
   value,
   onValueChange,
-  trackColor = { true: "#34C759", false: "#E5E5EA" },
-  thumbColor = { true: "#ffffff", false: "#ffffff" },
+  trackColor = { true: "#34C759", false: "#666" },
+  thumbColor = { true: "#fff", false: "#fff" },
   style,
   loading: externalLoading = false,
 }) => {
@@ -177,13 +177,10 @@ export const Switch: React.FC<SwitchProps> = ({
           {computedLoading && (
             // <ActivityIndicator
             //   size="small"
-            //   color={isOn ? trackColor.true : "#666666"}
+            //   color={isOn ? trackColor.true : "#666"}
             //   style={styles.activityIndicator}
             // />
-            <Loader
-              color={isOn ? trackColor.true : "#666666"}
-              style={styles.activityIndicator}
-            />
+            <Loader color={isOn ? trackColor.true : "#666"} style={styles.activityIndicator} />
           )}
         </Animated.View>
       </Pressable>

@@ -22,7 +22,7 @@ import SignupScreen from "@app/auth/SignupScreen";
 import VerifyOTPScreen from "@app/auth/VerifyOTPScreen";
 
 // App Screens
-import Home from "@app/tabs/Index";
+import Home from "@app/tabs/Home";
 import Explore from "@app/tabs/Explore";
 import Bookings from "@app/tabs/Bookings";
 import Settings from "@app/tabs/Settings";
@@ -42,6 +42,7 @@ import { FeaturesProvider, useFeatures } from "@contexts/FeaturesContext";
 
 // Loader functions
 import { storeLoaderInSupabase, loadLoaderFromSupabase } from "@components/ui/loader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type RootStackParamList = {
   // Auth Screens
@@ -397,6 +398,10 @@ const AppInitializer = () => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
+        // Clear location inputs values
+        // await AsyncStorage.removeItem("departureCityName");
+        // await AsyncStorage.removeItem("destinationCityName");
+
         // Load cached loader from Supabase
         await loadLoaderFromSupabase();
 

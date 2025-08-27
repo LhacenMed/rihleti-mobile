@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
   interpolateColor,
   runOnJS,
+  withTiming,
 } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
@@ -17,6 +18,7 @@ interface SwitchProps {
   trackColor?: { true: string; false: string };
   thumbColor?: { true: string; false: string };
   style?: StyleProp<ViewStyle>;
+  loading?: boolean; // external loading control (optional)
 }
 
 export const Switch: React.FC<SwitchProps> = ({
@@ -25,6 +27,7 @@ export const Switch: React.FC<SwitchProps> = ({
   trackColor = { true: "#34C759", false: "#E5E5EA" },
   thumbColor = { true: "#ffffff", false: "#ffffff" },
   style,
+  loading: externalLoading = false,
 }) => {
   const springConfig = {
     stiffness: 1500,
@@ -45,8 +48,10 @@ export const Switch: React.FC<SwitchProps> = ({
 
   const [isOn, setIsOn] = useState(value);
   const [isLoading, setIsLoading] = useState(false);
+  const computedLoading = isLoading || externalLoading;
 
   const translateX = useSharedValue(value ? switchWidth - thumbSize - padding : 0);
+  const loadingProgress = useSharedValue(0);
 
   const circleAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }, { scale: circleScale.value }],
@@ -56,14 +61,15 @@ export const Switch: React.FC<SwitchProps> = ({
 
   // Update the useEffect hook to respond to the `value` prop changes
   useEffect(() => {
-    if (!isLoading) {
+    if (!computedLoading) {
       setIsOn(value);
       translateX.value = withSpring(value ? switchWidth - thumbSize - padding : 0, springConfig);
     }
-  }, [value, isLoading]);
+  }, [value, computedLoading]);
 
   const handleValueChange = async (newValue: boolean) => {
     setIsLoading(true);
+    loadingProgress.value = withTiming(1, { duration: 200 });
 
     try {
       // Trigger haptic feedback
@@ -83,6 +89,7 @@ export const Switch: React.FC<SwitchProps> = ({
       console.error("Switch value change failed:", error);
     } finally {
       setIsLoading(false);
+      loadingProgress.value = withTiming(0, { duration: 200 });
     }
   };
 
@@ -105,7 +112,7 @@ export const Switch: React.FC<SwitchProps> = ({
   }));
 
   const gesture = Gesture.Pan()
-    .enabled(!isLoading) // Disable gesture during loading
+    .enabled(!computedLoading) // Disable gesture during loading
     .onBegin(() => {
       scale.value = withSpring(0.7, springConfig);
       circleScale.value = withSpring(1.5, springConfig);
@@ -143,12 +150,16 @@ export const Switch: React.FC<SwitchProps> = ({
       [0, switchWidth - thumbSize - padding],
       [trackColor.false, trackColor.true]
     ),
-    opacity: isLoading ? 0.6 : 1, // Dim the track during loading
+    opacity: 1 - 0.4 * loadingProgress.value, // Animate dimming during loading
   }));
 
   return (
     <GestureDetector gesture={gesture}>
-      <Pressable onPress={toggleSwitch} style={[styles.container, style]} disabled={isLoading}>
+      <Pressable
+        onPress={toggleSwitch}
+        style={[styles.container, style]}
+        disabled={computedLoading}
+      >
         <Animated.View style={[styles.track, trackAnimatedStyle]} />
         <Animated.View
           style={[
@@ -163,7 +174,7 @@ export const Switch: React.FC<SwitchProps> = ({
           ]}
         />
         <Animated.View style={[styles.thumb, thumbAnimatedStyle]}>
-          {isLoading && (
+          {computedLoading && (
             <Loader
               // size="small"
               color={isOn ? trackColor.true : "#666666"}

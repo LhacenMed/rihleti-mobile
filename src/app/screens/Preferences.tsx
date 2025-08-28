@@ -38,7 +38,7 @@ export default function Preferences() {
           style={styles.row}
           onPress={triggerFromButton}
           disabled={switchLoading}
-          android_ripple={{ color: textColor }}
+          android_ripple={{ color: "gray" }}
         >
           <View style={styles.rowTextContainer}>
             <Text style={[styles.rowTitle, { color: textColor }]}>Swipe Between Tabs</Text>
@@ -48,7 +48,6 @@ export default function Preferences() {
           </View>
           <Switch value={swipeEnabled} onValueChange={handleSwitchChange} loading={switchLoading} />
         </Pressable>
-
       </View> */}
       <MenuItem
         title="Swipe Between Tabs"
@@ -67,7 +66,7 @@ export default function Preferences() {
             style={{ marginRight: 10 }}
           />
         }
-        disableRipple
+        // disableRipple
       />
     </View>
   );

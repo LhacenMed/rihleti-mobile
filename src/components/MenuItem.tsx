@@ -235,7 +235,7 @@
 // Fallback for Pressable
 
 import { useTheme } from "@contexts/ThemeContext";
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -244,6 +244,8 @@ import {
   Pressable,
   ViewStyle,
   StyleProp,
+  Platform,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Loader from "./ui/loader";
@@ -292,6 +294,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
   disableRipple = false,
 }) => {
   const { isDark } = useTheme();
+  const [isPressed, setIsPressed] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const backgroundColor = isDark ? "#1E1E1E" : "#ffffff";
   const dimBackgroundColor = isDark ? "#2A2A2A" : "rgb(241, 241, 241)";
@@ -316,12 +320,33 @@ const MenuItem: React.FC<MenuItemProps> = ({
   const textColor = isDanger ? dangerTextColor : normalTextColor;
   const rippleColor = isDanger ? dangerDimBackgroundColor : dimBackgroundColor;
 
+  const handlePressIn = () => {
+    if (Platform.OS === "ios") {
+      setIsPressed(true);
+      fadeAnim.setValue(1);
+    }
+    onPressIn?.();
+  };
+
+  const handlePressOut = () => {
+    if (Platform.OS === "ios") {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: false,
+      }).start(() => {
+        setIsPressed(false);
+      });
+    }
+    onPressOut?.();
+  };
+
   return (
     <View style={[computedContainerStyle, containerStyle]}>
       <Pressable
         onPress={onPress}
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
         disabled={loading || disabled}
         style={[styles.pressable, style]}
         android_ripple={
@@ -333,6 +358,16 @@ const MenuItem: React.FC<MenuItemProps> = ({
               }
         }
       >
+        {Platform.OS === "ios" && isPressed && (
+          <Animated.View
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+              opacity: fadeAnim,
+            }}
+            pointerEvents="none"
+          />
+        )}
         <View style={[styles.menuItemContent, style]}>
           <View style={styles.menuItemLeft}>
             {icon && (
@@ -396,9 +431,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   pressable: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 15,
     minHeight: 50,
+    position: "relative",
   },
   menuItemContent: {
     flexDirection: "row",

@@ -19,6 +19,7 @@ const Bookings = () => {
 
         <TouchableOpacity
           className="mb-6 flex-row items-center rounded-lg border border-border bg-card p-4"
+          // @ts-ignore
           onPress={() => navigation.navigate("Messages")}
         >
           <Ionicons name="chatbubbles-outline" size={24} color="#64748b" />

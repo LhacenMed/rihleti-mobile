@@ -196,7 +196,7 @@ const Settings = () => {
           <MenuItem
             icon="options-outline"
             title="Preferences"
-            value="Controls"
+            // value="Controls"
             isFirst={false}
             isLast={false}
             showValue={true}

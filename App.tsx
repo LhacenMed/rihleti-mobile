@@ -286,7 +286,7 @@ const AppNavigator = () => {
               component={DepartureLocationScreen}
               options={{
                 headerShown: false,
-                ...TransitionPresets.ModalPresentationIOS,
+                ...TransitionPresets.SlideFromRightIOS,
               }}
             />
             <RootStack.Screen
@@ -294,7 +294,7 @@ const AppNavigator = () => {
               component={DestinationLocationScreen}
               options={{
                 headerShown: false,
-                ...TransitionPresets.ModalPresentationIOS,
+                ...TransitionPresets.SlideFromRightIOS,
               }}
             />
           </>

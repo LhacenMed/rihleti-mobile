@@ -145,7 +145,7 @@ const DestinationLocationScreen: React.FC = () => {
   );
 
   return (
-    <View className="-mt-7 flex-1 bg-background">
+    <View className="flex-1 bg-background">
       {/* Top search-as-header */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={handleGoBack} style={styles.closeButton}>

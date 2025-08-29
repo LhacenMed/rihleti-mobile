@@ -9,6 +9,7 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
+import { Button as PaperButton } from "react-native-paper";
 
 // Button variant configurations using Tailwind-style class names
 const buttonVariants = {
@@ -30,12 +31,12 @@ const buttonVariants = {
     primary: "h-[42px] px-4 py-2 rounded-full w-full",
   },
   textVariant: {
-    default: "text-white text-md",
-    primary: "text-white font-medium text-md",
-    destructive: "text-white font-medium text-md",
-    outline: "text-gray-700 text-lg",
-    secondary: "text-gray-700 font-medium text-md",
-    ghost: "text-gray-700 font-medium text-md",
+    default: "text-foreground text-md",
+    primary: "text-foreground font-medium text-md",
+    destructive: "text-foreground font-medium text-md",
+    outline: "text-muted-foreground text-lg",
+    secondary: "text-muted-foreground font-medium text-md",
+    ghost: "text-muted-foreground font-medium text-md",
     link: "text-blue-500 font-medium underline text-md",
   },
 };
@@ -168,7 +169,7 @@ export const Button: React.FC<ButtonProps> = ({
           <View
             style={{
               ...StyleSheet.absoluteFillObject,
-              backgroundColor: "rgba(0, 0, 0, 0.05)",
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
               borderRadius: 50,
             }}
           />

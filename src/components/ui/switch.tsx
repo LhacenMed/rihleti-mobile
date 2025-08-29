@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useImperativeHandle, forwardRef } from "react";
-import { StyleSheet, Pressable, StyleProp, ViewStyle, ActivityIndicator } from "react-native";
+import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
+import {
+  StyleSheet,
+  Pressable,
+  StyleProp,
+  ViewStyle,
+  Platform,
+  Switch as RNSwitch,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -39,6 +46,62 @@ export const Switch = forwardRef<SwitchRef, SwitchProps>(
     },
     ref
   ) => {
+    // On iOS, use the native Switch for platform-consistent look/feel
+    // Remove this if statement if it's causing issues
+    if (Platform.OS === "ios") {
+      const handleValueChange = async (newValue: boolean) => {
+        try {
+          Haptics.selectionAsync();
+          const result = onValueChange(newValue);
+          if (result instanceof Promise) {
+            await result;
+          }
+        } catch (error) {
+          console.error("Switch value change failed:", error);
+        }
+      };
+
+      const toggleSwitch = () => {
+        if (externalLoading) return;
+        const newValue = !value;
+        handleValueChange(newValue);
+      };
+
+      const triggerPressAnimation = () => {
+        if (externalLoading) return;
+        toggleSwitch();
+      };
+
+      const onPressIn = () => {
+        if (externalLoading) return;
+        // iOS native switch doesn't need press animations
+      };
+
+      const onPressOut = () => {
+        if (externalLoading) return;
+        // iOS native switch doesn't need press animations
+      };
+
+      // Expose methods to parent components for iOS switch
+      useImperativeHandle(ref, () => ({
+        triggerPress: triggerPressAnimation,
+        onPressIn,
+        onPressOut,
+      }));
+
+      return (
+        <RNSwitch
+          value={value}
+          onValueChange={onValueChange}
+          trackColor={trackColor}
+          thumbColor={value ? thumbColor.true : thumbColor.false}
+          ios_backgroundColor={trackColor.false}
+          style={style}
+          disabled={externalLoading}
+        />
+      );
+    }
+
     const springConfig = {
       stiffness: 1500,
       damping: 150,

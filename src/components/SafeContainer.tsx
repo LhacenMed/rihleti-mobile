@@ -13,12 +13,14 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
       {
         flex: 1,
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        // paddingHorizontal: Platform.OS === "android" ? 15 : 0,
+        // marginHorizontal: Platform.OS === "ios" ? 10 : 0,
       },
       style,
     ]}
-    className={`bg-background ${className}`}
+    className="bg-background"
   >
-    {children}
+    <View className={`flex-1 bg-background ${className}`}>{children}</View>
   </SafeAreaView>
 );
 

@@ -15,7 +15,15 @@ export default {
             tsconfigPaths: true,
         },
 
-        plugins: [],
+        plugins: [
+            [
+                "expo-localization",
+                {
+                    // Optional: customize permission messages
+                    // locationAlwaysAndWhenInUsePermission: "Allow $(PRODUCT_NAME) to use your location."
+                }
+            ]
+        ],
 
         orientation: "portrait",
         icon: "./src/assets/icon.png",

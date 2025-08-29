@@ -64,7 +64,6 @@ export default function Preferences() {
         disabled={switchLoading}
         isLast
         isFirst
-        style={{ paddingVertical: 10 }}
         containerStyle={{ marginHorizontal: 20 }}
         rightAction={
           <Switch

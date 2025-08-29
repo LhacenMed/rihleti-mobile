@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ExpoLocation from "expo-location";
+import * as Localization from "expo-localization";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import locations from "@utils/locationsData";
@@ -76,6 +77,26 @@ const DepartureLocationScreen: React.FC = () => {
       });
 
       console.log(address);
+
+      // Get current device language
+      const deviceLanguage = Localization.getLocales()[0]?.languageCode;
+      console.log("Current device language:", deviceLanguage);
+
+      // Check if device language is not English
+      if (deviceLanguage && !deviceLanguage.startsWith("en")) {
+        console.log("Device language is not English, address may be in local language");
+        showModal(Modal, {
+          title: "Change language",
+          subtitle:
+            "Change your device's language to english to let the app get you current location.",
+          buttons: [
+            { text: "Cancel", style: "cancel" },
+            { text: "Retry", onPress: handleUseCurrentLocation },
+          ],
+        });
+        // TODO: implement a solution better than this
+        return;
+      }
 
       const city = address?.city || address?.subregion || "";
       const region = address?.region || address?.subregion || "";
@@ -147,7 +168,7 @@ const DepartureLocationScreen: React.FC = () => {
   );
 
   return (
-    <View className="-mt-7 flex-1 bg-background">
+    <View className="flex-1 bg-background">
       {/* Top search-as-header */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={handleGoBack} style={styles.closeButton}>

@@ -4,30 +4,19 @@ import { MaterialIcons } from "@expo/vector-icons";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-// import { Location } from "../types/location";
+// import { Location } from "@/types/location";
 
 type LocationInputsProps = {
   onDeparturePress?: () => void;
-  selectedDepartureCity?: string | null;
   onDestinationPress?: () => void;
-  selectedDestinationCity?: string | null;
 };
 
-const LocationInputs = ({
-  onDeparturePress,
-  selectedDepartureCity,
-  onDestinationPress,
-  selectedDestinationCity,
-}: LocationInputsProps) => {
+const LocationInputs = ({ onDeparturePress, onDestinationPress }: LocationInputsProps) => {
   const navigation = useNavigation();
   const animatedBgFrom = useRef(new Animated.Value(0)).current;
   const animatedBgTo = useRef(new Animated.Value(0)).current;
-  const [departureCityName, setDepartureCityName] = useState<string | null>(
-    selectedDepartureCity ?? null
-  );
-  const [destinationCityName, setDestinationCityName] = useState<string | null>(
-    selectedDestinationCity ?? null
-  );
+  const [departureCityName, setDepartureCityName] = useState<string | null>(null);
+  const [destinationCityName, setDestinationCityName] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isSwapPressed, setIsSwapPressed] = useState<boolean>(false);
 
@@ -88,13 +77,7 @@ const LocationInputs = ({
     setDestinationCityName(currentDeparture);
   };
 
-  useEffect(() => {
-    setDepartureCityName(selectedDepartureCity ?? null);
-  }, [selectedDepartureCity]);
-
-  useEffect(() => {
-    setDestinationCityName(selectedDestinationCity ?? null);
-  }, [selectedDestinationCity]);
+  // Removed prop-driven sync; component now manages its own state/storage
 
   // Refresh location data when screen comes into focus
   useFocusEffect(
@@ -104,11 +87,11 @@ const LocationInputs = ({
           const storedDepartureCity = await AsyncStorage.getItem("departureCityName");
           const storedDestinationCity = await AsyncStorage.getItem("destinationCityName");
 
-          if (storedDepartureCity && !selectedDepartureCity) {
+          if (storedDepartureCity) {
             setDepartureCityName(storedDepartureCity);
           }
 
-          if (storedDestinationCity && !selectedDestinationCity) {
+          if (storedDestinationCity) {
             setDestinationCityName(storedDestinationCity);
           }
         } catch (error) {
@@ -117,7 +100,7 @@ const LocationInputs = ({
       };
 
       refreshLocationData();
-    }, [selectedDepartureCity, selectedDestinationCity])
+    }, [])
   );
 
   useEffect(() => {
@@ -129,11 +112,11 @@ const LocationInputs = ({
         // const recentStoredDepartureCityName = await AsyncStorage.getItem("recentDepartureLocation");
         // console.log(recentStoredDepartureCityName);
 
-        if (storedDepartureCityName && !selectedDepartureCity) {
+        if (storedDepartureCityName) {
           setDepartureCityName(storedDepartureCityName);
         }
 
-        if (!storedDepartureCityName && !selectedDepartureCity) {
+        if (!storedDepartureCityName) {
           const state = await NetInfo.fetch();
           if (!state.isConnected) {
             console.log("No internet connection");
@@ -166,7 +149,7 @@ const LocationInputs = ({
     };
 
     fetchUserApiAddress();
-  }, [selectedDepartureCity]);
+  }, []);
 
   useEffect(() => {
     const storeCityNames = async () => {

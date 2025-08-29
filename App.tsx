@@ -7,6 +7,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
+import { toastConfig } from "@components/ui/toast";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
@@ -33,6 +34,7 @@ import Messages from "@app/screens/Messages";
 import Preferences from "@app/screens/Preferences";
 import DepartureLocationScreen from "@app/screens/DepartureLocationScreen";
 import DestinationLocationScreen from "@app/screens/DestinationLocationScreen";
+import TripsScreen from "@app/screens/TripsScreen";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
@@ -67,6 +69,10 @@ type RootStackParamList = {
   Preferences: undefined;
   DepartureLocation: undefined;
   DestinationLocation: undefined;
+  Trips: {
+    departure: string;
+    destination: string;
+  };
 };
 
 const Tab = createMaterialTopTabNavigator();
@@ -297,6 +303,28 @@ const AppNavigator = () => {
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
+            <RootStack.Screen
+              name="Trips"
+              component={TripsScreen}
+              options={{
+                headerShown: true,
+                headerTitle: "Available Trips",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: isDark ? "#ffffff" : "#000000",
+                },
+                headerStyle: {
+                  backgroundColor: isDark ? "#000" : "#fff",
+                  elevation: 0,
+                  shadowOpacity: 0,
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+                  height: 90,
+                },
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            />
           </>
         ) : (
           // Unauthenticated screens
@@ -450,7 +478,14 @@ export default function App() {
                   <BottomSheetModalProvider>
                     <StatusBar style="auto" />
                     <AppInitializer />
-                    <Toast />
+                    <Toast
+                      config={toastConfig}
+                      position="top"
+                      topOffset={60}
+                      visibilityTime={4000}
+                      autoHide={true}
+                      swipeable={true}
+                    />
                   </BottomSheetModalProvider>
                 </ModalPresenterParent>
               </PaperProvider>

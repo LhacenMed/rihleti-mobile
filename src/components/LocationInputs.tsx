@@ -9,9 +9,14 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 type LocationInputsProps = {
   onDeparturePress?: () => void;
   onDestinationPress?: () => void;
+  onLocationsChange?: (departure: string | null, destination: string | null) => void;
 };
 
-const LocationInputs = ({ onDeparturePress, onDestinationPress }: LocationInputsProps) => {
+const LocationInputs = ({
+  onDeparturePress,
+  onDestinationPress,
+  onLocationsChange,
+}: LocationInputsProps) => {
   const navigation = useNavigation();
   const animatedBgFrom = useRef(new Animated.Value(0)).current;
   const animatedBgTo = useRef(new Animated.Value(0)).current;
@@ -169,7 +174,10 @@ const LocationInputs = ({ onDeparturePress, onDestinationPress }: LocationInputs
     };
 
     storeCityNames();
-  }, [departureCityName, destinationCityName]);
+
+    // Notify parent component of location changes
+    onLocationsChange?.(departureCityName, destinationCityName);
+  }, [departureCityName, destinationCityName, onLocationsChange]);
 
   const handleDepartureInputPress = () => {
     onDeparturePress?.();

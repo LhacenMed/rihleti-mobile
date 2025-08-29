@@ -1,11 +1,11 @@
 import { useRef, useCallback, useState } from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import LocationInputs from "@components/LocationInputs";
 import SafeContainer from "@components/SafeContainer";
 // @ts-ignore
 import { Location } from "@types/location";
-import EmailBottomSheet from "~/components/EmailBottomSheet";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+// import EmailBottomSheet from "@/components/EmailBottomSheet";
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Button } from "react-native-paper";
 
 export default function Page() {
@@ -13,15 +13,10 @@ export default function Page() {
   const [selectedDestinationLocation, setSelectedDestinationLocation] = useState<Location | null>(
     null
   );
-  const emailBottomSheetRef = useRef<BottomSheetModal>(null);
+  const locationBottomSheetRef = useRef<BottomSheetModal>(null);
 
   const handlePresentEmailModal = useCallback(() => {
-    emailBottomSheetRef.current?.present();
-  }, []);
-
-  const handleEmailSubmit = useCallback((email: string) => {
-    console.log("Email submitted:", email);
-    emailBottomSheetRef.current?.dismiss();
+    locationBottomSheetRef.current?.present();
   }, []);
 
   const handleDepartureLocationSelect = (location: Location) => {
@@ -32,14 +27,26 @@ export default function Page() {
     setSelectedDestinationLocation(location);
   };
 
+  // Render backdrop
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        opacity={0.5}
+        enableTouchThrough={false}
+      />
+    ),
+    []
+  );
+
   return (
     <SafeContainer className="px-5">
       {/* Location Inputs */}
       <LocationInputs
         selectedDepartureCity={selectedDepartureLocation?.city || null}
         selectedDestinationCity={selectedDestinationLocation?.city || null}
-        onDepartureLocationSelect={handleDepartureLocationSelect}
-        onDestinationLocationSelect={handleDestinationLocationSelect}
       />
 
       {/* Search Button */}
@@ -48,16 +55,30 @@ export default function Page() {
       </TouchableOpacity>
 
       <Button style={{ marginTop: 20 }} mode="outlined" onPress={handlePresentEmailModal}>
-        <Text>Show it</Text>
+        Departure
+      </Button>
+      <Button style={{ marginTop: 20 }} mode="outlined" onPress={handlePresentEmailModal}>
+        Destination
       </Button>
 
-      <EmailBottomSheet
-        ref={emailBottomSheetRef}
-        onEmailSubmit={handleEmailSubmit}
-        title="Continue with Email"
-        placeholder="Enter your email address"
-        buttonText="Continue"
-      />
+      {/* Locations BottomSheet */}
+      <BottomSheetModal
+        ref={locationBottomSheetRef}
+        enableDismissOnClose={true}
+        backdropComponent={renderBackdrop}
+      >
+        <BottomSheetView className="flex-1 px-6 py-8">
+          <Text className="mb-6 text-center text-2xl font-bold text-black">Hi there</Text>
+          <TouchableOpacity
+            className={`rounded-lg bg-[#606c38] px-6 py-4`}
+            onPress={() => {
+              locationBottomSheetRef.current?.dismiss();
+            }}
+          >
+            <Text className={`text-center text-base font-semibold text-white`}>Ok</Text>
+          </TouchableOpacity>
+        </BottomSheetView>
+      </BottomSheetModal>
     </SafeContainer>
   );
 }

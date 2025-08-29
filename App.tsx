@@ -31,6 +31,8 @@ import SettingsTest from "@app/screens/SettingsTest";
 import WebViewScreen from "@app/screens/WebViewScreen";
 import Messages from "@app/screens/Messages";
 import Preferences from "@app/screens/Preferences";
+import DepartureLocationScreen from "@app/screens/DepartureLocationScreen";
+import DestinationLocationScreen from "@app/screens/DestinationLocationScreen";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
@@ -63,6 +65,8 @@ type RootStackParamList = {
   };
   Messages: undefined;
   Preferences: undefined;
+  DepartureLocation: undefined;
+  DestinationLocation: undefined;
 };
 
 const Tab = createMaterialTopTabNavigator();
@@ -277,6 +281,22 @@ const AppNavigator = () => {
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
+            <RootStack.Screen
+              name="DepartureLocation"
+              component={DepartureLocationScreen}
+              options={{
+                headerShown: false,
+                ...TransitionPresets.ModalPresentationIOS,
+              }}
+            />
+            <RootStack.Screen
+              name="DestinationLocation"
+              component={DestinationLocationScreen}
+              options={{
+                headerShown: false,
+                ...TransitionPresets.ModalPresentationIOS,
+              }}
+            />
           </>
         ) : (
           // Unauthenticated screens
@@ -399,8 +419,8 @@ const AppInitializer = () => {
     const initializeApp = async () => {
       try {
         // Clear location inputs values
-        // await AsyncStorage.removeItem("departureCityName");
-        // await AsyncStorage.removeItem("destinationCityName");
+        await AsyncStorage.removeItem("departureCityName");
+        await AsyncStorage.removeItem("destinationCityName");
 
         // Load cached loader from Supabase
         await loadLoaderFromSupabase();

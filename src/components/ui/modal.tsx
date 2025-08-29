@@ -204,8 +204,8 @@ const ModalFooter = ({
 const Modal = ({
   dismiss,
   header,
-  title,
-  subtitle,
+  title = "Title",
+  subtitle = "Subtitle",
   hasHeader,
   children,
   buttons = [{ text: "OK" }],

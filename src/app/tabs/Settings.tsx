@@ -9,7 +9,7 @@ import MenuItem from "@components/MenuItem";
 import { useTheme } from "@contexts/ThemeContext";
 import { useAuth } from "@contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeSwitcher } from "~/components/ThemeSwitcher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 // import { Ionicons } from "@expo/vector-icons";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@components/ui/modal";

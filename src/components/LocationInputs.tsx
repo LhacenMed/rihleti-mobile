@@ -1,18 +1,16 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { StyleSheet, View, Pressable, Animated, ActivityIndicator, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LocationBottomSheet from "./LocationBottomSheet";
-import { Location } from "../types/location";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+// import { Location } from "../types/location";
 
 type LocationInputsProps = {
   onDeparturePress?: () => void;
   selectedDepartureCity?: string | null;
   onDestinationPress?: () => void;
   selectedDestinationCity?: string | null;
-  onDepartureLocationSelect?: (location: Location) => void;
-  onDestinationLocationSelect?: (location: Location) => void;
 };
 
 const LocationInputs = ({
@@ -20,9 +18,8 @@ const LocationInputs = ({
   selectedDepartureCity,
   onDestinationPress,
   selectedDestinationCity,
-  onDepartureLocationSelect,
-  onDestinationLocationSelect,
 }: LocationInputsProps) => {
+  const navigation = useNavigation();
   const animatedBgFrom = useRef(new Animated.Value(0)).current;
   const animatedBgTo = useRef(new Animated.Value(0)).current;
   const [departureCityName, setDepartureCityName] = useState<string | null>(
@@ -33,8 +30,6 @@ const LocationInputs = ({
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [isSwapPressed, setIsSwapPressed] = useState<boolean>(false);
-  const [isLocationModalVisible, setIsLocationModalVisible] = useState<boolean>(false);
-  const [activeInput, setActiveInput] = useState<"departure" | "destination">("departure");
 
   const interpolatedBgFrom = animatedBgFrom.interpolate({
     inputRange: [0, 1],
@@ -85,10 +80,12 @@ const LocationInputs = ({
   };
 
   const handleSwitchCities = () => {
-    setDepartureCityName((prev) => {
-      setDestinationCityName(prev);
-      return destinationCityName;
-    });
+    const currentDeparture = departureCityName ?? null;
+    const currentDestination = destinationCityName ?? null;
+
+    // Swap values in state
+    setDepartureCityName(currentDestination);
+    setDestinationCityName(currentDeparture);
   };
 
   useEffect(() => {
@@ -99,12 +96,38 @@ const LocationInputs = ({
     setDestinationCityName(selectedDestinationCity ?? null);
   }, [selectedDestinationCity]);
 
+  // Refresh location data when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      const refreshLocationData = async () => {
+        try {
+          const storedDepartureCity = await AsyncStorage.getItem("departureCityName");
+          const storedDestinationCity = await AsyncStorage.getItem("destinationCityName");
+
+          if (storedDepartureCity && !selectedDepartureCity) {
+            setDepartureCityName(storedDepartureCity);
+          }
+
+          if (storedDestinationCity && !selectedDestinationCity) {
+            setDestinationCityName(storedDestinationCity);
+          }
+        } catch (error) {
+          console.error("Error refreshing location data:", error);
+        }
+      };
+
+      refreshLocationData();
+    }, [selectedDepartureCity, selectedDestinationCity])
+  );
+
   useEffect(() => {
     const fetchUserApiAddress = async () => {
       setLoading(true);
       try {
         const storedDepartureCityName = await AsyncStorage.getItem("departureCityName");
         const storedDestinationCityName = await AsyncStorage.getItem("destinationCityName");
+        // const recentStoredDepartureCityName = await AsyncStorage.getItem("recentDepartureLocation");
+        // console.log(recentStoredDepartureCityName);
 
         if (storedDepartureCityName && !selectedDepartureCity) {
           setDepartureCityName(storedDepartureCityName);
@@ -125,8 +148,11 @@ const LocationInputs = ({
             userApiAddress.region,
             userApiAddress.country
           );
-          setDepartureCityName(userApiAddress.city);
-          await AsyncStorage.setItem("departureCityName", userApiAddress.city);
+          const resolvedCity = (userApiAddress.city || "").trim();
+          if (resolvedCity === "Nouakchott") {
+            setDepartureCityName(resolvedCity);
+            await AsyncStorage.setItem("departureCityName", resolvedCity);
+          }
         }
 
         if (storedDestinationCityName) {
@@ -144,11 +170,18 @@ const LocationInputs = ({
 
   useEffect(() => {
     const storeCityNames = async () => {
-      if (departureCityName) {
+      // Update or clear departure
+      if (departureCityName && departureCityName.length > 0) {
         await AsyncStorage.setItem("departureCityName", departureCityName);
+      } else {
+        await AsyncStorage.removeItem("departureCityName");
       }
-      if (destinationCityName) {
+
+      // Update or clear destination
+      if (destinationCityName && destinationCityName.length > 0) {
         await AsyncStorage.setItem("destinationCityName", destinationCityName);
+      } else {
+        await AsyncStorage.removeItem("destinationCityName");
       }
     };
 
@@ -156,33 +189,13 @@ const LocationInputs = ({
   }, [departureCityName, destinationCityName]);
 
   const handleDepartureInputPress = () => {
-    setActiveInput("departure");
-    setIsLocationModalVisible(true);
     onDeparturePress?.();
+    navigation.navigate("DepartureLocation" as never);
   };
 
   const handleDestinationInputPress = () => {
-    setActiveInput("destination");
-    setIsLocationModalVisible(true);
     onDestinationPress?.();
-  };
-
-  const handleLocationSelect = (location: Location) => {
-    if (activeInput === "departure") {
-      setDepartureCityName(location.city);
-      onDepartureLocationSelect?.(location);
-      // Store as recent departure location
-      AsyncStorage.setItem("recentDepartureLocation", JSON.stringify(location));
-    } else {
-      setDestinationCityName(location.city);
-      onDestinationLocationSelect?.(location);
-      // Store as recent destination location
-      AsyncStorage.setItem("recentDestinationLocation", JSON.stringify(location));
-    }
-  };
-
-  const handleCloseModal = () => {
-    setIsLocationModalVisible(false);
+    navigation.navigate("DestinationLocation" as never);
   };
 
   const handleSwapPressIn = () => {
@@ -242,14 +255,6 @@ const LocationInputs = ({
       >
         <MaterialIcons name="swap-vert" size={24} color="#fff" />
       </Pressable>
-
-      {/* Location Selection Bottom Sheet */}
-      <LocationBottomSheet
-        isVisible={isLocationModalVisible}
-        onClose={handleCloseModal}
-        onLocationSelect={handleLocationSelect}
-        title={activeInput === "departure" ? "Select Departure City" : "Select Destination City"}
-      />
     </View>
   );
 };

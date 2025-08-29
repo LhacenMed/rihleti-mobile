@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
-import { Input } from "~/components/ui/input";
-import SafeContainer from "~/components/SafeContainer";
-import { supabase } from "~/lib/supabase";
-import { verifyEmail } from "~/utils/auth-helpers";
-import Loader from "~/components/ui/loader";
-import Button from "~/components/ui/button";
+import { Input } from "@/components/ui/input";
+import SafeContainer from "@/components/SafeContainer";
+import { supabase } from "@/lib/supabase";
+import { verifyEmail } from "@/utils/auth-helpers";
+import Loader from "@/components/ui/loader";
+import Button from "@/components/ui/button";
 import * as z from "zod";
 
 interface Props {
@@ -145,6 +145,8 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
             autoCapitalize="none"
             autoCorrect={false}
             editable={!loading}
+            autoFocus
+            autoComplete="email"
           />
         </View>
 
@@ -158,7 +160,6 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
               onChangeText={setPassword}
               isPassword
               autoCapitalize="sentences"
-              autoCorrect={false}
               editable={!loading}
             />
           </View>
@@ -184,7 +185,7 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleContinue}
           disabled={!isFormValid || loading}
         >
-          {loading ? <Loader /> : "Continue"}
+          {loading ? <Loader color="#666" /> : "Continue"}
         </Button>
 
         <Button
@@ -252,7 +253,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: "center",
     justifyContent: "center", // Added to center the loader
-    minHeight: 56, // Added minimum height to prevent button height changes
   },
   continueButtonDisabled: {
     backgroundColor: "#333333",

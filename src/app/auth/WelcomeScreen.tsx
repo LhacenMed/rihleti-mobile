@@ -18,7 +18,7 @@ import EmailBottomSheet from "@components/EmailBottomSheet";
 import { Button } from "@components/ui/button";
 import { GoogleLogo, RihletiLogo } from "@components/icons";
 // import { Ionicons } from "@expo/vector-icons";
-import SafeContainer from "~/components/SafeContainer";
+import SafeContainer from "@/components/SafeContainer";
 
 interface Props {
   navigation: any;

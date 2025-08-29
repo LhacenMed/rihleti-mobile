@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import { StyleSheet, Pressable, StyleProp, ViewStyle, ActivityIndicator } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -18,175 +18,213 @@ interface SwitchProps {
   trackColor?: { true: string; false: string };
   thumbColor?: { true: string; false: string };
   style?: StyleProp<ViewStyle>;
-  loading?: boolean; // external loading control (optional)
+  loading?: boolean;
 }
 
-export const Switch: React.FC<SwitchProps> = ({
-  value,
-  onValueChange,
-  trackColor = { true: "#34C759", false: "#666" },
-  thumbColor = { true: "#fff", false: "#fff" },
-  style,
-  loading: externalLoading = false,
-}) => {
-  const springConfig = {
-    stiffness: 1500,
-    damping: 150,
-    mass: 1,
-    overshootClamping: false,
-    restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 2,
-  };
+export interface SwitchRef {
+  triggerPress: () => void;
+  onPressIn: () => void;
+  onPressOut: () => void;
+}
 
-  const circleScale = useSharedValue(0);
-  const circleOpacity = useSharedValue(0);
+export const Switch = forwardRef<SwitchRef, SwitchProps>(
+  (
+    {
+      value,
+      onValueChange,
+      trackColor = { true: "#34C759", false: "#666" },
+      thumbColor = { true: "#fff", false: "#fff" },
+      style,
+      loading: externalLoading = false,
+    },
+    ref
+  ) => {
+    const springConfig = {
+      stiffness: 1500,
+      damping: 150,
+      mass: 1,
+      overshootClamping: false,
+      restDisplacementThreshold: 0.01,
+      restSpeedThreshold: 2,
+    };
 
-  const switchWidth = 55;
-  const thumbRadius = 18;
-  const thumbSize = thumbRadius * 2;
-  const padding = 0;
+    const circleScale = useSharedValue(0);
+    const circleOpacity = useSharedValue(0);
 
-  const [isOn, setIsOn] = useState(value);
-  const [isLoading, setIsLoading] = useState(false);
-  const computedLoading = isLoading || externalLoading;
+    const switchWidth = 55;
+    const thumbRadius = 18;
+    const thumbSize = thumbRadius * 2;
+    const padding = 0;
 
-  const translateX = useSharedValue(value ? switchWidth - thumbSize - padding : 0);
-  const loadingProgress = useSharedValue(0);
+    const [isOn, setIsOn] = useState(value);
+    const [isLoading, setIsLoading] = useState(false);
+    const computedLoading = isLoading || externalLoading;
 
-  const circleAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }, { scale: circleScale.value }],
-    opacity: circleOpacity.value,
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-  }));
+    const translateX = useSharedValue(value ? switchWidth - thumbSize - padding : 0);
+    const loadingProgress = useSharedValue(0);
+    const scale = useSharedValue(1);
 
-  // Update the useEffect hook to respond to the `value` prop changes
-  useEffect(() => {
-    if (!computedLoading) {
-      setIsOn(value);
-      translateX.value = withSpring(value ? switchWidth - thumbSize - padding : 0, springConfig);
-    }
-  }, [value, computedLoading]);
+    const circleAnimatedStyle = useAnimatedStyle(() => ({
+      transform: [{ translateX: translateX.value }, { scale: circleScale.value }],
+      opacity: circleOpacity.value,
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+    }));
 
-  const handleValueChange = async (newValue: boolean) => {
-    setIsLoading(true);
-    loadingProgress.value = withTiming(1, { duration: 200 });
-
-    try {
-      // Trigger haptic feedback
-      Haptics.selectionAsync();
-
-      // Call the onValueChange function and await if it returns a promise
-      const result = onValueChange(newValue);
-      if (result instanceof Promise) {
-        await result;
+    useEffect(() => {
+      if (!computedLoading) {
+        setIsOn(value);
+        translateX.value = withSpring(value ? switchWidth - thumbSize - padding : 0, springConfig);
       }
+    }, [value, computedLoading]);
 
-      // Update state and animate only after promise resolves
-      setIsOn(newValue);
-      translateX.value = withSpring(newValue ? switchWidth - thumbSize - padding : 0, springConfig);
-    } catch (error) {
-      // If promise rejects, don't change the state
-      console.error("Switch value change failed:", error);
-    } finally {
-      setIsLoading(false);
-      loadingProgress.value = withTiming(0, { duration: 200 });
-    }
-  };
+    const handleValueChange = async (newValue: boolean) => {
+      setIsLoading(true);
+      loadingProgress.value = withTiming(1, { duration: 200 });
 
-  const toggleSwitch = () => {
-    if (isLoading) return; // Prevent action during loading
+      try {
+        Haptics.selectionAsync();
 
-    const newValue = !isOn;
-    handleValueChange(newValue);
-  };
+        const result = onValueChange(newValue);
+        if (result instanceof Promise) {
+          await result;
+        }
 
-  const scale = useSharedValue(1);
+        setIsOn(newValue);
+        translateX.value = withSpring(
+          newValue ? switchWidth - thumbSize - padding : 0,
+          springConfig
+        );
+      } catch (error) {
+        console.error("Switch value change failed:", error);
+      } finally {
+        setIsLoading(false);
+        loadingProgress.value = withTiming(0, { duration: 200 });
+      }
+    };
 
-  const thumbAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }, { scale: scale.value }],
-    backgroundColor: interpolateColor(
-      translateX.value,
-      [0, switchWidth - thumbSize - padding],
-      [thumbColor.false, thumbColor.true]
-    ),
-  }));
+    const toggleSwitch = () => {
+      if (computedLoading) return;
+      const newValue = !isOn;
+      handleValueChange(newValue);
+    };
 
-  const gesture = Gesture.Pan()
-    .enabled(!computedLoading) // Disable gesture during loading
-    .onBegin(() => {
+    const isDragging = useSharedValue(false);
+
+    const onPressIn = () => {
+      if (computedLoading || isDragging.value) return;
       scale.value = withSpring(0.7, springConfig);
-      circleScale.value = withSpring(1.5, springConfig);
-      circleOpacity.value = withSpring(1, springConfig);
-    })
-    .onUpdate((e) => {
-      translateX.value = Math.min(
-        Math.max(e.translationX + (isOn ? switchWidth - thumbSize - padding : 0), 0),
-        switchWidth - thumbSize - padding
-      );
-    })
-    .onEnd(() => {
+      // circleScale.value = withSpring(1.5, springConfig);
+      // circleOpacity.value = withSpring(1, springConfig);
+    };
+
+    const onPressOut = () => {
+      if (computedLoading || isDragging.value) return;
       scale.value = withSpring(1, springConfig);
-      circleScale.value = withSpring(0, springConfig);
-      circleOpacity.value = withSpring(0, springConfig);
+      // circleScale.value = withSpring(0, springConfig);
+      // circleOpacity.value = withSpring(0, springConfig);
+    };
 
-      const midpoint = (switchWidth - thumbSize - padding) / 2;
-      const newValue = translateX.value > midpoint;
+    const triggerPressAnimation = () => {
+      if (computedLoading) return;
 
-      // Reset position temporarily during loading
-      translateX.value = withSpring(isOn ? switchWidth - thumbSize - padding : 0, springConfig);
+      // Trigger the press animation
+      scale.value = withSpring(0.7, springConfig, () => {
+        scale.value = withSpring(1, springConfig);
+      });
 
-      // Handle the value change with loading
-      runOnJS(handleValueChange)(newValue);
-    })
-    .onFinalize(() => {
-      scale.value = withSpring(1, springConfig);
-      circleScale.value = withSpring(0, springConfig);
-      circleOpacity.value = withSpring(0, springConfig);
-    });
+      // Toggle the switch
+      toggleSwitch();
+    };
 
-  const trackAnimatedStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      translateX.value,
-      [0, switchWidth - thumbSize - padding],
-      [trackColor.false, trackColor.true]
-    ),
-    opacity: 1 - 0.4 * loadingProgress.value, // Animate dimming during loading
-  }));
+    // Expose methods to parent components
+    useImperativeHandle(ref, () => ({
+      triggerPress: triggerPressAnimation,
+      onPressIn,
+      onPressOut,
+    }));
 
-  return (
-    <GestureDetector gesture={gesture}>
-      <Pressable
-        onPress={toggleSwitch}
-        style={[styles.container, style]}
-        disabled={computedLoading}
-      >
-        <Animated.View style={[styles.track, trackAnimatedStyle]} />
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              width: 22,
-              height: 22,
-              borderRadius: (thumbSize + 10) / 2,
-              left: 2,
-            },
-            circleAnimatedStyle,
-          ]}
-        />
-        <Animated.View style={[styles.thumb, thumbAnimatedStyle]}>
-          {computedLoading && (
-            // <ActivityIndicator
-            //   size="small"
-            //   color={isOn ? trackColor.true : "#666"}
-            //   style={styles.activityIndicator}
-            // />
-            <Loader color={isOn ? trackColor.true : "#666"} style={styles.activityIndicator} />
-          )}
-        </Animated.View>
-      </Pressable>
-    </GestureDetector>
-  );
-};
+    const thumbAnimatedStyle = useAnimatedStyle(() => ({
+      transform: [{ translateX: translateX.value }, { scale: scale.value }],
+      backgroundColor: interpolateColor(
+        translateX.value,
+        [0, switchWidth - thumbSize - padding],
+        [thumbColor.false, thumbColor.true]
+      ),
+    }));
+
+    const gesture = Gesture.Pan()
+      .enabled(!computedLoading)
+      .onBegin(() => {
+        isDragging.value = true;
+        scale.value = withSpring(0.7, springConfig);
+        circleScale.value = withSpring(1.5, springConfig);
+        circleOpacity.value = withSpring(1, springConfig);
+      })
+      .onUpdate((e) => {
+        translateX.value = Math.min(
+          Math.max(e.translationX + (isOn ? switchWidth - thumbSize - padding : 0), 0),
+          switchWidth - thumbSize - padding
+        );
+      })
+      .onEnd(() => {
+        scale.value = withSpring(1, springConfig);
+        circleScale.value = withSpring(0, springConfig);
+        circleOpacity.value = withSpring(0, springConfig);
+
+        const midpoint = (switchWidth - thumbSize - padding) / 2;
+        const newValue = translateX.value > midpoint;
+
+        translateX.value = withSpring(isOn ? switchWidth - thumbSize - padding : 0, springConfig);
+        runOnJS(handleValueChange)(newValue);
+      })
+      .onFinalize(() => {
+        isDragging.value = false;
+        scale.value = withSpring(1, springConfig);
+        circleScale.value = withSpring(0, springConfig);
+        circleOpacity.value = withSpring(0, springConfig);
+      });
+
+    const trackAnimatedStyle = useAnimatedStyle(() => ({
+      backgroundColor: interpolateColor(
+        translateX.value,
+        [0, switchWidth - thumbSize - padding],
+        [trackColor.false, trackColor.true]
+      ),
+      opacity: 1 - 0.4 * loadingProgress.value,
+    }));
+
+    return (
+      <GestureDetector gesture={gesture}>
+        <Pressable
+          onPress={toggleSwitch}
+          onPressIn={onPressIn}
+          onPressOut={onPressOut}
+          style={[styles.container, style]}
+          disabled={computedLoading}
+        >
+          <Animated.View style={[styles.track, trackAnimatedStyle]} />
+          <Animated.View
+            style={[
+              {
+                position: "absolute",
+                width: 22,
+                height: 22,
+                borderRadius: (thumbSize + 10) / 2,
+                left: 2,
+              },
+              circleAnimatedStyle,
+            ]}
+          />
+          <Animated.View style={[styles.thumb, thumbAnimatedStyle]}>
+            {computedLoading && (
+              <Loader color={isOn ? trackColor.true : "#666"} style={styles.activityIndicator} />
+            )}
+          </Animated.View>
+        </Pressable>
+      </GestureDetector>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -214,17 +252,3 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 });
-
-// Example usage:
-// const [switchValue, setSwitchValue] = useState(false);
-//
-// const handleSwitchChange = async (newValue: boolean) => {
-//   // Simulate an API call
-//   await new Promise(resolve => setTimeout(resolve, 2000));
-//   setSwitchValue(newValue);
-// };
-//
-// <Switch
-//   value={switchValue}
-//   onValueChange={handleSwitchChange}
-// />

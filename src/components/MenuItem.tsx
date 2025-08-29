@@ -257,18 +257,16 @@ interface MenuItemProps {
   isLast?: boolean;
   isDanger?: boolean;
   onPress?: () => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
   disabled?: boolean;
   showValue?: boolean;
   showChevron?: boolean;
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
-  // Apply styles to the OUTER container (use this for margins)
   containerStyle?: StyleProp<ViewStyle>;
-  // Optional right-side action (e.g., a Switch). When provided, it replaces
-  // the default value/loading/chevron section and remains interactive.
   rightAction?: React.ReactNode;
   rightActionContainerStyle?: StyleProp<ViewStyle>;
-  // If true, removes the ripple effect on press
   disableRipple?: boolean;
 }
 
@@ -281,6 +279,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
   isLast,
   isDanger,
   onPress,
+  onPressIn,
+  onPressOut,
   disabled,
   showValue = true,
   showChevron = true,
@@ -320,6 +320,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
     <View style={[computedContainerStyle, containerStyle]}>
       <Pressable
         onPress={onPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
         disabled={loading || disabled}
         style={[styles.pressable, style]}
         android_ripple={
@@ -331,46 +333,6 @@ const MenuItem: React.FC<MenuItemProps> = ({
               }
         }
       >
-        {/* <View style={styles.menuItemContent} pointerEvents="none">
-          <View style={styles.menuItemLeft}>
-            {icon && (
-              <View style={styles.iconContainer}>
-                <Ionicons
-                  name={(icon as any) || ""}
-                  size={20}
-                  color={textColor}
-                  style={styles.icon}
-                />
-              </View>
-            )}
-            <View>
-              <Text style={[styles.menuItemTitle, { color: textColor }]}>{title}</Text>
-              {subtitle && <Text style={styles.menuItemSubtitle}>{subtitle}</Text>}
-            </View>
-          </View>
-          {rightAction ? (
-            <View
-              style={[styles.menuItemRight, rightActionContainerStyle]}
-              pointerEvents="box-none"
-            >
-              <View style={styles.rightActionWrapper} pointerEvents="box-only">
-                {rightAction}
-              </View>
-            </View>
-          ) : (
-            <View style={styles.menuItemRight}>
-              {showValue && value && (
-                <Text style={[styles.menuItemValue, { color: valueTextColor }]}>{value}</Text>
-              )}
-              {loading ? (
-                <ActivityIndicator size="small" color={chevronColor} />
-              ) : showChevron ? (
-                <Ionicons name="chevron-forward" size={20} color={chevronColor} />
-              ) : null}
-            </View>
-          )}
-        </View> */}
-
         <View style={[styles.menuItemContent, style]}>
           <View style={styles.menuItemLeft}>
             {icon && (
@@ -391,15 +353,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
               >
                 {title}
               </Text>
-              {subtitle && (
-                <Text
-                  style={styles.menuItemSubtitle}
-                  // numberOfLines={1}
-                  // ellipsizeMode="tail"
-                >
-                  {subtitle}
-                </Text>
-              )}
+              {subtitle && <Text style={styles.menuItemSubtitle}>{subtitle}</Text>}
             </View>
           </View>
           {rightAction ? (
@@ -439,7 +393,7 @@ const styles = StyleSheet.create({
   menuItem: {
     backgroundColor: "hsl(var(--modal-background))",
     borderBottomWidth: 1,
-    overflow: "hidden", // Ensures the ripple effect respects border radius
+    overflow: "hidden",
   },
   pressable: {
     paddingHorizontal: 20,
@@ -457,13 +411,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    minWidth: 0, // Important: allows flex child to shrink below its content size
-    marginRight: 5, // Space between left content and right content
+    minWidth: 0,
+    marginRight: 5,
   },
   menuItemRight: {
     flexDirection: "row",
     alignItems: "center",
-    flexShrink: 0, // Prevent right side from shrinking
+    flexShrink: 0,
     marginRight: -10,
     marginLeft: 10,
   },
@@ -486,18 +440,18 @@ const styles = StyleSheet.create({
     color: "#666666",
     fontSize: 14,
     marginRight: 8,
-    maxWidth: 150, // Limit value text width
+    maxWidth: 150,
   },
   iconContainer: {
     width: 32,
     height: 20,
     justifyContent: "center",
     alignItems: "flex-start",
-    flexShrink: 0, // Prevent icon from shrinking
+    flexShrink: 0,
   },
   textContainer: {
     flex: 1,
-    minWidth: 0, // Important: allows text to shrink and be truncated
+    minWidth: 0,
   },
   button: {
     borderRadius: 0,
@@ -505,8 +459,6 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   buttonContent: {
-    // paddingHorizontal: 5,
-    // paddingVertical: 5,
     minHeight: 50,
     justifyContent: "flex-start",
     alignItems: "center",

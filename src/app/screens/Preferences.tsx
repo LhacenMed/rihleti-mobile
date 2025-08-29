@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet, Button, Pressable } from "react-native";
-import { Switch } from "@components/ui/switch";
+import React, { useRef } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { Switch, SwitchRef } from "@components/ui/switch";
 import MenuItem from "@components/MenuItem";
 import { useTheme } from "@contexts/ThemeContext";
 import { useFeatures } from "@contexts/FeaturesContext";
@@ -9,25 +9,31 @@ export default function Preferences() {
   const { isDark } = useTheme();
   const { swipeEnabled, setSwipeEnabled } = useFeatures();
   const [switchLoading, setSwitchLoading] = React.useState(false);
+  const switchRef = useRef<SwitchRef>(null);
 
   const backgroundColor = isDark ? "#171717" : "rgb(249, 249, 249)";
-  const sectionBackgroundColor = isDark ? "#2A2A2A" : "#ffffff";
   const sectionTitleColor = "#666666";
-  const textColor = isDark ? "#ffffff" : "#000000";
 
-  // Switch tap still shows loading by itself
   const handleSwitchChange = async (newValue: boolean) => {
+    setSwitchLoading(true);
     // await new Promise((r) => setTimeout(r, 1000));
     setSwipeEnabled(newValue);
+    setSwitchLoading(false);
   };
 
-  // Trigger loading from a separate button
-  const triggerFromButton = async () => {
+  const handleMenuItemPress = () => {
     if (switchLoading) return;
-    setSwitchLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setSwipeEnabled(!swipeEnabled);
-    setSwitchLoading(false);
+    switchRef.current?.triggerPress();
+  };
+
+  const handleMenuItemPressIn = () => {
+    if (switchLoading) return;
+    switchRef.current?.onPressIn();
+  };
+
+  const handleMenuItemPressOut = () => {
+    if (switchLoading) return;
+    switchRef.current?.onPressOut();
   };
 
   return (
@@ -52,7 +58,9 @@ export default function Preferences() {
       <MenuItem
         title="Swipe Between Tabs"
         subtitle="Allow horizontal tab swipes"
-        onPress={triggerFromButton}
+        onPress={handleMenuItemPress}
+        onPressIn={handleMenuItemPressIn}
+        onPressOut={handleMenuItemPressOut}
         disabled={switchLoading}
         isLast
         isFirst
@@ -60,13 +68,13 @@ export default function Preferences() {
         containerStyle={{ marginHorizontal: 20 }}
         rightAction={
           <Switch
+            ref={switchRef}
             value={swipeEnabled}
             onValueChange={handleSwitchChange}
             loading={switchLoading}
             style={{ marginRight: 10 }}
           />
         }
-        // disableRipple
       />
     </View>
   );

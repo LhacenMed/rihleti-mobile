@@ -1,5 +1,13 @@
 import React, { useRef, useEffect } from "react";
-import { Text, View, Animated, TouchableWithoutFeedback, BackHandler } from "react-native";
+import {
+  Text,
+  View,
+  Animated,
+  TouchableWithoutFeedback,
+  BackHandler,
+  Platform,
+  Alert,
+} from "react-native";
 import { Button as PaperButton } from "react-native-paper";
 import { ModalContentProps } from "@whitespectre/rn-modal-presenter";
 import { useTheme } from "@contexts/ThemeContext";
@@ -73,20 +81,22 @@ const useModalAnimations = () => {
   return { fadeAnim, translateY, animateIn, animateOut };
 };
 
-const useModalEffects = (animateIn: () => void, dismiss: () => void) => {
+const useModalEffects = (animateIn: () => void, dismiss: () => void, enabled: boolean = true) => {
   useEffect(() => {
+    if (!enabled) return;
     Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
     animateIn();
-  }, [animateIn]);
+  }, [animateIn, enabled]);
 
   useEffect(() => {
+    if (!enabled) return;
     const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
       dismiss();
       return true;
     });
 
     return () => backHandler.remove();
-  }, [dismiss]);
+  }, [dismiss, enabled]);
 };
 
 // Components
@@ -213,6 +223,8 @@ const Modal = ({
   const { isDark } = useTheme();
   const { fadeAnim, translateY, animateIn, animateOut } = useModalAnimations();
 
+  const iosAlertMode = Platform.OS === "ios" && !header;
+
   const handleDismiss = () => {
     animateOut(() => dismiss());
   };
@@ -222,7 +234,28 @@ const Modal = ({
     handleDismiss();
   };
 
-  useModalEffects(animateIn, handleDismiss);
+  useModalEffects(animateIn, handleDismiss, !iosAlertMode);
+
+  // iOS native alert path when no header is provided
+  useEffect(() => {
+    if (!iosAlertMode) return;
+    Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+
+    const mappedButtons = (buttons && buttons.length > 0 ? buttons : [{ text: "OK" }]).map((b) => ({
+      text: b.text,
+      style: (b.style as any) ?? undefined,
+      onPress: () => {
+        b.onPress?.();
+        dismiss();
+      },
+    }));
+
+    Alert.alert(title || "", subtitle || "", mappedButtons as any, { cancelable: true });
+  }, [iosAlertMode, title, subtitle, buttons, dismiss]);
+
+  if (iosAlertMode) {
+    return <View />;
+  }
 
   return (
     <TouchableWithoutFeedback onPress={handleDismiss}>

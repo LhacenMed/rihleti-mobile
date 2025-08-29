@@ -3,8 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-nativ
 import { BottomSheetModal, BottomSheetView, BottomSheetFlatList, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import locations from "@utils/locationsData";
-// @ts-ignore
-import { Location } from "@types/location";
+import { Location } from "@/types/location";
 
 type LocationBottomSheetProps = {
   isVisible: boolean;

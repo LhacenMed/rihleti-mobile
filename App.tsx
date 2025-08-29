@@ -419,7 +419,7 @@ const AppInitializer = () => {
     const initializeApp = async () => {
       try {
         // Clear location inputs values
-        await AsyncStorage.removeItem("departureCityName");
+        // await AsyncStorage.removeItem("departureCityName");
         await AsyncStorage.removeItem("destinationCityName");
 
         // Load cached loader from Supabase

@@ -10,10 +10,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as ExpoLocation from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import locations from "@utils/locationsData";
 import { Location } from "@/types/location";
+import { showModal } from "@whitespectre/rn-modal-presenter";
+import Modal from "@/components/ui/modal";
 
 const DestinationLocationScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -47,39 +50,61 @@ const DestinationLocationScreen: React.FC = () => {
     [navigation]
   );
 
-  const getUserApiAddress = useCallback(async () => {
-    const response = await fetch("https://ipinfo.io/json");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return {
-      ip: data.ip,
-      city: data.city,
-      region: data.region,
-      country: data.country,
-    } as { ip: string; city: string; region: string; country: string };
-  }, []);
-
   const handleUseCurrentLocation = useCallback(async () => {
     try {
       setFetchingCurrent(true);
-      const info = await getUserApiAddress();
+      const { status } = await ExpoLocation.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        showModal(Modal, {
+          title: "Enable location",
+          subtitle: "Allow access to use Current location.",
+          buttons: [
+            { text: "Cancel", style: "cancel" },
+            { text: "Retry", onPress: handleUseCurrentLocation },
+          ],
+        });
+        return;
+      }
+
+      const position = await ExpoLocation.getCurrentPositionAsync({
+        accuracy: ExpoLocation.Accuracy.Highest,
+      });
+
+      const [address] = await ExpoLocation.reverseGeocodeAsync({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+
+      const city = address?.city || address?.subregion || "";
+      const region = address?.region || address?.subregion || "";
+      const country = address?.country || address?.isoCountryCode || "";
+
       const currentLocation: Location = {
         id: -1,
-        city: info.city,
-        region: info.region,
-        country: info.country,
+        city,
+        region,
+        country,
       } as unknown as Location;
       await AsyncStorage.setItem("destinationCityName", currentLocation.city);
       await AsyncStorage.setItem("recentDestinationLocation", JSON.stringify(currentLocation));
       navigation.goBack();
     } catch (e) {
-      console.error("Failed to fetch current location from IP:", e);
+      console.error("Failed to fetch precise current location:", e);
+      const message = String((e as Error)?.message || e || "");
+      if (message.includes("unsatisfied device settings")) {
+        showModal(Modal, {
+          title: "Enable location",
+          subtitle: "Allow access and turn on location to use Current location.",
+          buttons: [
+            { text: "Cancel", style: "cancel" },
+            { text: "Retry", onPress: handleUseCurrentLocation },
+          ],
+        });
+      }
     } finally {
       setFetchingCurrent(false);
     }
-  }, [getUserApiAddress, navigation]);
+  }, [navigation]);
 
   // Clear search
   const handleClearSearch = useCallback(() => {
@@ -120,7 +145,7 @@ const DestinationLocationScreen: React.FC = () => {
   );
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="-mt-7 flex-1 bg-background">
       {/* Top search-as-header */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={handleGoBack} style={styles.closeButton}>

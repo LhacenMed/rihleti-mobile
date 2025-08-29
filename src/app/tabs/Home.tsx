@@ -2,8 +2,7 @@ import { useRef, useCallback, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import LocationInputs from "@components/LocationInputs";
 import SafeContainer from "@components/SafeContainer";
-// @ts-ignore
-import { Location } from "@types/location";
+import { Location } from "@/types/location";
 // import EmailBottomSheet from "@/components/EmailBottomSheet";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Button } from "react-native-paper";
@@ -19,13 +18,13 @@ export default function Page() {
     locationBottomSheetRef.current?.present();
   }, []);
 
-  const handleDepartureLocationSelect = (location: Location) => {
-    setSelectedDepartureLocation(location);
-  };
+  // const handleDepartureLocationSelect = (location: Location) => {
+  //   setSelectedDepartureLocation(location);
+  // };
 
-  const handleDestinationLocationSelect = (location: Location) => {
-    setSelectedDestinationLocation(location);
-  };
+  // const handleDestinationLocationSelect = (location: Location) => {
+  //   setSelectedDestinationLocation(location);
+  // };
 
   // Render backdrop
   const renderBackdrop = useCallback(

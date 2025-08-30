@@ -1,65 +1,22 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Platform, Alert } from "react-native";
-// import { useSafeAreaInsets } from "react-native-safe-area-context";
-// import { NavigationProp, useNavigation } from "@react-navigation/native";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-import MenuItem from "@components/MenuItem";
-// import ColorSchemePopup from "../components/ColorSchemePopup";
-// import LanguagePopup from "../components/LanguagePopup";
+import MenuItem, { MenuGroup } from "@components/MenuItem";
 import { useTheme } from "@contexts/ThemeContext";
 import { useAuth } from "@contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-// import { Ionicons } from "@expo/vector-icons";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@components/ui/modal";
-// import { translations as en } from "../translations/en";
-// import { translations as fr } from "../translations/fr";
-// import { translations as ar } from "../translations/ar";
-// import { translations as es } from "../translations/es";
-// import { translations as de } from "../translations/de";
-// import { translations as it } from "../translations/it";
-// import { FIREBASE_AUTH } from "../../FirebaseConfig";
-// import { RootStackParamList } from "../types";
 import * as Haptic from "expo-haptics";
+import Constants from "expo-constants";
 
 const Settings = () => {
-  // const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
-  // const insets = useSafeAreaInsets();
-  // const [modalVisible, setModalVisible] = useState(false);
-  // const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
-  // const themes = useContext(ThemeContext);
-  // const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { isDark } = useTheme();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigation = useNavigation();
 
-  // const translationsMap: Record<string, typeof en> = {
-  //   English: en,
-  //   French: fr,
-  //   Arabic: ar,
-  //   Spanish: es,
-  //   German: de,
-  //   Italian: it,
-  // };
-
-  // const selectedTranslations = translationsMap[selectedLanguage];
-
   const backgroundColor = isDark ? "#171717" : "rgb(249, 249, 249)";
-  // const headerTextColor = isDark ? "rgb(249, 249, 249)" : "#171717";
-  const sectionBackgroundColor = isDark ? "#2A2A2A" : "#ffffff";
-  const sectionTitleColor = "#666666";
-
-  // const handleColorSchemeSelect = (scheme: string) => {
-  //   // Update the theme when a new scheme is selected
-  //   // themes.toggleTheme(scheme as ThemeMode);
-  // };
-
-  // const handleLanguageSelect = (language: string) => {
-  //   // Handle language selection logic here
-  //   console.log(`Selected language: ${language}`);
-  // };
 
   const navigateToAccount = () => {
     navigation.navigate("Account" as never);
@@ -134,12 +91,11 @@ const Settings = () => {
         </View>
 
         {/* Profile Section */}
-        <Text style={[styles.firstSectionTitle, { color: sectionTitleColor }]}>Profile</Text>
-        <View style={[styles.section, { backgroundColor: sectionBackgroundColor }]}>
+        <MenuGroup title="Profile">
           <MenuItem
             icon="mail-outline"
             title="Email"
-            value="2l7acenmed653@gmail.com"
+            value={user?.email}
             isFirst
             isLast={false}
             showValue
@@ -149,17 +105,16 @@ const Settings = () => {
           <MenuItem
             icon="logo-google"
             title="Google"
-            value="Connected"
+            value={user?.app_metadata.providers?.includes("google") ? "Connected" : "Disconnected"}
             isFirst={false}
             isLast
             showValue
             showChevron={false}
             disabled
           />
-        </View>
+        </MenuGroup>
         {/* About Section */}
-        <Text style={[styles.sectionTitle, { color: sectionTitleColor }]}>About</Text>
-        <View style={[styles.section, { backgroundColor: sectionBackgroundColor }]}>
+        <MenuGroup title="About">
           <MenuItem icon="document-text-outline" title="Terms of Use" isFirst isLast={false} />
           <MenuItem
             icon="shield-outline"
@@ -173,35 +128,33 @@ const Settings = () => {
           <MenuItem
             icon="information-circle-outline"
             title="Check for Updates"
-            value="1.0.11(48)"
+            value={Constants.expoConfig?.version || "1.0.0"}
             isFirst={false}
             isLast
             showValue={true}
             showChevron={true}
           />
-        </View>
+        </MenuGroup>
         {/* App Section */}
-        <Text style={[styles.sectionTitle, { color: sectionTitleColor }]}>App</Text>
-        <View style={[styles.section, { backgroundColor: sectionBackgroundColor }]}>
-          <MenuItem
-            icon={isDark ? "moon-outline" : "sunny-outline"}
-            title="Color Scheme"
-            value={isDark ? "Dark" : "Light"}
-            isFirst
-            isLast={false}
-            showValue={true}
-            showChevron={true}
-            // onPress={() => setModalVisible(true)}
-          />
+        <MenuGroup title="App">
           <MenuItem
             icon="options-outline"
             title="Preferences"
             // value="Controls"
-            isFirst={false}
+            isFirst
             isLast={false}
             showValue={true}
             showChevron={true}
             onPress={navigateToPreferences}
+          />
+          <MenuItem
+            icon={isDark ? "moon-outline" : "sunny-outline"}
+            title="Color Scheme"
+            value={isDark ? "Dark" : "Light"}
+            isLast={false}
+            showValue={true}
+            showChevron={true}
+            // onPress={() => setModalVisible(true)}
           />
           <MenuItem
             icon="earth"
@@ -213,13 +166,13 @@ const Settings = () => {
             showChevron={true}
             // onPress={() => setLanguageModalVisible(true)}
           />
-        </View>
+        </MenuGroup>
         {/* Contact Section */}
-        <View style={[styles.miniSection, { backgroundColor: sectionBackgroundColor }]}>
+        <MenuGroup containerStyle={styles.miniSection}>
           <MenuItem icon="chatbubble-outline" title="Contact Us" isFirst isLast />
-        </View>
+        </MenuGroup>
         {/* Danger Zone */}
-        <View style={[styles.miniSection, { backgroundColor: sectionBackgroundColor }]}>
+        <MenuGroup containerStyle={styles.miniSection}>
           <MenuItem
             icon="log-out-outline"
             title="Log Out"
@@ -236,8 +189,10 @@ const Settings = () => {
             isLast
             showChevron={false}
           />
-        </View>
-        <Text style={[styles.footerText, { color: sectionTitleColor }]}>Version 1.0.11</Text>
+        </MenuGroup>
+        <Text style={[styles.footerText, { color: "#666666" }]}>
+          Version {Constants.expoConfig?.version || "1.0.0"}
+        </Text>
       </ScrollView>
     </View>
   );
@@ -277,27 +232,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  firstSectionTitle: {
-    fontSize: 12,
-    marginLeft: 35,
-    marginBottom: 8,
-  },
-  sectionTitle: {
-    fontSize: 12,
-    marginLeft: 35,
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  section: {
-    marginHorizontal: 20,
-    borderRadius: 18,
-    marginBottom: 8,
-  },
   miniSection: {
-    marginHorizontal: 20,
-    borderRadius: 18,
     marginTop: 16,
-    marginBottom: 8,
   },
   footerText: {
     fontSize: 12,

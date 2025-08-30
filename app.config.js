@@ -4,7 +4,7 @@ export default {
     expo: {
         name: "Rihleti",
         slug: "rihleti",
-        version: "1.0.0",
+        version: "1.0.2",
 
         web: {
             favicon: "./src/assets/favicon.png",

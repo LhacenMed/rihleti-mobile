@@ -1,78 +1,3 @@
-// import { useTheme } from "@contexts/ThemeContext";
-// import React from "react";
-// import { View, Text, StyleSheet, ActivityIndicator, ViewStyle, StyleProp } from "react-native";
-// import { Button } from "react-native-paper";
-// import { Ionicons } from "@expo/vector-icons";
-// import Loader from "./ui/loader";
-
-// interface MenuItemProps {
-//   icon?: string;
-//   title: string;
-//   subtitle?: string;
-//   value?: string;
-//   isFirst?: boolean;
-//   isLast?: boolean;
-//   isDanger?: boolean;
-//   onPress?: () => void;
-//   disabled?: boolean;
-//   showValue?: boolean;
-//   showChevron?: boolean;
-//   loading?: boolean;
-//   style?: StyleProp<ViewStyle>;
-//   // Apply styles to the OUTER container (use this for margins)
-//   containerStyle?: StyleProp<ViewStyle>;
-//   // Optional right-side action (e.g., a Switch). When provided, it replaces
-//   // the default value/loading/chevron section and remains interactive.
-//   rightAction?: React.ReactNode;
-//   rightActionContainerStyle?: StyleProp<ViewStyle>;
-//   // If true, removes the ripple effect on press
-//   disableRipple?: boolean;
-// }
-
-// const MenuItem: React.FC<MenuItemProps> = ({
-//   icon,
-//   title,
-//   subtitle,
-//   value,
-//   isFirst,
-//   isLast,
-//   isDanger,
-//   onPress,
-//   disabled,
-//   showValue = true,
-//   showChevron = true,
-//   loading = false,
-//   style,
-//   containerStyle,
-//   rightAction,
-//   rightActionContainerStyle,
-//   disableRipple = false,
-// }) => {
-//   const { isDark } = useTheme();
-
-//   const backgroundColor = isDark ? "#1E1E1E" : "#ffffff";
-//   // const dimBackgroundColor = isDark ? "#2A2A2A" : "rgb(241, 241, 241)";
-//   // const dangerDimBackgroundColor = isDark ? "#2A1F1F" : "#FFE8E8";
-//   const borderBottomColor = isDark ? "#404040" : "rgb(210, 210, 210)";
-//   const normalTextColor = isDark ? "#ffffff" : "#171717";
-//   const dangerTextColor = isDark ? "red" : "red";
-//   const valueTextColor = isDark ? "#666666" : "rgb(142, 142, 142)";
-//   const chevronColor = isDark ? "#666666" : "rgb(142, 142, 142)";
-
-//   const computedContainerStyle = {
-//     ...styles.menuItem,
-//     borderTopLeftRadius: isFirst ? 17 : 0,
-//     borderTopRightRadius: isFirst ? 17 : 0,
-//     borderBottomLeftRadius: isLast ? 17 : 0,
-//     borderBottomRightRadius: isLast ? 17 : 0,
-//     borderBottomWidth: isLast ? 0 : 1,
-//     borderBottomColor: borderBottomColor,
-//     backgroundColor: backgroundColor,
-//   };
-
-//   const textColor = isDanger ? dangerTextColor : normalTextColor;
-//   // const rippleColor = isDanger ? dangerDimBackgroundColor : dimBackgroundColor;
-
 //   return (
 //     <View style={[computedContainerStyle, containerStyle, styles.container]}>
 //       <Button
@@ -87,162 +12,21 @@
 //         labelStyle={{ opacity: 0 }} // Hide the default label since we're using custom content
 //         compact
 //       >
-//         <View style={[styles.menuItemContent, style]}>
-//           <View style={styles.menuItemLeft}>
-//             {icon && (
-//               <View style={styles.iconContainer}>
-//                 <Ionicons
-//                   name={(icon as any) || ""}
-//                   size={20}
-//                   color={textColor}
-//                   style={styles.icon}
-//                 />
-//               </View>
-//             )}
-//             <View style={styles.textContainer}>
-//               <Text
-//                 style={[styles.menuItemTitle, { color: textColor }]}
-//                 numberOfLines={1}
-//                 ellipsizeMode="tail"
-//               >
-//                 {title}
-//               </Text>
-//               {subtitle && (
-//                 <Text
-//                   style={styles.menuItemSubtitle}
-//                   // numberOfLines={1}
-//                   // ellipsizeMode="tail"
-//                 >
-//                   {subtitle}
-//                 </Text>
-//               )}
-//             </View>
-//           </View>
-//           {rightAction ? (
-//             <View
-//               style={[styles.menuItemRight, rightActionContainerStyle]}
-//               pointerEvents="box-none"
-//             >
-//               <View style={styles.rightActionWrapper} pointerEvents="box-only">
-//                 {rightAction}
-//               </View>
-//             </View>
-//           ) : (
-//             <View style={styles.menuItemRight} pointerEvents="none">
-//               {showValue && value && !loading && (
-//                 <Text
-//                   style={[styles.menuItemValue, { color: valueTextColor }]}
-//                   numberOfLines={1}
-//                   ellipsizeMode="middle"
-//                 >
-//                   {value}
-//                 </Text>
-//               )}
-//               {loading ? (
-//                 <Loader style={{ marginRight: 5 }} color={chevronColor} size={15} />
-//               ) : showChevron ? (
-//                 <Ionicons name="chevron-forward" size={20} color={chevronColor} />
-//               ) : null}
-//             </View>
-//           )}
-//         </View>
+//         ...same content
 //       </Button>
 //     </View>
 //   );
 // };
 
-// const styles = StyleSheet.create({
-//   container: {
-//     // paddingHorizontal: 10,
-//   },
-//   menuItem: {
-//     backgroundColor: "hsl(var(--modal-background))",
-//     borderBottomWidth: 1,
-//     overflow: "hidden", // Ensures the ripple effect respects border radius
-//   },
-//   button: {
-//     borderRadius: 0,
-//     margin: 0,
-//     backgroundColor: "transparent",
-//   },
-//   buttonContent: {
-//     // paddingHorizontal: 5,
-//     // paddingVertical: 5,
-//     minHeight: 50,
-//     justifyContent: "flex-start",
-//     alignItems: "center",
-//   },
-//   menuItemContent: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     width: "100%",
-//     paddingHorizontal: 10,
-//   },
-//   menuItemLeft: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     flex: 1,
-//     minWidth: 0, // Important: allows flex child to shrink below its content size
-//     marginRight: 5, // Space between left content and right content
-//   },
-//   menuItemRight: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     flexShrink: 0, // Prevent right side from shrinking
-//     marginRight: -10,
-//     marginLeft: 10,
-//   },
-//   rightActionWrapper: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//   },
-//   textContainer: {
-//     flex: 1,
-//     minWidth: 0, // Important: allows text to shrink and be truncated
-//   },
-//   icon: {
-//     marginRight: 12,
-//   },
-//   menuItemTitle: {
-//     fontSize: 14,
-//   },
-//   menuItemSubtitle: {
-//     fontSize: 12,
-//     marginTop: 4,
-//     color: "#AAAAAA",
-//   },
-//   menuItemValue: {
-//     color: "#666666",
-//     fontSize: 14,
-//     marginRight: 8,
-//     maxWidth: 150, // Limit value text width
-//   },
-//   iconContainer: {
-//     width: 32,
-//     height: 20,
-//     justifyContent: "center",
-//     alignItems: "flex-start",
-//     flexShrink: 0, // Prevent icon from shrinking
-//   },
-//   loadingIndicator: {
-//     marginRight: 8,
-//   },
-// });
-
-// export default MenuItem;
-
-// Fallback for Pressable
-
 import { useTheme } from "@contexts/ThemeContext";
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
   Pressable,
   ViewStyle,
+  TextStyle,
   StyleProp,
   Platform,
   Animated,
@@ -424,6 +208,44 @@ const MenuItem: React.FC<MenuItemProps> = ({
   );
 };
 
+export default MenuItem;
+
+// MenuGroup component for organizing menu sections
+interface MenuGroupProps {
+  title?: string;
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  titleStyle?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
+}
+
+export const MenuGroup: React.FC<MenuGroupProps> = ({
+  title,
+  children,
+  style,
+  titleStyle,
+  containerStyle,
+}) => {
+  const { isDark } = useTheme();
+
+  const sectionTitleColor = "#666666";
+  const sectionBackgroundColor = isDark ? "#2A2A2A" : "#ffffff";
+
+  return (
+    <>
+      {title && (
+        <Text style={[styles.sectionTitle, { color: sectionTitleColor }, titleStyle]}>{title}</Text>
+      )}
+      <View
+        style={[styles.section, { backgroundColor: sectionBackgroundColor }, containerStyle, style]}
+      >
+        {children}
+      </View>
+    </>
+  );
+};
+
+// Add the section styles to the existing StyleSheet
 const styles = StyleSheet.create({
   menuItem: {
     backgroundColor: "hsl(var(--modal-background))",
@@ -502,6 +324,20 @@ const styles = StyleSheet.create({
   loadingIndicator: {
     marginRight: 8,
   },
+  sectionTitle: {
+    fontSize: 12,
+    marginLeft: 45,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  firstSectionTitle: {
+    fontSize: 12,
+    marginLeft: 35,
+    marginBottom: 8,
+  },
+  section: {
+    marginHorizontal: 20,
+    borderRadius: 18,
+    marginBottom: 8,
+  },
 });
-
-export default MenuItem;

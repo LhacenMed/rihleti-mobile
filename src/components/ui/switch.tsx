@@ -310,6 +310,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.7,
+    shadowRadius: 4,
+    elevation: 6,
   },
   activityIndicator: {
     position: "absolute",

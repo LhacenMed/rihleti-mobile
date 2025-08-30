@@ -195,21 +195,7 @@ const AppNavigator = () => {
               name="Account"
               component={Account}
               options={{
-                headerShown: true,
-                headerTitle: "Account",
-                headerTitleStyle: {
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: isDark ? "#fff" : "#000",
-                },
-                headerStyle: {
-                  backgroundColor: isDark ? "#000" : "#fff",
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  borderBottomWidth: 1,
-                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-                  height: 90,
-                },
+                headerShown: false,
                 ...TransitionPresets.ModalPresentationIOS,
               }}
             />
@@ -217,21 +203,7 @@ const AppNavigator = () => {
               name="SettingsTest"
               component={SettingsTest}
               options={{
-                headerShown: true,
-                headerTitle: "Settings",
-                headerTitleStyle: {
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: isDark ? "#fff" : "#000",
-                },
-                headerStyle: {
-                  backgroundColor: isDark ? "#000" : "#fff",
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  borderBottomWidth: 1,
-                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-                  height: 90,
-                },
+                headerShown: false,
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
@@ -239,21 +211,7 @@ const AppNavigator = () => {
               name="Preferences"
               component={Preferences}
               options={{
-                headerShown: true,
-                headerTitle: "App Functionality",
-                headerTitleStyle: {
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: isDark ? "#fff" : "#000",
-                },
-                headerStyle: {
-                  backgroundColor: isDark ? "#000" : "#fff",
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  borderBottomWidth: 1,
-                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-                  height: 90,
-                },
+                headerShown: false,
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
@@ -269,21 +227,7 @@ const AppNavigator = () => {
               name="Messages"
               component={Messages}
               options={{
-                headerShown: true,
-                headerTitle: "Messages",
-                headerTitleStyle: {
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: isDark ? "#fff" : "#000",
-                },
-                headerStyle: {
-                  backgroundColor: isDark ? "#000" : "#fff",
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  borderBottomWidth: 1,
-                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-                  height: 90,
-                },
+                headerShown: false,
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
@@ -307,21 +251,7 @@ const AppNavigator = () => {
               name="Trips"
               component={TripsScreen}
               options={{
-                headerShown: true,
-                headerTitle: "Available Trips",
-                headerTitleStyle: {
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: isDark ? "#fff" : "#000",
-                },
-                headerStyle: {
-                  backgroundColor: isDark ? "#000" : "#fff",
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  borderBottomWidth: 1,
-                  borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-                  height: 90,
-                },
+                headerShown: false,
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />

@@ -3,11 +3,13 @@ import { Switch, SwitchRef } from "@components/ui/switch";
 import MenuItem, { MenuGroup } from "@components/MenuItem";
 import { useFeatures } from "@contexts/FeaturesContext";
 import SafeContainer from "@/components/SafeContainer";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Preferences() {
   const { swipeEnabled, setSwipeEnabled } = useFeatures();
   const [switchLoading, setSwitchLoading] = React.useState(false);
   const switchRef = useRef<SwitchRef>(null);
+  const navigation = useNavigation();
 
   const handleSwitchChange = async (newValue: boolean) => {
     setSwitchLoading(true);
@@ -32,7 +34,13 @@ export default function Preferences() {
   };
 
   return (
-    <SafeContainer>
+    <SafeContainer
+      header={{
+        title: "Preferences",
+        showBackButton: true,
+        onBackPress: () => navigation.goBack(),
+      }}
+    >
       <MenuGroup title="Tabs">
         <MenuItem
           title="Swipe Between Tabs"

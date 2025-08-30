@@ -5,6 +5,7 @@ import TripCard from "../../components/TripCard";
 import { fetchTripsByLocations, fetchTripsByExactLocations } from "../../utils/trips-service";
 import { TripWithRoute } from "../../types/trips";
 import Loader from "../../components/ui/loader";
+import { useNavigation } from "@react-navigation/native";
 
 type TripsScreenProps = {
   route: {
@@ -21,6 +22,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigation = useNavigation();
 
   const fetchTrips = async () => {
     try {
@@ -102,7 +104,14 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   };
 
   return (
-    <SafeContainer className="px-4 pt-10">
+    <SafeContainer
+      className="px-4"
+      header={{
+        title: "Trips",
+        showBackButton: true,
+        onBackPress: () => navigation.goBack(),
+      }}
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

@@ -14,7 +14,7 @@ import * as ExpoLocation from "expo-location";
 import * as Localization from "expo-localization";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import locations from "@utils/locationsData";
+import locations from "@/utils/locations-data";
 import { Location } from "@/types/location";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@/components/ui/modal";

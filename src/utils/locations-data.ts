@@ -622,6 +622,13 @@ export const locations = [
     region: "Centre",
     country: "Burkina Faso",
   },
+  {
+    id: 90,
+    name: "Wad Naga",
+    city: "Wad Naga",
+    region: "Gorgol",
+    country: "Mauritanie",
+  },
 ];
 
 export default locations;

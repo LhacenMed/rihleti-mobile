@@ -14,7 +14,7 @@ import { PaperProvider } from "react-native-paper";
 
 // Auth Context and Components
 import { AuthProvider, useAuth } from "@contexts/AuthContext";
-import LoadingScreen from "@components/LoadingScreen";
+import LoadingScreen from "@/app/screens/Loading";
 
 // Auth Screens
 import WelcomeScreen from "@app/auth/WelcomeScreen";
@@ -29,12 +29,12 @@ import Bookings from "@app/tabs/Bookings";
 import Settings from "@app/tabs/Settings";
 import Account from "@app/screens/Account";
 import SettingsTest from "@app/screens/SettingsTest";
-import WebViewScreen from "@app/screens/WebViewScreen";
+import WebViewScreen from "@/app/screens/WebView";
 import Messages from "@app/screens/Messages";
 import Preferences from "@app/screens/Preferences";
-import DepartureLocationScreen from "@app/screens/DepartureLocationScreen";
-import DestinationLocationScreen from "@app/screens/DestinationLocationScreen";
-import TripsScreen from "@app/screens/TripsScreen";
+import DepartureLocationScreen from "@/app/screens/DepartureLocation";
+import DestinationLocationScreen from "@/app/screens/DestinationLocation";
+import TripsScreen from "@/app/screens/Trips";
 import TabBar from "@components/TabBar";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
@@ -163,7 +163,7 @@ const AppNavigator = () => {
                   headerTitleStyle: {
                     fontWeight: "bold",
                     fontSize: 20,
-                    color: isDark ? "#ffffff" : "#000000",
+                    color: isDark ? "#fff" : "#000",
                   },
                   headerStyle: {
                     backgroundColor: isDark ? "#000" : "#fff",
@@ -176,13 +176,13 @@ const AppNavigator = () => {
                   headerRight: () => (
                     <View className="mr-4 flex-row items-center space-x-3">
                       <TouchableOpacity className="p-2">
-                        <Ionicons name="search" size={22} color={isDark ? "#ffffff" : "#000000"} />
+                        <Ionicons name="search" size={22} color={isDark ? "#fff" : "#000"} />
                       </TouchableOpacity>
                       <TouchableOpacity className="p-2">
                         <Ionicons
                           name="ellipsis-vertical"
                           size={22}
-                          color={isDark ? "#ffffff" : "#000000"}
+                          color={isDark ? "#fff" : "#000"}
                         />
                       </TouchableOpacity>
                     </View>
@@ -200,7 +200,7 @@ const AppNavigator = () => {
                 headerTitleStyle: {
                   fontWeight: "bold",
                   fontSize: 20,
-                  color: isDark ? "#ffffff" : "#000000",
+                  color: isDark ? "#fff" : "#000",
                 },
                 headerStyle: {
                   backgroundColor: isDark ? "#000" : "#fff",
@@ -222,7 +222,7 @@ const AppNavigator = () => {
                 headerTitleStyle: {
                   fontWeight: "bold",
                   fontSize: 20,
-                  color: isDark ? "#ffffff" : "#000000",
+                  color: isDark ? "#fff" : "#000",
                 },
                 headerStyle: {
                   backgroundColor: isDark ? "#000" : "#fff",
@@ -244,7 +244,7 @@ const AppNavigator = () => {
                 headerTitleStyle: {
                   fontWeight: "bold",
                   fontSize: 20,
-                  color: isDark ? "#ffffff" : "#000000",
+                  color: isDark ? "#fff" : "#000",
                 },
                 headerStyle: {
                   backgroundColor: isDark ? "#000" : "#fff",
@@ -274,7 +274,7 @@ const AppNavigator = () => {
                 headerTitleStyle: {
                   fontWeight: "bold",
                   fontSize: 20,
-                  color: isDark ? "#ffffff" : "#000000",
+                  color: isDark ? "#fff" : "#000",
                 },
                 headerStyle: {
                   backgroundColor: isDark ? "#000" : "#fff",
@@ -312,7 +312,7 @@ const AppNavigator = () => {
                 headerTitleStyle: {
                   fontWeight: "bold",
                   fontSize: 20,
-                  color: isDark ? "#ffffff" : "#000000",
+                  color: isDark ? "#fff" : "#000",
                 },
                 headerStyle: {
                   backgroundColor: isDark ? "#000" : "#fff",

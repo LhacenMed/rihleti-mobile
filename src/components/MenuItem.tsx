@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 12,
     marginLeft: 45,
-    marginTop: 16,
+    // marginTop: 16,
     marginBottom: 8,
   },
   firstSectionTitle: {
@@ -338,6 +338,6 @@ const styles = StyleSheet.create({
   section: {
     marginHorizontal: 20,
     borderRadius: 18,
-    marginBottom: 8,
+    marginBottom: 20,
   },
 });

@@ -168,11 +168,11 @@ const Settings = () => {
           />
         </MenuGroup>
         {/* Contact Section */}
-        <MenuGroup containerStyle={styles.miniSection}>
+        <MenuGroup>
           <MenuItem icon="chatbubble-outline" title="Contact Us" isFirst isLast />
         </MenuGroup>
         {/* Danger Zone */}
-        <MenuGroup containerStyle={styles.miniSection}>
+        <MenuGroup>
           <MenuItem
             icon="log-out-outline"
             title="Log Out"

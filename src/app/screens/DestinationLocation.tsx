@@ -5,9 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
-  Switch,
   ActivityIndicator,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ExpoLocation from "expo-location";
@@ -21,13 +22,13 @@ import Modal from "@/components/ui/modal";
 const DestinationLocationScreen: React.FC = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
-  // const [nearbyAirports, setNearbyAirports] = useState<boolean>(true);
+  const [showAllLocations, setShowAllLocations] = useState(false);
   const [fetchingCurrent, setFetchingCurrent] = useState<boolean>(false);
 
   // Filter locations based on search query
   const filteredLocations = useMemo(() => {
     if (!searchQuery.trim()) {
-      return locations;
+      return showAllLocations ? locations : [];
     }
 
     const query = searchQuery.toLowerCase();
@@ -37,7 +38,7 @@ const DestinationLocationScreen: React.FC = () => {
         location.region.toLowerCase().includes(query) ||
         location.country.toLowerCase().includes(query)
     );
-  }, [searchQuery]);
+  }, [searchQuery, showAllLocations]);
 
   // Handle location selection
   const handleLocationSelect = useCallback(
@@ -132,88 +133,139 @@ const DestinationLocationScreen: React.FC = () => {
     [handleLocationSelect]
   );
 
-  // Render empty state
-  const renderEmptyState = useCallback(
-    () => (
-      <View style={styles.emptyState}>
-        <MaterialIcons name="search-off" size={48} color="#666666" />
-        <Text style={styles.emptyStateText}>No locations found</Text>
-        <Text style={styles.emptyStateSubtext}>Try searching with different keywords</Text>
-      </View>
-    ),
-    []
-  );
-
-  return (
-    <View className="flex-1 bg-background">
-      {/* Top search-as-header */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={handleGoBack} style={styles.closeButton}>
-          <MaterialIcons name="close" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-        <View style={styles.searchBar}>
-          <MaterialIcons name="search" size={20} color="#666666" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Where to?"
-            placeholderTextColor="#999999"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            autoFocus
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={handleClearSearch} style={styles.clearButton}>
-              <MaterialIcons name="clear" size={20} color="#666666" />
+  // Render search results or all locations toggle
+  const renderSearchResults = useCallback(() => {
+    if (searchQuery.trim()) {
+      return (
+        <View style={styles.allLocationsContainer}>
+          <View style={styles.allLocationsHeader}>
+            <Text style={styles.locationsHeader}>
+              {filteredLocations.length} location{filteredLocations.length !== 1 ? "s" : ""} found
+            </Text>
+            <TouchableOpacity
+              onPress={() => {}}
+              style={{
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 6,
+                backgroundColor: "transparent",
+              }}
+            >
+              <Text style={styles.hideAllText}></Text>
             </TouchableOpacity>
+          </View>
+          {filteredLocations.length > 0 ? (
+            <ScrollView
+              style={styles.scrollView}
+              showsVerticalScrollIndicator={true}
+              keyboardShouldPersistTaps="handled"
+            >
+              {filteredLocations.map((item) => (
+                <React.Fragment key={item.id}>
+                  {renderLocationItem({ item })}
+                  <View style={styles.separator} />
+                </React.Fragment>
+              ))}
+            </ScrollView>
+          ) : (
+            <View style={styles.noResultsContainer}>
+              <Text style={styles.noResultsText}>No locations found</Text>
+            </View>
           )}
         </View>
-      </View>
+      );
+    }
 
-      {/* Nearby airports toggle */}
-      {/* <View style={styles.optionRow}>
-        <Text style={styles.optionText}>Add nearby airports</Text>
-        <Switch
-          value={nearbyAirports}
-          onValueChange={setNearbyAirports}
-          trackColor={{ false: "#3A3A3C", true: "#3A3A3C" }}
-          thumbColor={nearbyAirports ? "#FF5A1F" : "#B0B0B0"}
-        />
-      </View> */}
+    if (showAllLocations) {
+      return (
+        <View style={styles.allLocationsContainer}>
+          <View style={styles.allLocationsHeader}>
+            <Text style={styles.locationsHeader}>All Locations</Text>
+            <TouchableOpacity
+              onPress={() => setShowAllLocations(false)}
+              style={styles.hideAllButton}
+            >
+              <Text style={styles.hideAllText}>Hide</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            style={styles.scrollView}
+            showsVerticalScrollIndicator={true}
+            keyboardShouldPersistTaps="handled"
+          >
+            {locations.map((item) => (
+              <React.Fragment key={item.id}>
+                {renderLocationItem({ item })}
+                <View style={styles.separator} />
+              </React.Fragment>
+            ))}
+          </ScrollView>
+        </View>
+      );
+    }
 
-      {/* Current location */}
-      <TouchableOpacity style={styles.currentLocationRow} onPress={handleUseCurrentLocation}>
-        <MaterialIcons name="location-on" size={20} color="#FFFFFF" />
-        <Text style={styles.currentLocationText}>Current location</Text>
-        {fetchingCurrent && (
-          <ActivityIndicator size="small" color="#999999" style={styles.currentSpinner} />
-        )}
-      </TouchableOpacity>
-
-      {/* Divider and sign-in tip */}
-      <View style={styles.divider} />
-      <View style={styles.tipContainer}>
-        <Text style={styles.tipText}>Tip: Sign in to view your recent searches</Text>
-        <TouchableOpacity style={styles.signInButton}>
-          <Text style={styles.signInText}>Sign in</Text>
+    return (
+      <View style={styles.emptyStateContainer}>
+        <MaterialIcons name="search" size={48} color="#666666" />
+        <Text style={styles.emptyStateText}>Search for a location</Text>
+        <Text style={styles.emptyStateSubtext}>Type a city, region, or country name</Text>
+        <TouchableOpacity style={styles.showAllButton} onPress={() => setShowAllLocations(true)}>
+          <Text style={styles.showAllText}>Show All Locations</Text>
         </TouchableOpacity>
       </View>
+    );
+  }, [searchQuery, showAllLocations, filteredLocations, renderLocationItem]);
 
-      {/* Locations List */}
-      <FlatList
-        data={filteredLocations}
-        renderItem={renderLocationItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={true}
-        ListEmptyComponent={renderEmptyState}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        keyboardShouldPersistTaps="handled"
-        removeClippedSubviews={false}
-        initialNumToRender={20}
-        maxToRenderPerBatch={20}
-        windowSize={10}
-      />
-    </View>
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View className="flex-1 bg-background">
+        {/* Top search-as-header */}
+        <View style={styles.topBar}>
+          <TouchableOpacity onPress={handleGoBack} style={styles.closeButton}>
+            <MaterialIcons name="close" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <View style={styles.searchBar}>
+            <MaterialIcons name="search" size={20} color="#666666" style={styles.searchIcon} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Where to?"
+              placeholderTextColor="#999999"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              autoFocus
+              returnKeyType="search"
+              blurOnSubmit={false}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={handleClearSearch} style={styles.clearButton}>
+                <MaterialIcons name="clear" size={20} color="#666666" />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+
+        {/* Current location */}
+        <TouchableOpacity style={styles.currentLocationRow} onPress={handleUseCurrentLocation}>
+          <MaterialIcons name="location-on" size={20} color="#FFFFFF" />
+          <Text style={styles.currentLocationText}>Current location</Text>
+          {fetchingCurrent && (
+            <ActivityIndicator size="small" color="#999999" style={styles.currentSpinner} />
+          )}
+        </TouchableOpacity>
+
+        {/* Divider and sign-in tip */}
+        <View style={styles.divider} />
+        <View style={styles.tipContainer}>
+          <Text style={styles.tipText}>Tip: Sign in to view your recent searches</Text>
+          <TouchableOpacity style={styles.signInButton}>
+            <Text style={styles.signInText}>Sign in</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Search Results or All Locations */}
+        {renderSearchResults()}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -310,8 +362,62 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
   },
-  listContent: {
-    paddingBottom: 20,
+  searchResultsContainer: {
+    flex: 1,
+  },
+  allLocationsContainer: {
+    flex: 1,
+  },
+  allLocationsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#3A3A3C",
+  },
+  resultsHeader: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    paddingBottom: 10,
+    paddingHorizontal: 12,
+  },
+  locationsHeader: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
+  },
+  hideAllButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    backgroundColor: "#3A3A3C",
+  },
+  hideAllText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  emptyStateContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  showAllButton: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: "#007AFF",
+  },
+  showAllText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   locationItem: {
     flexDirection: "row",
@@ -335,7 +441,7 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: "#3A3A3C",
-    marginHorizontal: 20,
+    // marginHorizontal: 20,
   },
   emptyState: {
     alignItems: "center",
@@ -352,6 +458,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666666",
     marginTop: 4,
+    textAlign: "center",
+  },
+  scrollView: {
+    flex: 1,
+  },
+  noResultsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: "#666666",
     textAlign: "center",
   },
 });

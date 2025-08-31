@@ -1,6 +1,7 @@
-import { ScrollView, StyleSheet, Text, View, Button, Alert } from "react-native";
+import { ScrollView, StyleSheet, Text, View, Button, Alert, Platform } from "react-native";
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import SafeContainer from "@/components/SafeContainer";
 
 export default function Account({ navigation }: { navigation: any }) {
   const { user, signOut } = useAuth();
@@ -13,67 +14,45 @@ export default function Account({ navigation }: { navigation: any }) {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: "#fefae0" }}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Account</Text>
-        <Text style={styles.subtitle}>Manage your account settings</Text>
+    <SafeContainer>
+      <View className="flex-1 px-8">
+        <Text
+          style={{
+            paddingTop: Platform.OS === "ios" ? 20 : 0,
+          }}
+          className="mb-8 text-center text-4xl font-bold text-foreground"
+        >
+          Account
+        </Text>
+        <Text className="mb-8 text-center text-xl text-muted-foreground">
+          Manage your account settings
+        </Text>
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Email: {user?.email || "Not available"}</Text>
-          <Text style={styles.infoText}>User ID: {user?.id || "Not available"}</Text>
-          <Text style={styles.infoText}>
+        <View className="mb-10 rounded-sm border border-border bg-card p-5">
+          <Text className="mb-3 text-xl text-muted-foreground">
+            Email: {user?.email || "Not available"}
+          </Text>
+          <Text className="mb-3 text-xl text-muted-foreground">
+            User ID: {user?.id || "Not available"}
+          </Text>
+          <Text className="mb-3 text-xl text-muted-foreground">
             Member since:{" "}
             {user?.created_at ? new Date(user.created_at).getFullYear() : "Not available"}
           </Text>
-          <Text style={styles.infoText}>
+          <Text className="mb-3 text-xl text-muted-foreground">
             Email verified: {user?.email_confirmed_at ? "Yes" : "No"}
           </Text>
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View className="mt-5">
           <Button title="Back to Settings" onPress={() => navigation.goBack()} color="#606c38" />
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View className="mt-5">
           <Button title="Sign Out" onPress={handleSignOut} color="#dc3545" />
         </View>
       </View>
-    </ScrollView>
+    </SafeContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flex: 1,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#000",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 30,
-    textAlign: "center",
-  },
-  infoContainer: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 30,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-  },
-  infoText: {
-    fontSize: 16,
-    color: "#333",
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    marginTop: 20,
-  },
-});

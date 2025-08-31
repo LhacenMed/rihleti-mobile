@@ -13,6 +13,7 @@ import {
 import { WebView } from "react-native-webview";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface RouteParams {
   link: string;
@@ -33,6 +34,7 @@ export default function WebViewScreen() {
   const progressAnim = useRef(new Animated.Value(0)).current;
   const screenWidth = Dimensions.get("window").width;
   const webViewRef = useRef(null);
+  const { isDark } = useTheme();
 
   // Extract domain from URL
   const getDomain = (url: string) => {
@@ -123,21 +125,21 @@ export default function WebViewScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       {/* Header */}
-      <View className="border-b border-gray-200 bg-white px-4 py-3">
+      <View className="border-b border-border bg-background px-4 py-3">
         {/* Top row with back button and title */}
         <View className="mb-3 flex-row items-center">
           <TouchableOpacity onPress={handleGoBack} className="p-2">
             <Text className="text-base font-medium text-primary">Back</Text>
           </TouchableOpacity>
           <View className="flex-1 items-center">
-            <Text className="text-base font-semibold text-gray-900">{title}</Text>
+            <Text className="text-base font-semibold text-foreground">{title}</Text>
           </View>
           <View className="p-2" style={{ width: 60 }} />
         </View>
 
         {/* URL Bar */}
         <View className="flex-row items-center">
-          <View className="flex-1 rounded-full bg-gray-100 px-4 py-2">
+          <View className="flex-1 rounded-full bg-secondary px-4 py-2">
             {isUrlEditing ? (
               <View className="flex-row items-center">
                 <TextInput
@@ -147,7 +149,7 @@ export default function WebViewScreen() {
                   onBlur={handleUrlCancel}
                   autoFocus
                   selectTextOnFocus
-                  className="flex-1 text-sm text-gray-800"
+                  className="flex-1 text-sm text-muted-foreground"
                   placeholder="Enter URL..."
                   keyboardType="url"
                   autoCapitalize="none"
@@ -159,11 +161,21 @@ export default function WebViewScreen() {
               </View>
             ) : (
               <TouchableOpacity onPress={handleUrlPress} className="flex-row items-center">
-                <Ionicons name="lock-closed" size={13} color="#000000" className="mr-2" />
-                <Text className="flex-1 text-sm text-gray-800" numberOfLines={1}>
+                <Ionicons
+                  name="lock-closed"
+                  size={13}
+                  color={isDark ? "#fff" : "#000"}
+                  className="mr-2"
+                />
+                <Text className="flex-1 text-sm text-muted-foreground" numberOfLines={1}>
                   {displayUrl}
                 </Text>
-                <Ionicons name="ellipsis-horizontal" size={13} color="#000000" className="ml-2" />
+                <Ionicons
+                  name="ellipsis-horizontal"
+                  size={13}
+                  color={isDark ? "#fff" : "#000"}
+                  className="ml-2"
+                />
               </TouchableOpacity>
             )}
           </View>

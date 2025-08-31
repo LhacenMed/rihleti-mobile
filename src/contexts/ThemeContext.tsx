@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { View, useColorScheme } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
@@ -38,7 +38,7 @@ const themes = {
     "--border": "0 0% 90%",
     "--input": "0 0% 90%",
     "--ring": "0 0% 4%",
-    "--radius": "24px",
+    "--radius": "10px",
     "--sidebar-background": "210 40% 98%",
     "--sidebar-foreground": "0 0% 4%",
     "--sidebar-primary": "0 0% 4%",

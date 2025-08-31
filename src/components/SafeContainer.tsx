@@ -1,3 +1,4 @@
+import { useTheme } from "@/contexts/ThemeContext";
 import React from "react";
 import {
   View,
@@ -8,10 +9,20 @@ import {
   Text,
   TouchableOpacity,
   TextStyle,
+  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
 } from "react-native";
+// import { SparklesIcon as SparklesIconMicro } from "react-native-heroicons/micro";
+// // Old solid style from heroicons v1
+// import { SparklesIcon as SparklesIconMini } from "react-native-heroicons/mini";
+// import { SparklesIcon } from "react-native-heroicons/solid";
+// import { SparklesIcon as SparklesIconOutline } from "react-native-heroicons/outline";
+// import { ChevronLeftIcon } from "react-native-heroicons/mini";
+import { Ionicons } from "@expo/vector-icons";
 
 interface HeaderProps {
   title?: string;
+  titleComponent?: React.ReactNode;
   leftComponent?: React.ReactNode;
   rightComponent?: React.ReactNode;
   onLeftPress?: () => void;
@@ -22,6 +33,7 @@ interface HeaderProps {
   headerStyle?: ViewStyle;
   showBackButton?: boolean;
   onBackPress?: () => void;
+  bottomComponent?: React.ReactNode;
 }
 
 interface SafeContainerProps {
@@ -32,6 +44,8 @@ interface SafeContainerProps {
 }
 
 const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, className, header }) => {
+  const { isDark } = useTheme();
+
   if (header) {
     return (
       <View style={[{ flex: 1 }, style]}>
@@ -41,7 +55,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
             { paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 },
             header.headerStyle,
           ]}
-          className="bg-background"
+          className="border-b border-border bg-background"
         >
           <View
             style={{
@@ -50,17 +64,17 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
               justifyContent: "space-between",
               paddingHorizontal: 16,
               paddingVertical: 12,
-              borderBottomWidth: 1,
-              marginBottom: 16,
+              // marginBottom: 16,
             }}
-            className="border-b border-border"
           >
             {/* Left Section */}
             <View style={{ flex: 1, alignItems: "flex-start" }}>
               {header.showBackButton ? (
-                <TouchableOpacity onPress={header.onBackPress}>
-                  <Text className="text-base text-primary">Back</Text>
-                </TouchableOpacity>
+                <View>
+                  <TouchableWithoutFeedback onPress={header.onBackPress}>
+                    <Ionicons name="chevron-back" size={24} color={isDark ? "#fff" : "#000"} />
+                  </TouchableWithoutFeedback>
+                </View>
               ) : header.leftComponent ? (
                 header.leftComponent
               ) : header.leftText ? (
@@ -71,15 +85,19 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
             </View>
 
             {/* Title Section */}
-            {header.title && (
-              <View style={{ flex: 2, alignItems: "center" }}>
-                <Text
-                  style={[{ fontSize: 18, fontWeight: "600" }, header.titleStyle]}
-                  className="text-foreground"
-                  numberOfLines={1}
-                >
-                  {header.title}
-                </Text>
+            {(header.titleComponent || header.title) && (
+              <View style={{ flex: 7, alignItems: "center" }}>
+                {header.titleComponent ? (
+                  header.titleComponent
+                ) : (
+                  <Text
+                    style={[{ fontSize: 18, fontWeight: "600" }, header.titleStyle]}
+                    className="text-foreground"
+                    numberOfLines={1}
+                  >
+                    {header.title}
+                  </Text>
+                )}
               </View>
             )}
 
@@ -94,6 +112,13 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
               ) : null}
             </View>
           </View>
+
+          {/* Optional bottom component below header row */}
+          {header.bottomComponent && (
+            <View style={{ paddingBottom: 12 }}>
+              {header.bottomComponent}
+            </View>
+          )}
         </SafeAreaView>
 
         {/* Content area */}

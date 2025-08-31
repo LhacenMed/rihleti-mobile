@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, Alert, RefreshControl } from "react-native";
+import { View, Text, ScrollView, Alert, RefreshControl, TouchableOpacity } from "react-native";
 import SafeContainer from "@components/SafeContainer";
 import TripCard from "../../components/TripCard";
 import { fetchTripsByLocations, fetchTripsByExactLocations } from "../../utils/trips-service";
 import { TripWithRoute } from "../../types/trips";
-import Loader from "../../components/ui/loader";
+// import Loader from "../../components/ui/loader";
 import { useNavigation } from "@react-navigation/native";
+import { Button, ProgressBar } from "react-native-paper";
+// import { LinearProgress } from "react-native-elements";
+import TripCardSkeleton from "@/components/TripCardSkeleton";
+import { Ionicons } from "@expo/vector-icons";
+import { Bars3BottomLeftIcon } from "react-native-heroicons/solid";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type TripsScreenProps = {
   route: {
@@ -23,10 +29,12 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigation = useNavigation();
+  const { isDark } = useTheme();
 
   const fetchTrips = async () => {
     try {
       setLoading(true);
+      await new Promise((r) => setTimeout(r, 3000));
       setError(null);
       const fetchedTrips = await fetchTripsByExactLocations(departure, destination);
       setTrips(fetchedTrips);
@@ -60,10 +68,6 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   };
 
   const renderContent = () => {
-    if (loading) {
-      return <Loader />;
-    }
-
     if (error) {
       return (
         <View className="flex-1 items-center justify-center py-20">
@@ -92,13 +96,103 @@ export default function TripsScreen({ route }: TripsScreenProps) {
     }
 
     return (
-      <View className="mb-6">
-        <Text className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-          Found {trips.length} trip{trips.length !== 1 ? "s" : ""}
-        </Text>
+      <View className="mt-2">
         {trips.map((trip) => (
-          <TripCard key={trip.id} trip={trip} onPress={handleTripPress} />
+          <TripCard
+            key={trip.id}
+            trip={trip}
+            departureTime={
+              trip.departure_time
+                ? new Date(trip.departure_time).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                  })
+                : "N/A"
+            }
+            arrivalTime={
+              trip.arrival_time
+                ? new Date(trip.arrival_time).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                  })
+                : "N/A"
+            }
+            departureCity={trip.origin?.address || "Unknown"}
+            departureCode="N/A"
+            arrivalCity={trip.destination?.address || "Unknown"}
+            arrivalCode="N/A"
+            airline="Turkish Airlines"
+            price={`$${trip.price}`}
+            duration="15h 25m"
+            stops="2 stops"
+            layoverDetails="1h 35m in BJL, 1h 30m in IST"
+            nextDay={false}
+            onPress={handleTripPress}
+          />
         ))}
+      </View>
+    );
+  };
+
+  // Custom title component for the header
+  const TripTitleComponent = () => (
+    <View className="w-full overflow-hidden rounded-[10px] border border-muted-foreground bg-secondary">
+      <View className="flex-column px-3 py-3">
+        <Text className="text-sm font-medium text-foreground">
+          {departure} - {destination}
+        </Text>
+        <Text className="mt-1 text-xs text-muted-foreground">29 Sep - 6 Oct</Text>
+      </View>
+      {loading && (
+        <View className="absolute bottom-0 left-0 right-0">
+          <ProgressBar indeterminate color="red" style={{ backgroundColor: "transparent" }} />
+        </View>
+      )}
+    </View>
+  );
+
+  const TripsFilter = () => {
+    return (
+      <View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          // contentContainerStyle={{ paddingHorizontal: 16 }}
+          className="flex-row"
+        >
+          {/* Sort Button */}
+          <TouchableOpacity className="mx-1 ml-2 flex-row items-center rounded-xl border border-border bg-card px-4 py-2">
+            <Bars3BottomLeftIcon
+              size={20}
+              color={isDark ? "#fff" : "#000"}
+              style={{ marginRight: 5 }}
+            />
+            <Text className="text-sm font-medium text-foreground">Sort: Best</Text>
+          </TouchableOpacity>
+
+          {/* Filter Buttons */}
+          <TouchableOpacity className="mx-1 rounded-xl border border-border bg-card px-4 py-2">
+            <Text className="text-sm font-medium text-foreground">Stops</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="mx-1 rounded-xl border border-border bg-card px-4 py-2">
+            <Text className="text-sm font-medium text-foreground">Times</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="mx-1 rounded-xl border border-border bg-card px-4 py-2">
+            <Text className="text-sm font-medium text-foreground">Airlines</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="mx-1 rounded-xl border border-border bg-card px-4 py-2">
+            <Text className="text-sm font-medium text-foreground">Airports</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="mx-1 mr-2 rounded-xl border border-border bg-card px-4 py-2">
+            <Text className="text-sm font-medium text-foreground">Airports</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     );
   };
@@ -107,26 +201,26 @@ export default function TripsScreen({ route }: TripsScreenProps) {
     <SafeContainer
       className="px-4"
       header={{
-        title: "Trips",
+        titleComponent: <TripTitleComponent />,
+        bottomComponent: <TripsFilter />,
         showBackButton: true,
         onBackPress: () => navigation.goBack(),
       }}
     >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
-        {/* Header */}
-        <View className="mb-6">
-          <Text className="text-2xl font-bold text-black dark:text-white">Available Trips</Text>
-          <Text className="mt-2 text-base text-gray-600 dark:text-gray-400">
-            {departure} → {destination}
-          </Text>
+      {loading ? (
+        <View className="mt-2">
+          {[1, 2, 3, 4, 5].map((index) => (
+            <TripCardSkeleton key={index} />
+          ))}
         </View>
-
-        {/* Content */}
-        {renderContent()}
-      </ScrollView>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          {renderContent()}
+        </ScrollView>
+      )}
     </SafeContainer>
   );
 }

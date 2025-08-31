@@ -378,7 +378,7 @@ const AppInitializer = () => {
       try {
         // Clear location inputs values
         // await AsyncStorage.removeItem("departureCityName");
-        await AsyncStorage.removeItem("destinationCityName");
+        // await AsyncStorage.removeItem("destinationCityName");
 
         // Load cached loader from Supabase
         await loadLoaderFromSupabase();

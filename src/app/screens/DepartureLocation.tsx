@@ -53,6 +53,9 @@ const DepartureLocationScreen: React.FC = () => {
   );
 
   const handleUseCurrentLocation = useCallback(async () => {
+    // Dismiss keyboard
+    Keyboard.dismiss();
+
     try {
       setFetchingCurrent(true);
       const { status } = await ExpoLocation.requestForegroundPermissionsAsync();
@@ -69,7 +72,7 @@ const DepartureLocationScreen: React.FC = () => {
       }
 
       const position = await ExpoLocation.getCurrentPositionAsync({
-        accuracy: ExpoLocation.Accuracy.Highest,
+        accuracy: ExpoLocation.Accuracy.Balanced,
       });
 
       const [address] = await ExpoLocation.reverseGeocodeAsync({

@@ -12,6 +12,7 @@ import TripCardSkeleton from "@/components/TripCardSkeleton";
 import { Ionicons } from "@expo/vector-icons";
 import { Bars3BottomLeftIcon } from "react-native-heroicons/solid";
 import { useTheme } from "@/contexts/ThemeContext";
+import { showSearchModal } from "../../components/search-modal";
 
 type TripsScreenProps = {
   route: {
@@ -28,6 +29,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const navigation = useNavigation();
   const { isDark } = useTheme();
 
@@ -138,7 +140,10 @@ export default function TripsScreen({ route }: TripsScreenProps) {
 
   // Custom title component for the header
   const TripTitleComponent = () => (
-    <View className="w-full overflow-hidden rounded-[10px] border border-muted-foreground bg-secondary">
+    <TouchableOpacity
+      onPress={() => showSearchModal(departure, destination)}
+      className="w-full overflow-hidden rounded-[10px] border border-muted-foreground bg-secondary"
+    >
       <View className="flex-column px-3 py-3">
         <Text className="text-sm font-medium text-foreground">
           {departure} - {destination}
@@ -150,7 +155,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
           <ProgressBar indeterminate color="red" style={{ backgroundColor: "transparent" }} />
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 
   const TripsFilter = () => {
@@ -203,6 +208,11 @@ export default function TripsScreen({ route }: TripsScreenProps) {
       header={{
         titleComponent: <TripTitleComponent />,
         bottomComponent: <TripsFilter />,
+        rightComponent: (
+          <TouchableOpacity>
+            <Ionicons name="ellipsis-vertical" size={20} color={isDark ? "#fff" : "#000"} />
+          </TouchableOpacity>
+        ),
         showBackButton: true,
         onBackPress: () => navigation.goBack(),
       }}

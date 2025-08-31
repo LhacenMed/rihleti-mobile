@@ -8,6 +8,7 @@ import EmailBottomSheet from "@/components/EmailBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Button } from "@components/ui/button";
 import { showLocationErrorToast } from "@utils/toast-helpers";
+import { showSearchModal } from "@/components/search-modal";
 
 type RootStackParamList = {
   Trips: {
@@ -59,7 +60,12 @@ export default function Page() {
         <Text className="text-base font-semibold text-white">Search</Text>
       </Button>
 
-      <Button variant="outline" className="mt-10" onPress={handlePresentEmailModal}>
+      <Button
+        variant="outline"
+        className="mt-10"
+        // onPress={handlePresentEmailModal}
+        onPress={() => showSearchModal("Nouakchott", "Wad Naga")}
+      >
         Departure
       </Button>
 

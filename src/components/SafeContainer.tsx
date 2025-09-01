@@ -55,7 +55,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
             { paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 },
             header.headerStyle,
           ]}
-          className="border-b border-border bg-background"
+          className="border-b border-border bg-card"
         >
           <View
             style={{

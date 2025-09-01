@@ -42,6 +42,7 @@ import Preferences from "@/app/screens/Preferences";
 import DepartureLocationScreen from "@/app/screens/DepartureLocation";
 import DestinationLocationScreen from "@/app/screens/DestinationLocation";
 import TripsScreen from "@/app/screens/Trips";
+import TripDetailsScreen from "@/app/screens/TripDetails";
 import TabBar from "@/components/TabBar";
 
 // Utilities
@@ -71,6 +72,9 @@ type RootStackParamList = {
   Trips: {
     departure: string;
     destination: string;
+  };
+  TripDetails: {
+    tripId: string;
   };
 };
 
@@ -218,6 +222,14 @@ const AppNavigator = () => {
             <RootStack.Screen
               name="Trips"
               component={TripsScreen}
+              options={{
+                headerShown: false,
+                ...TransitionPresets.SlideFromRightIOS,
+              }}
+            />
+            <RootStack.Screen
+              name="TripDetails"
+              component={TripDetailsScreen}
               options={{
                 headerShown: false,
                 ...TransitionPresets.SlideFromRightIOS,

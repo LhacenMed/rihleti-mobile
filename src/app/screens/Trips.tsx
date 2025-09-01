@@ -6,6 +6,7 @@ import { fetchTripsByLocations, fetchTripsByExactLocations } from "@/utils/trips
 import { TripWithRoute } from "@/types/trips";
 // import Loader from "@/components/ui/loader";
 import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { Button, ProgressBar } from "react-native-paper";
 // import { LinearProgress } from "react-native-elements";
 import TripCardSkeleton from "@/components/blocks/trip-card-skeleton";
@@ -30,7 +31,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const { isDark } = useTheme();
 
   const fetchTrips = async () => {
@@ -59,14 +60,8 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   }, [departure, destination]);
 
   const handleTripPress = (trip: TripWithRoute) => {
-    Alert.alert(
-      "Trip Selected",
-      `You selected a trip from ${trip.origin?.address || "Unknown"} to ${trip.destination?.address || "Unknown"} for ${trip.price}`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Book Now", onPress: () => console.log("Book trip:", trip.id) },
-      ]
-    );
+    // Navigate to trip details screen with trip ID
+    navigation.navigate("TripDetails", { tripId: trip.id });
   };
 
   const renderContent = () => {

@@ -74,14 +74,14 @@ create table public.routes (
 
 ### Basic Trip Fetching
 ```typescript
-import { fetchTripsByLocations } from '@utils/trips-service';
+import { fetchTripsByLocations } from '@/utils/trips-service';
 
 const trips = await fetchTripsByLocations('Nouakchott', 'Dakar');
 ```
 
 ### Displaying Trips
 ```typescript
-import TripCard from '@components/TripCard';
+import TripCard from '@/components/TripCard';
 
 <TripCard 
   trip={trip} 

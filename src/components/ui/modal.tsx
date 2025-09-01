@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Button as PaperButton } from "react-native-paper";
 import { ModalContentProps } from "@whitespectre/rn-modal-presenter";
-import { useTheme } from "@contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import * as Haptic from "expo-haptics";
 
 // Types

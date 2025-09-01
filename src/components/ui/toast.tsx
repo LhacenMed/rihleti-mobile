@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, useColorScheme } from "react-native";
 import { BaseToast, ErrorToast, SuccessToast, InfoToast } from "react-native-toast-message";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 // Dynamic styles based on theme
 const getDynamicStyles = (isDark: boolean) => ({

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity, Animated } from "react-native";
 import { Tooltip } from "react-native-paper";
-// import { useTheme } from "@contexts/ThemeContext";
+// import { useTheme } from "@/contexts/ThemeContext";
 import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
 import ExploreIcon from "@/components/icons/tab-icons/ExploreIcon";
 import BookingsIcon from "@/components/icons/tab-icons/BookingsIcon";

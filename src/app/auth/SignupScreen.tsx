@@ -14,8 +14,8 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-import { signupSchema, SignupFormData } from "@utils/validation";
-import { verifyEmail, sendVerificationEmail } from "@utils/auth-helpers";
+import { signupSchema, SignupFormData } from "@/utils/validation";
+import { verifyEmail, sendVerificationEmail } from "@/utils/auth-helpers";
 
 interface SignupScreenProps {
   navigation: any; // Replace with proper navigation type

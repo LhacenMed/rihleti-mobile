@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, Alert, RefreshControl, TouchableOpacity } from "react-native";
-import SafeContainer from "@components/SafeContainer";
-import TripCard from "../../components/TripCard";
-import { fetchTripsByLocations, fetchTripsByExactLocations } from "../../utils/trips-service";
-import { TripWithRoute } from "../../types/trips";
-// import Loader from "../../components/ui/loader";
+import SafeContainer from "@/components/SafeContainer";
+import TripCard from "@/components/blocks/trip-card";
+import { fetchTripsByLocations, fetchTripsByExactLocations } from "@/utils/trips-service";
+import { TripWithRoute } from "@/types/trips";
+// import Loader from "@/components/ui/loader";
 import { useNavigation } from "@react-navigation/native";
 import { Button, ProgressBar } from "react-native-paper";
 // import { LinearProgress } from "react-native-elements";
-import TripCardSkeleton from "@/components/TripCardSkeleton";
+import TripCardSkeleton from "@/components/blocks/trip-card-skeleton";
 import { Ionicons } from "@expo/vector-icons";
 import { Bars3BottomLeftIcon } from "react-native-heroicons/solid";
 import { useTheme } from "@/contexts/ThemeContext";
-import { showSearchModal } from "../../components/search-modal";
+import { showSearchModal } from "@/components/blocks/search-modal";
 
 type TripsScreenProps = {
   route: {

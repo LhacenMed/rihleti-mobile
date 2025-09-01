@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { Switch, SwitchRef } from "@components/ui/switch";
-import MenuItem, { MenuGroup } from "@components/MenuItem";
-import { useFeatures } from "@contexts/FeaturesContext";
+import { Switch, SwitchRef } from "@/components/ui/switch";
+import MenuItem, { MenuGroup } from "@/components/blocks/menu-item";
+import { useFeatures } from "@/contexts/FeaturesContext";
 import SafeContainer from "@/components/SafeContainer";
 import { useNavigation } from "@react-navigation/native";
 

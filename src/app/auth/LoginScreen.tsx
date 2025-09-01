@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, StatusBar, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 import { Input } from "@/components/ui/input";
 import SafeContainer from "@/components/SafeContainer";
 import { supabase } from "@/lib/supabase";
 import { verifyEmail } from "@/utils/auth-helpers";
-import Loader from "@/components/ui/loader";
+// import Loader from "@/components/ui/loader";
 import Button from "@/components/ui/button";
 import * as z from "zod";
 
@@ -185,7 +185,7 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleContinue}
           disabled={!isFormValid || loading}
         >
-          {loading ? <Loader color="#666" /> : "Continue"}
+          {loading ? <ActivityIndicator color="#666" /> : "Continue"}
         </Button>
 
         <Button

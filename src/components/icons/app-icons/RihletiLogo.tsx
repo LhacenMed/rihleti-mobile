@@ -1,6 +1,6 @@
 import React from "react";
 import { LogoProps } from "../types";
-import RihletiLogoSvg from "@assets/icons/rihleti-logo.svg";
+import RihletiLogoSvg from "@/assets/icons/rihleti-logo.svg";
 
 const RihletiLogo: React.FC<LogoProps> = ({
   width = 48,

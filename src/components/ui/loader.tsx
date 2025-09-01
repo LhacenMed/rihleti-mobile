@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, ViewStyle } from "react-native";
 import { WebView } from "react-native-webview";
-import { supabase } from "@lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 // Simple table schema:
 // CREATE TABLE app_config (

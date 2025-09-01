@@ -18,7 +18,7 @@
 //   );
 // };
 
-import { useTheme } from "@contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -30,9 +30,10 @@ import {
   StyleProp,
   Platform,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Loader from "./ui/loader";
+// import Loader from "@/components/ui/loader";
 
 interface MenuItemProps {
   icon?: string;
@@ -196,7 +197,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
                 </Text>
               )}
               {loading ? (
-                <Loader style={{ marginRight: 5 }} color={chevronColor} size={15} />
+                <ActivityIndicator style={{ marginRight: 5 }} color={chevronColor} size={15} />
               ) : showChevron ? (
                 <Ionicons name="chevron-forward" size={20} color={chevronColor} />
               ) : null}

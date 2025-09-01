@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Button, TouchableOpacity } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { useAuth } from "@contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@/components/ui/modal";
 

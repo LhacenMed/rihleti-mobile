@@ -8,7 +8,6 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  runOnJS,
   ReduceMotion,
 } from "react-native-reanimated";
 import * as Haptic from "expo-haptics";
@@ -67,8 +66,8 @@ const SearchModal = ({ dismiss, departure, destination }: SearchModalProps & Mod
 
     // Start fade-out near the end of the animation
     setTimeout(() => {
-      opacity.value = withTiming(0, { duration: 50 });
-    }, 80);
+      opacity.value = withTiming(0, { duration: 100 });
+    }, 100);
 
     // Dismiss modal after fade completes
     setTimeout(() => {

@@ -14,9 +14,9 @@ import {
   // BottomSheetBackdrop,
   // TouchableHighlight,
 } from "@gorhom/bottom-sheet";
-import EmailBottomSheet from "@components/EmailBottomSheet";
-import { Button } from "@components/ui/button";
-import { GoogleLogo, RihletiLogo } from "@components/icons";
+import EmailBottomSheet from "@/components/blocks/email-bottom-sheet";
+import { Button } from "@/components/ui/button";
+import { GoogleLogo, RihletiLogo } from "@/components/icons";
 // import { Ionicons } from "@expo/vector-icons";
 import SafeContainer from "@/components/SafeContainer";
 

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Platform, Alert } from "react-native";
-import MenuItem, { MenuGroup } from "@components/MenuItem";
-import { useTheme } from "@contexts/ThemeContext";
-import { useAuth } from "@contexts/AuthContext";
+import MenuItem, { MenuGroup } from "@/components/blocks/menu-item";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { ThemeSwitcher } from "@/components/blocks/theme-switcher";
 import { showModal } from "@whitespectre/rn-modal-presenter";
-import Modal from "@components/ui/modal";
+import Modal from "@/components/ui/modal";
 import * as Haptic from "expo-haptics";
 import Constants from "expo-constants";
 

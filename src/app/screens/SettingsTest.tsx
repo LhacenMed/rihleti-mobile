@@ -2,10 +2,10 @@ import React from "react";
 import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuth } from "@contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeSwitcher } from "@components/ThemeSwitcher";
-import { useTheme } from "@contexts/ThemeContext";
+import { ThemeSwitcher } from "@/components/blocks/theme-switcher";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "react-native-paper";
 import SafeContainer from "@/components/SafeContainer";
 

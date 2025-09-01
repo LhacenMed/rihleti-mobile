@@ -15,14 +15,14 @@
  */
 
 // Icon exports
-export { default as RihletiLogo } from "@components/icons/app-icons/RihletiLogo";
-export { default as GoogleLogo } from "@components/icons/app-icons/GoogleLogo";
+export { default as RihletiLogo } from "@/components/icons/app-icons/RihletiLogo";
+export { default as GoogleLogo } from "@/components/icons/app-icons/GoogleLogo";
 
 // Re-export existing icons for consistency
-export { default as HomeIcon } from "@components/icons/tab-icons/HomeIcon";
-export { default as ExploreIcon } from "@components/icons/tab-icons/ExploreIcon";
-export { default as BookingsIcon } from "@components/icons/tab-icons/BookingsIcon";
-export { default as SettingsIcon } from "@components/icons/tab-icons/SettingsIcon";
+export { default as HomeIcon } from "@/components/icons/tab-icons/HomeIcon";
+export { default as ExploreIcon } from "@/components/icons/tab-icons/ExploreIcon";
+export { default as BookingsIcon } from "@/components/icons/tab-icons/BookingsIcon";
+export { default as SettingsIcon } from "@/components/icons/tab-icons/SettingsIcon";
 
 // Export icon types
 export type { IconProps } from "./types";

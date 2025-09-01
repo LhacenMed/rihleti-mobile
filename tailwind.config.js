@@ -10,6 +10,26 @@ module.exports = {
     presets: [require("nativewind/preset")],
     theme: {
         extend: {
+            fontFamily: {
+                outfit: ["Outfit-Regular", "system-ui", "sans-serif"],
+                "outfit-light": ["Outfit-Light", "system-ui", "sans-serif"],
+                "outfit-extralight": ["Outfit-ExtraLight", "system-ui", "sans-serif"],
+                "outfit-medium": ["Outfit-Medium", "system-ui", "sans-serif"],
+                "outfit-semibold": ["Outfit-SemiBold", "system-ui", "sans-serif"],
+                "outfit-bold": ["Outfit-Bold", "system-ui", "sans-serif"],
+                "outfit-extrabold": ["Outfit-ExtraBold", "system-ui", "sans-serif"],
+                "outfit-black": ["Outfit-Black", "system-ui", "sans-serif"],
+            },
+            fontWeight: {
+                extralight: "200",
+                light: "300",
+                normal: "400",
+                medium: "500",
+                semibold: "600",
+                bold: "700",
+                extrabold: "800",
+                black: "900",
+            },
             colors: {
                 // Core colors
                 background: "hsl(var(--background))",

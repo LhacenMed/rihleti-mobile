@@ -2,13 +2,13 @@ import { useRef, useCallback, useState } from "react";
 import { Platform, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import LocationInputs from "@components/LocationInputs";
-import SafeContainer from "@components/SafeContainer";
-import EmailBottomSheet from "@/components/EmailBottomSheet";
+import LocationInputs from "@/components/blocks/location-inputs";
+import SafeContainer from "@/components/SafeContainer";
+import EmailBottomSheet from "@/components/blocks/email-bottom-sheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { Button } from "@components/ui/button";
-import { showLocationErrorToast } from "@utils/toast-helpers";
-import { showSearchModal } from "@/components/search-modal";
+import { Button } from "@/components/ui/button";
+import { showLocationErrorToast } from "@/utils/toast-helpers";
+import { showSearchModal } from "@/components/blocks/search-modal";
 
 type RootStackParamList = {
   Trips: {
@@ -57,7 +57,7 @@ export default function Page() {
 
       {/* Search Button */}
       <Button className="items-center rounded-2xl bg-[#FF5A1F] p-4" onPress={handleSearchPress}>
-        <Text className="text-base font-semibold text-white">Search</Text>
+        <Text className="font-outfit-semibold text-base text-white">Search</Text>
       </Button>
 
       <Button

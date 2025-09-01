@@ -1,6 +1,6 @@
 import React from "react";
 import { LogoProps } from "../types";
-import GoogleLogoSVG from "@assets/icons/google.svg";
+import GoogleLogoSVG from "@/assets/icons/google.svg";
 
 const GoogleLogo: React.FC<LogoProps> = ({
   width = 48,

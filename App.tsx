@@ -7,46 +7,45 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "@components/ui/toast";
+import { toastConfig } from "@/components/ui/toast";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
 
-// Auth Context and Components
-import { AuthProvider, useAuth } from "@contexts/AuthContext";
-import LoadingScreen from "@/app/screens/Loading";
+// Contexts
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
+import { FeaturesProvider, useFeatures } from "@/contexts/FeaturesContext";
+
+// Loading Hook
+import { useAppReady } from "@/hooks/useAppReady";
 
 // Auth Screens
-import WelcomeScreen from "@app/auth/WelcomeScreen";
-import LoginScreen from "@app/auth/LoginScreen";
-import SignupScreen from "@app/auth/SignupScreen";
-import VerifyOTPScreen from "@app/auth/VerifyOTPScreen";
+import WelcomeScreen from "@/app/auth/WelcomeScreen";
+import LoginScreen from "@/app/auth/LoginScreen";
+import SignupScreen from "@/app/auth/SignupScreen";
+import VerifyOTPScreen from "@/app/auth/VerifyOTPScreen";
 
 // App Screens
-import Home from "@app/tabs/Home";
-import Explore from "@app/tabs/Explore";
-import Bookings from "@app/tabs/Bookings";
-import Settings from "@app/tabs/Settings";
-import Account from "@app/screens/Account";
-import SettingsTest from "@app/screens/SettingsTest";
+import Home from "@/app/tabs/Home";
+import Explore from "@/app/tabs/Explore";
+import Bookings from "@/app/tabs/Bookings";
+import Settings from "@/app/tabs/Settings";
+import Account from "@/app/screens/Account";
+import SettingsTest from "@/app/screens/SettingsTest";
 import WebViewScreen from "@/app/screens/WebView";
-import Messages from "@app/screens/Messages";
-import Preferences from "@app/screens/Preferences";
+import Messages from "@/app/screens/Messages";
+import Preferences from "@/app/screens/Preferences";
 import DepartureLocationScreen from "@/app/screens/DepartureLocation";
 import DestinationLocationScreen from "@/app/screens/DestinationLocation";
 import TripsScreen from "@/app/screens/Trips";
-import TabBar from "@components/TabBar";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import TabBar from "@/components/TabBar";
 
-// Theme Context
-import { ThemeProvider, useTheme } from "@contexts/ThemeContext";
-import { FeaturesProvider, useFeatures } from "@contexts/FeaturesContext";
-
-// Loader functions
-import { storeLoaderInSupabase, loadLoaderFromSupabase } from "@components/ui/loader";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// Utilities
+// import { storeLoaderInSupabase, loadLoaderFromSupabase } from "@/components/ui/loader";
 
 type RootStackParamList = {
   // Auth Screens
@@ -78,7 +77,7 @@ type RootStackParamList = {
 const Tab = createMaterialTopTabNavigator();
 const RootStack = createStackNavigator<RootStackParamList>();
 
-// Material Top Tabs Navigator (nested inside Stack)
+// Material Top Tabs Navigator
 const TopTabsNavigator = () => {
   const { swipeEnabled } = useFeatures();
   return (
@@ -96,67 +95,35 @@ const TopTabsNavigator = () => {
         tabBarIndicatorStyle: { display: "none" },
         tabBarPressColor: "transparent",
         swipeEnabled, // Controlled by FeaturesContext
-        animationEnabled: false, // Make swipe animation disabled when pressing a tab
+        animationEnabled: false, // Make swipe animation disabled when pressing a tab button
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarLabel: "Home",
-        }}
-      />
-      <Tab.Screen
-        name="Explore"
-        component={Explore}
-        options={{
-          tabBarLabel: "Explore",
-        }}
-      />
-      <Tab.Screen
-        name="Bookings"
-        component={Bookings}
-        options={{
-          tabBarLabel: "Bookings",
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          tabBarLabel: "Settings",
-        }}
-      />
+      <Tab.Screen name="Home" component={Home} options={{ tabBarLabel: "Home" }} />
+      <Tab.Screen name="Explore" component={Explore} options={{ tabBarLabel: "Explore" }} />
+      <Tab.Screen name="Bookings" component={Bookings} options={{ tabBarLabel: "Bookings" }} />
+      <Tab.Screen name="Settings" component={Settings} options={{ tabBarLabel: "Settings" }} />
     </Tab.Navigator>
   );
 };
 
 // Main Navigation Component
 const AppNavigator = () => {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const { isDark } = useTheme();
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           // Authenticated screens
           <>
+            {/* Main app screen */}
             <RootStack.Screen
               name="MainApp"
               component={TopTabsNavigator}
               options={({ route }: any) => {
                 // Get the focused route name from the nested tab navigator
                 const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
-
                 return {
                   headerShown: true,
                   headerTitle: routeName,
@@ -191,6 +158,7 @@ const AppNavigator = () => {
                 };
               }}
             />
+            {/* Other app screens */}
             <RootStack.Screen
               name="Account"
               component={Account}
@@ -275,71 +243,6 @@ const AppNavigator = () => {
                 ...TransitionPresets.SlideFromRightIOS,
               }}
             />
-            {/* <RootStack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{
-                headerShown: false,
-                presentation: "modal",
-                gestureEnabled: true,
-                gestureDirection: "vertical",
-                cardStyleInterpolator: ({ current, next, layouts }) => {
-                  const modalHeight = layouts.screen.height * 0.9; // Modal takes 90% of screen
-                  const topOffset = layouts.screen.height * 0.06; // 10% visible background
-
-                  const translateY = current.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [layouts.screen.height, topOffset],
-                    extrapolate: "clamp",
-                  });
-
-                  // Background screen moves up slightly
-                  const backgroundTranslateY = next
-                    ? next.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, -40], // Move background up by 20px
-                        extrapolate: "clamp",
-                      })
-                    : 0;
-
-                  const backgroundScale = next
-                    ? next.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [1, 0.95],
-                        extrapolate: "clamp",
-                      })
-                    : 1;
-
-                  return {
-                    cardStyle: {
-                      height: modalHeight,
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
-                      overflow: "hidden",
-                      transform: [{ translateY }],
-                    },
-                    overlayStyle: {
-                      opacity: current.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 0.3],
-                      }),
-                      backgroundColor: "black",
-                    },
-                    // This affects the previous screen
-                    ...(next && {
-                      containerStyle: {
-                        transform: [
-                          { translateY: backgroundTranslateY },
-                          { scale: backgroundScale },
-                        ],
-                      },
-                    }),
-                  };
-                },
-                cardOverlayEnabled: true,
-                gestureResponseDistance: 100,
-              }}
-            /> */}
             <RootStack.Screen
               name="SignUp"
               component={SignupScreen}
@@ -372,26 +275,32 @@ const AppNavigator = () => {
 };
 
 // App Initialization Component
-const AppInitializer = () => {
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        // Clear location inputs values
-        // await AsyncStorage.removeItem("departureCityName");
-        // await AsyncStorage.removeItem("destinationCityName");
+const AppContent = () => {
+  const { isReady } = useAppReady();
 
-        // Load cached loader from Supabase
-        await loadLoaderFromSupabase();
+  // TODO: Remove this useEffect when you find a new custom lottie loader or uncomment this when you want to use this loader from components/ui/loader.tsx
+  // useEffect(() => {
+  //   const initializeData = async () => {
+  //     try {
+  //       // Initialize app data after resources are loaded
+  //       await loadLoaderFromSupabase();
+  //       await storeLoaderInSupabase();
+  //     } catch (error) {
+  //       console.error("Error initializing app data:", error);
+  //     }
+  //   };
 
-        // Store/update loader in Supabase (only runs if needed)
-        await storeLoaderInSupabase();
-      } catch (error) {
-        console.error("Error initializing loader:", error);
-      }
-    };
+  //   if (isReady) {
+  //     initializeData();
+  //   }
+  // }, [isReady]);
 
-    initializeApp();
-  }, []);
+  // TODO: Implement an animated splash screen
+
+  // Don't render anything until app is ready
+  if (!isReady) {
+    return null;
+  }
 
   return <AppNavigator />;
 };
@@ -407,7 +316,7 @@ export default function App() {
                 <ModalPresenterParent>
                   <BottomSheetModalProvider>
                     <StatusBar style="auto" />
-                    <AppInitializer />
+                    <AppContent />
                     <Toast
                       config={toastConfig}
                       position="top"

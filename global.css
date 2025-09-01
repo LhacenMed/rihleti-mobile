@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global font family */
+
+* {
+    font-family: "Outfit-Regular", system-ui, sans-serif;
+}

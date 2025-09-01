@@ -41,7 +41,7 @@ export default function Preferences() {
         onBackPress: () => navigation.goBack(),
       }}
     >
-      <MenuGroup title="Tabs">
+      <MenuGroup title="Tabs" titleStyle={{ marginTop: 20 }}>
         <MenuItem
           title="Swipe Between Tabs"
           subtitle="Allow horizontal tab swipes"

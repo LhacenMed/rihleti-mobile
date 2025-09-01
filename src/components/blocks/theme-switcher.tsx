@@ -1,7 +1,6 @@
-import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { useTheme } from "../../contexts/ThemeContext";
-import type { ThemeMode } from "../../types/theme";
+import { useTheme } from "@/contexts/ThemeContext";
+import type { ThemeMode } from "@/types/theme";
 
 interface ThemeOption {
   key: ThemeMode;

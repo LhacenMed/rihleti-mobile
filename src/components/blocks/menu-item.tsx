@@ -33,7 +33,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-// import Loader from "@/components/ui/loader";
+import {Loader} from "@/components/ui/loader";
 
 interface MenuItemProps {
   icon?: string;
@@ -71,12 +71,12 @@ const MenuItem: React.FC<MenuItemProps> = ({
   disabled,
   showValue = true,
   showChevron = true,
-  loading = false,
+  loading,
   style,
   containerStyle,
   rightAction,
   rightActionContainerStyle,
-  disableRipple = false,
+  disableRipple,
 }) => {
   const { isDark } = useTheme();
   const [isPressed, setIsPressed] = useState(false);
@@ -197,9 +197,13 @@ const MenuItem: React.FC<MenuItemProps> = ({
                 </Text>
               )}
               {loading ? (
-                <ActivityIndicator style={{ marginRight: 5 }} color={chevronColor} size={15} />
+                <Loader
+                  style={{ marginRight: 5 }}
+                  color={isDanger ? dangerTextColor : chevronColor}
+                  size={20}
+                />
               ) : showChevron ? (
-                <Ionicons name="chevron-forward" size={20} color={chevronColor} />
+                <Ionicons name="chevron-forward" size={19} color={chevronColor} />
               ) : null}
             </View>
           )}

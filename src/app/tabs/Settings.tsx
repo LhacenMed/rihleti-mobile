@@ -4,15 +4,16 @@ import MenuItem, { MenuGroup } from "@/components/blocks/menu-item";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-import { ThemeSwitcher } from "@/components/blocks/theme-switcher";
+// import { ThemeSwitcher } from "@/components/blocks/theme-switcher";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@/components/ui/modal";
+import { showThemeSwitchModal } from "@/components/blocks/theme-switch-modal";
 import * as Haptic from "expo-haptics";
 import Constants from "expo-constants";
 
 const Settings = () => {
   const [logoutLoading, setLogoutLoading] = useState(false);
-  const { isDark } = useTheme();
+  const { isDark, theme } = useTheme();
   const { user, signOut } = useAuth();
   const navigation = useNavigation();
 
@@ -86,9 +87,9 @@ const Settings = () => {
         // scrollEnabled
       >
         {/* Theme Section */}
-        <View className="mb-8 px-4">
+        {/* <View className="mb-8 px-4">
           <ThemeSwitcher />
-        </View>
+        </View> */}
 
         {/* Profile Section */}
         <MenuGroup title="Profile">
@@ -98,8 +99,6 @@ const Settings = () => {
             value={user?.email}
             isFirst
             isLast={false}
-            showValue
-            showChevron
             onPress={navigateToAccount}
           />
           <MenuItem
@@ -108,7 +107,6 @@ const Settings = () => {
             value={user?.app_metadata.providers?.includes("google") ? "Connected" : "Disconnected"}
             isFirst={false}
             isLast
-            showValue
             showChevron={false}
             disabled
           />
@@ -119,11 +117,8 @@ const Settings = () => {
           <MenuItem
             icon="shield-outline"
             title="Privacy Policy"
-            value=""
             isFirst={false}
             isLast={false}
-            showValue={true}
-            showChevron={true}
           />
           <MenuItem
             icon="information-circle-outline"
@@ -131,8 +126,6 @@ const Settings = () => {
             value={Constants.expoConfig?.version || "1.0.0"}
             isFirst={false}
             isLast
-            showValue={true}
-            showChevron={true}
           />
         </MenuGroup>
         {/* App Section */}
@@ -143,18 +136,14 @@ const Settings = () => {
             // value="Controls"
             isFirst
             isLast={false}
-            showValue={true}
-            showChevron={true}
             onPress={navigateToPreferences}
           />
           <MenuItem
             icon={isDark ? "moon-outline" : "sunny-outline"}
             title="Color Scheme"
-            value={isDark ? "Dark" : "Light"}
+            value={theme == "dark" ? "Dark" : theme == "light" ? "Light" : "System"}
             isLast={false}
-            showValue={true}
-            showChevron={true}
-            // onPress={() => setModalVisible(true)}
+            onPress={() => showThemeSwitchModal()}
           />
           <MenuItem
             icon="earth"
@@ -162,8 +151,6 @@ const Settings = () => {
             value="English"
             isFirst={false}
             isLast
-            showValue={true}
-            showChevron={true}
             // onPress={() => setLanguageModalVisible(true)}
           />
         </MenuGroup>
@@ -176,6 +163,7 @@ const Settings = () => {
           <MenuItem
             icon="log-out-outline"
             title="Log Out"
+            subtitle=""
             isDanger
             isFirst
             showChevron={false}

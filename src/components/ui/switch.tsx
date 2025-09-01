@@ -17,7 +17,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
-import Loader from "../ux/loader";
+import { Loader } from "@/components/ui/loader";
 
 interface SwitchProps {
   value: boolean;
@@ -280,7 +280,11 @@ export const Switch = forwardRef<SwitchRef, SwitchProps>(
           />
           <Animated.View style={[styles.thumb, thumbAnimatedStyle]}>
             {computedLoading && (
-              <Loader color={isOn ? trackColor.true : "#666"} style={styles.activityIndicator} />
+              <Loader
+                color={isOn ? trackColor.true : "#666"}
+                style={styles.activityIndicator}
+                size={20}
+              />
             )}
           </Animated.View>
         </Pressable>
@@ -321,5 +325,7 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     position: "absolute",
+    top: 2,
+    left: 2,
   },
 });

@@ -72,7 +72,7 @@ export default function Page() {
         Departure
       </Button>
 
-      <Loader color={isDark ? "white" : "black"} />
+      {/* <Loader color={isDark ? "white" : "black"} /> */}
 
       {/* Locations BottomSheet */}
       <EmailBottomSheet

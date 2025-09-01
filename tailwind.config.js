@@ -12,13 +12,11 @@ module.exports = {
         extend: {
             fontFamily: {
                 outfit: ["Outfit-Regular", "system-ui", "sans-serif"],
-                "outfit-light": ["Outfit-Light", "system-ui", "sans-serif"],
-                "outfit-extralight": ["Outfit-ExtraLight", "system-ui", "sans-serif"],
-                "outfit-medium": ["Outfit-Medium", "system-ui", "sans-serif"],
-                "outfit-semibold": ["Outfit-SemiBold", "system-ui", "sans-serif"],
                 "outfit-bold": ["Outfit-Bold", "system-ui", "sans-serif"],
-                "outfit-extrabold": ["Outfit-ExtraBold", "system-ui", "sans-serif"],
-                "outfit-black": ["Outfit-Black", "system-ui", "sans-serif"],
+                poppins: ["Poppins-Regular", "system-ui", "sans-serif"],
+                "poppins-bold": ["Poppins-Bold", "system-ui", "sans-serif"],
+                "poppins-italic": ["Poppins-Italic", "system-ui", "sans-serif"],
+                "poppins-bold-italic": ["Poppins-BoldItalic", "system-ui", "sans-serif"],
             },
             fontWeight: {
                 extralight: "200",

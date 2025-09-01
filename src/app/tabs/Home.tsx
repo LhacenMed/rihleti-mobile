@@ -57,7 +57,7 @@ export default function Page() {
 
       {/* Search Button */}
       <Button className="items-center rounded-2xl bg-[#FF5A1F] p-4" onPress={handleSearchPress}>
-        <Text className="font-outfit-semibold text-base text-white">Search</Text>
+        <Text className="font-outfit-bold text-base text-white">Search</Text>
       </Button>
 
       <Button

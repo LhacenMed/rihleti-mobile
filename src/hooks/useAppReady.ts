@@ -12,14 +12,12 @@ export const useAppReady = () => {
 
   // Load fonts
   const [fontsLoaded, fontError] = useFonts({
-    "Outfit-Regular": require("@/assets/fonts/OutfitRegular.ttf"),
-    "Outfit-Medium": require("@/assets/fonts/OutfitMedium.ttf"),
-    "Outfit-SemiBold": require("@/assets/fonts/OutfitSemiBold.ttf"),
-    "Outfit-Bold": require("@/assets/fonts/OutfitBold.ttf"),
-    "Outfit-ExtraBold": require("@/assets/fonts/OutfitExtraBold.ttf"),
-    "Outfit-Black": require("@/assets/fonts/OutfitBlack.ttf"),
-    "Outfit-Light": require("@/assets/fonts/OutfitLight1.ttf"),
-    "Outfit-ExtraLight": require("@/assets/fonts/OutfitExtraLight.ttf"),
+    "Outfit-Regular": require("@/assets/fonts/Outfit/OutfitRegular.ttf"),
+    "Outfit-Bold": require("@/assets/fonts/Outfit/OutfitBold.ttf"),
+    "Poppins-Regular": require("@/assets/fonts/Poppins/Poppins-Regular.ttf"),
+    "Poppins-Bold": require("@/assets/fonts/Poppins/Poppins-Bold.ttf"),
+    "Poppins-Italic": require("@/assets/fonts/Poppins/Poppins-Italic.ttf"),
+    "Poppins-BoldItalic": require("@/assets/fonts/Poppins/Poppins-BoldItalic.ttf"),
   });
 
   useEffect(() => {

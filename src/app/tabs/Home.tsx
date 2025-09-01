@@ -9,6 +9,8 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { showLocationErrorToast } from "@/utils/toast-helpers";
 import { showSearchModal } from "@/components/blocks/search-modal";
+import { Loader } from "@/components/ui/loader";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type RootStackParamList = {
   Trips: {
@@ -24,6 +26,7 @@ export default function Page() {
   const locationBottomSheetRef = useRef<BottomSheetModal>(null);
   const [departureLocation, setDepartureLocation] = useState<string | null>(null);
   const [destinationLocation, setDestinationLocation] = useState<string | null>(null);
+  const { isDark } = useTheme();
 
   const handlePresentEmailModal = useCallback(() => {
     locationBottomSheetRef.current?.present();
@@ -68,6 +71,8 @@ export default function Page() {
       >
         Departure
       </Button>
+
+      <Loader color={isDark ? "white" : "black"} />
 
       {/* Locations BottomSheet */}
       <EmailBottomSheet

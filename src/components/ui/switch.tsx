@@ -17,7 +17,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
-import Loader from "./loader";
+import Loader from "../ux/loader";
 
 interface SwitchProps {
   value: boolean;

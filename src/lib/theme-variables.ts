@@ -10,7 +10,7 @@ export const themes = {
     "--popover-foreground": "0 0% 4%",
     "--primary": "15 87% 56%",
     "--primary-foreground": "0 0% 98%",
-    "--secondary": "0 0% 96%",
+    "--secondary": "0 0% 80%",
     "--secondary-foreground": "0 0% 4%",
     "--muted": "0 0% 96%",
     "--muted-foreground": "0 0% 45%",

@@ -1,46 +1,56 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { View, Text, TouchableOpacity, Platform, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-import { signupSchema, SignupFormData } from "@/utils/validation";
 import { verifyEmail, sendVerificationEmail } from "@/utils/auth-helpers";
+import SafeContainer from "@/components/SafeContainer";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
+import Button from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@/contexts/ThemeContext";
+import * as z from "zod";
 
 interface SignupScreenProps {
   navigation: any; // Replace with proper navigation type
 }
 
 export default function SignupScreen({ navigation }: SignupScreenProps) {
-  const [loading, setLoading] = useState(false);
-  const [showVerification, setShowVerification] = useState(false);
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const { isDark } = useTheme();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
-    mode: "onChange",
-  });
+  const keyboard = useAnimatedKeyboard();
 
-  const onSubmit = async (data: SignupFormData) => {
+  const animatedStyle = useAnimatedStyle(() => ({
+    paddingBottom: Math.max(40, keyboard.height.value + (Platform.OS === "android" ? 20 : 0)),
+  }));
+
+  // Validation schemas
+  const nameSchema = z.string().min(1, { message: "Name is required" });
+  const emailSchema = z.string().email({ message: "Invalid email address" });
+  const passwordSchema = z
+    .string()
+    .min(1, { message: "Password is required" })
+    .min(8, { message: "Password must be at least 8 characters" })
+    .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
+    .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
+    .regex(/[0-9]/, { message: "Password must contain at least one number" });
+
+  // Handle form submission
+  const handleSignup = async (): Promise<void> => {
     setLoading(true);
 
     try {
+      // Validate all inputs
+      nameSchema.parse(name);
+      emailSchema.parse(email);
+      passwordSchema.parse(password);
+
       // Step 1: Verify email
-      const emailVerification = await verifyEmail(data.email);
+      const emailVerification = await verifyEmail(email);
       if (!emailVerification.isValid) {
         Toast.show({
           type: "error",
@@ -51,7 +61,7 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
       }
 
       // Step 2: Send verification email
-      const verificationResult = await sendVerificationEmail(data.email, data.password);
+      const verificationResult = await sendVerificationEmail(email, password);
       if (!verificationResult.success) {
         Toast.show({
           type: "error",
@@ -62,17 +72,14 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
       }
 
       // Step 3: Store verification data and navigate to OTP screen
-      await AsyncStorage.setItem("verificationEmail", data.email);
-      await AsyncStorage.setItem("signupName", data.name);
+      await AsyncStorage.setItem("verificationEmail", email);
+      await AsyncStorage.setItem("signupName", name);
       if (verificationResult.tokenData) {
         await AsyncStorage.setItem(
           "verificationTokenData",
           JSON.stringify(verificationResult.tokenData)
         );
       }
-
-      setEmail(data.email);
-      setShowVerification(true);
 
       Toast.show({
         type: "success",
@@ -82,192 +89,118 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
 
       // Navigate to OTP verification screen
       navigation.navigate("VerifyOTP", {
-        email: data.email,
-        name: data.name,
+        email: email,
+        name: name,
       });
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error instanceof Error ? error.message : "An error occurred",
-      });
+      if (error instanceof z.ZodError) {
+        const firstError = error.issues[0];
+        Toast.show({
+          type: "error",
+          text1: "Validation Error",
+          text2: firstError.message,
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: error instanceof Error ? error.message : "An error occurred",
+        });
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  const handleContinue = (): void => {
+    handleSignup();
+  };
+
+  const handleBackPress = (): void => {
+    if (navigation) {
+      navigation.goBack();
+    }
+  };
+
+  const isFormValid = name && email && password;
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.form}>
-          <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Sign up to get started</Text>
+    <SafeContainer>
+      {/* Header with back button */}
+      <View className="px-4 pb-4 pt-2">
+        <TouchableOpacity
+          onPress={handleBackPress}
+          className="h-11 w-11 items-start justify-center"
+        >
+          <Ionicons name="chevron-back" size={24} color={isDark ? "#fff" : "#000"} />
+        </TouchableOpacity>
+      </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Name</Text>
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={[styles.input, errors.name && styles.inputError]}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Enter your full name"
-                  autoCapitalize="words"
-                  placeholderTextColor="#999"
-                />
-              )}
-            />
-            {errors.name && <Text style={styles.errorText}>{errors.name.message}</Text>}
-          </View>
+      {/* Main content */}
+      <View className="flex-1 px-6 pt-2.5">
+        <Text className="mb-6 py-[2px] text-3xl font-bold text-foreground">
+          Create your account
+        </Text>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={[styles.input, errors.email && styles.inputError]}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Enter your email"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  placeholderTextColor="#999"
-                />
-              )}
-            />
-            {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
-          </View>
+        <Input
+          placeholder="Full name"
+          placeholderTextColor="#666"
+          value={name}
+          onChangeText={setName}
+          autoCapitalize="words"
+          autoCorrect={false}
+          editable={!loading}
+          autoFocus
+          autoComplete="name"
+        />
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={[styles.input, errors.password && styles.inputError]}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Enter your password"
-                  secureTextEntry
-                  placeholderTextColor="#999"
-                />
-              )}
-            />
-            {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
-          </View>
+        <Input
+          placeholder="Email address"
+          placeholderTextColor="#666"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          editable={!loading}
+          autoComplete="email"
+        />
 
-          <TouchableOpacity
-            style={[styles.button, (!isValid || loading) && styles.buttonDisabled]}
-            onPress={handleSubmit(onSubmit)}
-            disabled={!isValid || loading}
-          >
-            <Text style={styles.buttonText}>
-              {loading ? "Creating Account..." : "Continue with Email"}
-            </Text>
-          </TouchableOpacity>
+        <Input
+          placeholder="Password"
+          placeholderTextColor="#666"
+          value={password}
+          onChangeText={setPassword}
+          isPassword
+          autoCapitalize="none"
+          editable={!loading}
+          // passwordRequirements={[
+          //   { label: "At least 8 characters", met: password.length >= 8 },
+          //   { label: "One uppercase letter", met: /[A-Z]/.test(password) },
+          //   { label: "One lowercase letter", met: /[a-z]/.test(password) },
+          //   { label: "One number", met: /[0-9]/.test(password) },
+          // ]}
+        />
 
-          <TouchableOpacity
-            style={styles.linkContainer}
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={styles.linkText}>
-              Already have an account? <Text style={styles.linkTextBold}>Sign In</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        <Text className="text-md mt-2 text-muted-foreground">
+          Password must be at least 8 characters with uppercase, lowercase, and numbers.
+        </Text>
+      </View>
+
+      {/* Bottom buttons */}
+      <Animated.View style={animatedStyle} className="gap-4 px-6">
+        <Button
+          variant="default"
+          textStyle={[{ fontSize: 16, fontWeight: "600" }]}
+          className={`items-center justify-center border-transparent bg-secondary`}
+          textClassName={`text-base font-semibold py-[2px]`}
+          onPress={handleContinue}
+          disabled={!isFormValid || loading}
+        >
+          {loading ? <ActivityIndicator color="#666" /> : "Create Account"}
+        </Button>
+      </Animated.View>
+    </SafeContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fefae0",
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  form: {
-    width: "100%",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 8,
-    color: "#000",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 40,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 8,
-    color: "#333",
-  },
-  input: {
-    backgroundColor: "white",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 8,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-  },
-  inputError: {
-    borderColor: "#e74c3c",
-  },
-  errorText: {
-    color: "#e74c3c",
-    fontSize: 14,
-    marginTop: 5,
-  },
-  button: {
-    backgroundColor: "#606c38",
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    backgroundColor: "#ccc",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  linkContainer: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  linkText: {
-    color: "#666",
-    fontSize: 14,
-  },
-  linkTextBold: {
-    color: "#606c38",
-    fontWeight: "600",
-  },
-});

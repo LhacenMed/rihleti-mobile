@@ -60,7 +60,7 @@ export default function WelcomeScreen({ navigation }: Props) {
   return (
     <SafeContainer>
       {/* Contact us Button */}
-      <View className="absolute right-4 top-12 z-10">
+      <View className="absolute right-4 top-0 z-10">
         <TouchableOpacity>
           <Text className="text-base font-medium text-muted-foreground">Contact us</Text>
         </TouchableOpacity>

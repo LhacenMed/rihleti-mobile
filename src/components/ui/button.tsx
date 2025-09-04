@@ -23,7 +23,7 @@ const buttonVariants = {
     link: "bg-transparent border border-transparent",
   },
   size: {
-    default: "h-[42px] px-4 py-2 w-full rounded-lg",
+    default: "h-[42px] px-4 py-2 w-full rounded-md",
     sm: "h-8 px-3 py-1.5 rounded-md text-xs",
     lg: "h-10 px-8 py-2.5 rounded-md text-base",
     xl: "h-12 px-10 py-3 rounded-md text-lg",
@@ -161,6 +161,7 @@ export const Button: React.FC<ButtonProps> = ({
           style,
           {
             transform: [{ scale }],
+            overflow: "hidden"
           },
         ]}
       >
@@ -170,7 +171,6 @@ export const Button: React.FC<ButtonProps> = ({
             style={{
               ...StyleSheet.absoluteFillObject,
               backgroundColor: "rgba(0, 0, 0, 0.1)",
-              borderRadius: 50,
             }}
           />
         )}

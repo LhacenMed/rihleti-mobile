@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, StatusBar, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Platform,
+  ActivityIndicator,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 import { Input } from "@/components/ui/input";
 import SafeContainer from "@/components/SafeContainer";
 import { supabase } from "@/lib/supabase";
 import { verifyEmail } from "@/utils/auth-helpers";
-// import Loader from "@/components/ui/loader";
+import { Loader } from "@/components/ui/loader";
 import Button from "@/components/ui/button";
 import * as z from "zod";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Props {
   navigation?: any;
@@ -18,11 +27,12 @@ interface Props {
 const emailSchema = z.string().email({ message: "Invalid email address" });
 const passwordSchema = z.string().min(1, { message: "Password is required" });
 
-const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
+const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPasswordScreen, setShowPasswordScreen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { isDark } = useTheme();
 
   const keyboard = useAnimatedKeyboard();
 
@@ -122,66 +132,60 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeContainer>
       {/* Header with back button */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+      <View className="px-4 pb-4 pt-2">
+        <TouchableOpacity
+          onPress={handleBackPress}
+          className="h-11 w-11 items-start justify-center"
+        >
+          <Ionicons name="chevron-back" size={24} color={isDark ? "#fff" : "#000"} />
         </TouchableOpacity>
       </View>
 
       {/* Main content */}
-      <View style={styles.content}>
-        <Text style={styles.title}>
+      <View className="flex-1 px-6 pt-2.5">
+        <Text className="mb-6 py-[2px] text-3xl font-bold text-foreground">
           {showPasswordScreen ? "Log in to Rihleti" : "What's your email?"}
         </Text>
 
-        <View style={styles.inputContainer}>
-          <Input
-            style={styles.textInput}
-            placeholder="Email address"
-            placeholderTextColor="#666666"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            editable={!loading}
-            autoFocus
-            autoComplete="email"
-          />
-        </View>
+        <Input
+          placeholder="Email address"
+          placeholderTextColor="#666"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          editable={!loading}
+          autoFocus
+          autoComplete="email"
+        />
 
         {showPasswordScreen && (
-          <View style={styles.inputContainer}>
-            <Input
-              style={styles.textInput}
-              placeholder="Password"
-              placeholderTextColor="#666666"
-              value={password}
-              onChangeText={setPassword}
-              isPassword
-              autoCapitalize="sentences"
-              editable={!loading}
-            />
-          </View>
+          <Input
+            placeholder="Password"
+            placeholderTextColor="#666"
+            value={password}
+            onChangeText={setPassword}
+            isPassword
+            autoCapitalize="sentences"
+            editable={!loading}
+          />
         )}
 
         {!showPasswordScreen && (
-          <Text style={styles.subtitle}>We'll send you a confirmation code.</Text>
+          <Text className="text-md mt-2 text-muted-foreground">
+            We'll send you a confirmation code.
+          </Text>
         )}
       </View>
 
       {/* Bottom buttons */}
-      <Animated.View style={[styles.bottomContainer, animatedStyle]}>
+      <Animated.View style={animatedStyle} className="gap-4 px-6">
         <Button
-          variant="ghost"
-          style={[
-            styles.continueButton,
-            (!isFormValid || loading) && styles.continueButtonDisabled,
-          ]}
-          textStyle={[
-            styles.continueButtonText,
-            (!isFormValid || loading) && styles.continueButtonTextDisabled,
-          ]}
+          variant="default"
+          textStyle={[{ fontSize: 16, fontWeight: "600" }]}
+          className={`items-center justify-center border-transparent bg-secondary`}
+          textClassName={`text-base font-semibold py-[2px]`}
           onPress={handleContinue}
           disabled={!isFormValid || loading}
         >
@@ -190,8 +194,9 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
 
         <Button
           variant="outline"
-          style={styles.loginButton}
-          textStyle={styles.loginButtonText}
+          textStyle={{ fontSize: 16 }}
+          className="items-center border-[#333]"
+          textClassName="text-base font-semibold text-muted-foreground py-[2px]"
           onPress={showPasswordScreen ? handleLoginWithEmail : handleLoginWithPassword}
           disabled={loading}
         >
@@ -202,81 +207,4 @@ const EmailInputScreen: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 16,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 10,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#ffffff",
-    marginBottom: 32,
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "#333333",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    fontSize: 16,
-    color: "#ffffff",
-    backgroundColor: "transparent",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666666",
-    marginTop: 8,
-  },
-  bottomContainer: {
-    paddingHorizontal: 24,
-    gap: 16,
-  },
-  continueButton: {
-    backgroundColor: "#ffffff",
-    borderRadius: 25,
-    paddingVertical: 16,
-    alignItems: "center",
-    justifyContent: "center", // Added to center the loader
-  },
-  continueButtonDisabled: {
-    backgroundColor: "#333333",
-  },
-  continueButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000000",
-  },
-  continueButtonTextDisabled: {
-    color: "#666666",
-  },
-  loginButton: {
-    borderWidth: 1,
-    borderColor: "#333333",
-    borderRadius: 25,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  loginButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#ffffff",
-  },
-});
-
-export default EmailInputScreen;
+export default LoginScreen;

@@ -39,12 +39,12 @@ export const showThemeSwitchModal = () => {
             key={option.value}
             label={option.label}
             value={option.value}
-            color={isDark ? "#BB86FC" : "#6200EE"}
+            color={isDark ? "hsl(15 87% 56%)" : "hsl(15 87% 56%)"}
             uncheckedColor={isDark ? "#ccc" : "#555"}
             labelStyle={{
               color: isDark ? "#fff" : "#000",
-              fontSize: 18,
-              fontFamily: "Outfit-Regular",
+              fontSize: 15,
+              // fontFamily: "Outfit-Regular",
             }}
             rippleColor="transparent"
           />

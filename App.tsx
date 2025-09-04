@@ -1,53 +1,61 @@
+// Global styles and utilities
 import "./global.css";
 import "@/utils/haptic"; // Initialize global haptic function
+
+// React and React Native core
 import { View, TouchableOpacity } from "react-native";
+
+// Expo
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+
+// React Navigation
+import { NavigationContainer, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import Toast from "react-native-toast-message";
-import { toastConfig } from "@/components/ui/toast";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { useEffect } from "react";
-import { PaperProvider } from "react-native-paper";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+// Third-party libraries
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
+
+// Components
+import TabBar from "@/components/TabBar";
+import { toastConfig } from "@/components/ui/toast";
 
 // Contexts
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { FeaturesProvider, useFeatures } from "@/contexts/FeaturesContext";
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 
-// Loading Hook
+// Hooks
 import { useAppReady } from "@/hooks/useAppReady";
 
 // Auth Screens
-import WelcomeScreen from "@/app/auth/WelcomeScreen";
 import LoginScreen from "@/app/auth/LoginScreen";
 import SignupScreen from "@/app/auth/SignupScreen";
 import VerifyOTPScreen from "@/app/auth/VerifyOTPScreen";
+import WelcomeScreen from "@/app/auth/WelcomeScreen";
 
 // App Screens
-import Home from "@/app/tabs/Home";
-import Explore from "@/app/tabs/Explore";
-import Bookings from "@/app/tabs/Bookings";
-import Settings from "@/app/tabs/Settings";
 import Account from "@/app/screens/Account";
-import SettingsTest from "@/app/screens/SettingsTest";
-import WebViewScreen from "@/app/screens/WebView";
-import Messages from "@/app/screens/Messages";
-import Preferences from "@/app/screens/Preferences";
 import DepartureLocationScreen from "@/app/screens/DepartureLocation";
 import DestinationLocationScreen from "@/app/screens/DestinationLocation";
-import TripsScreen from "@/app/screens/Trips";
+import Messages from "@/app/screens/Messages";
+import Preferences from "@/app/screens/Preferences";
+import SettingsTest from "@/app/screens/SettingsTest";
 import TripDetailsScreen from "@/app/screens/TripDetails";
-import TabBar from "@/components/TabBar";
+import TripsScreen from "@/app/screens/Trips";
+import WebViewScreen from "@/app/screens/WebView";
 
-// Utilities
-// import { storeLoaderInSupabase, loadLoaderFromSupabase } from "@/components/ui/loader";
+// Tab Screens
+import Bookings from "@/app/tabs/Bookings";
+import Explore from "@/app/tabs/Explore";
+import Home from "@/app/tabs/Home";
+import Settings from "@/app/tabs/Settings";
 
 type RootStackParamList = {
   // Auth Screens

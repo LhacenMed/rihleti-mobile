@@ -128,13 +128,16 @@ export default function WebViewScreen() {
       <View className="border-b border-border bg-background px-4 py-3">
         {/* Top row with back button and title */}
         <View className="mb-3 flex-row items-center">
-          <TouchableOpacity onPress={handleGoBack} className="p-2">
-            <Text className="text-base font-medium text-primary">Back</Text>
-          </TouchableOpacity>
+          <View className="w-16 items-start">
+            <TouchableOpacity onPress={handleGoBack} className="px-2">
+              {/* <Text className="text-base font-medium text-primary">Back</Text> */}
+              <Ionicons size={24} name="chevron-back" color="hsl(15 87% 56%)" />
+            </TouchableOpacity>
+          </View>
           <View className="flex-1 items-center">
             <Text className="text-base font-semibold text-foreground">{title}</Text>
           </View>
-          <View className="p-2" style={{ width: 60 }} />
+          <View className="w-16" />
         </View>
 
         {/* URL Bar */}
@@ -149,7 +152,7 @@ export default function WebViewScreen() {
                   onBlur={handleUrlCancel}
                   autoFocus
                   selectTextOnFocus
-                  className="flex-1 text-sm text-muted-foreground"
+                  className="flex-1 p-0 text-sm text-muted-foreground"
                   placeholder="Enter URL..."
                   keyboardType="url"
                   autoCapitalize="none"

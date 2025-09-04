@@ -13,7 +13,7 @@ export default function Preferences() {
 
   const handleSwitchChange = async (newValue: boolean) => {
     setSwitchLoading(true);
-    // await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     setSwipeEnabled(newValue);
     setSwitchLoading(false);
   };

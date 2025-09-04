@@ -93,7 +93,7 @@ const Input = React.forwardRef<TextInput, InputProps>(
           <TextInput
             ref={ref}
             secureTextEntry={isPassword ? !showPassword : false}
-            className={`mb-3 rounded-xl bg-zinc-800 px-3 py-3 text-lg text-white ${
+            className={`mb-3 rounded-lg border border-[#333] bg-transparent px-4 py-3 text-base text-foreground ${
               error ? "border border-red-500" : ""
             } ${actionIcon || isPassword ? "pr-16" : ""} ${inputClassName}`}
             placeholderTextColor="#6B7280"
@@ -140,16 +140,23 @@ const Input = React.forwardRef<TextInput, InputProps>(
             {isPassword ? (
               <TouchableWithoutFeedback onPress={togglePasswordVisibility}>
                 <View
-                  className="items-center justify-center rounded-md border border-zinc-600"
-                  style={{ width: 35, height: 24 }}
+                  className="items-center justify-center rounded-md border border-[#333]"
+                  style={{
+                    width: 35,
+                    height: 24,
+                  }}
                 >
                   <LottieView
                     ref={lottieRef}
-                    source={require("../../assets/lottie/eye-icon-light.json")}
-                    style={{ width: 35, height: 35, transform: [{ translateY: -1 }] }}
+                    source={require("@/assets/lottie/eye-icon-light.json")}
+                    style={{
+                      width: 35,
+                      height: 35,
+                      transform: [{ translateY: -1 }],
+                    }}
                     loop={false}
                     autoPlay={false}
-                    speed={3}
+                    speed={5}
                   />
                 </View>
               </TouchableWithoutFeedback>

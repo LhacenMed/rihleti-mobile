@@ -19,6 +19,7 @@ import {
 // import { SparklesIcon as SparklesIconOutline } from "react-native-heroicons/outline";
 // import { ChevronLeftIcon } from "react-native-heroicons/mini";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 interface HeaderProps {
   title?: string;
@@ -45,6 +46,17 @@ interface SafeContainerProps {
 
 const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, className, header }) => {
   const { isDark } = useTheme();
+  const navigation = useNavigation();
+
+  // Default back functionality with haptic feedback
+  const handleBackPress = () => {
+    (global as any).hapticClick();
+    if (header?.onBackPress) {
+      header.onBackPress();
+    } else {
+      navigation.goBack();
+    }
+  };
 
   if (header) {
     return (
@@ -71,7 +83,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
             <View style={{ flex: 1, alignItems: "flex-start" }}>
               {header.showBackButton ? (
                 <View>
-                  <TouchableWithoutFeedback onPress={header.onBackPress}>
+                  <TouchableWithoutFeedback onPress={handleBackPress}>
                     <Ionicons name="chevron-back" size={24} color={isDark ? "#fff" : "#000"} />
                   </TouchableWithoutFeedback>
                 </View>
@@ -115,9 +127,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
 
           {/* Optional bottom component below header row */}
           {header.bottomComponent && (
-            <View style={{ paddingBottom: 12 }}>
-              {header.bottomComponent}
-            </View>
+            <View style={{ paddingBottom: 12 }}>{header.bottomComponent}</View>
           )}
         </SafeAreaView>
 

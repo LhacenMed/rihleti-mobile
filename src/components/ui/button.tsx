@@ -8,8 +8,10 @@ import {
   View,
   Text,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
-import { Button as PaperButton } from "react-native-paper";
+import { Loader } from "@/components/ui/loader";
+// import { Button as PaperButton } from "react-native-paper";
 
 // Button variant configurations using Tailwind-style class names
 const buttonVariants = {
@@ -46,6 +48,7 @@ export interface ButtonProps {
   variant?: keyof typeof buttonVariants.variant;
   size?: keyof typeof buttonVariants.size;
   disabled?: boolean;
+  loading?: boolean;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
@@ -57,7 +60,8 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   variant = "default",
   size = "default",
-  disabled = false,
+  disabled,
+  loading,
   onPress,
   style,
   textStyle,
@@ -161,11 +165,11 @@ export const Button: React.FC<ButtonProps> = ({
           style,
           {
             transform: [{ scale }],
-            overflow: "hidden"
+            overflow: "hidden",
           },
         ]}
       >
-        {renderContent()}
+        {loading ? <Loader size={20} color="#666" /> : renderContent()}
         {isPressed && !disabled && (
           <View
             style={{

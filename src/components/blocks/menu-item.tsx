@@ -33,7 +33,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {Loader} from "@/components/ui/loader";
+import { Loader } from "@/components/ui/loader";
 
 interface MenuItemProps {
   icon?: string;

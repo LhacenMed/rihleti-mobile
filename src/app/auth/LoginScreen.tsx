@@ -188,8 +188,9 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           textClassName={`text-base font-semibold py-[2px]`}
           onPress={handleContinue}
           disabled={!isFormValid || loading}
+          loading={loading}
         >
-          {loading ? <ActivityIndicator color="#666" /> : "Continue"}
+          Continue
         </Button>
 
         <Button

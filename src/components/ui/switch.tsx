@@ -16,7 +16,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
-import * as Haptics from "expo-haptics";
 import { Loader } from "@/components/ui/loader";
 
 interface SwitchProps {
@@ -51,7 +50,7 @@ export const Switch = forwardRef<SwitchRef, SwitchProps>(
     if (Platform.OS === "ios") {
       const handleValueChange = async (newValue: boolean) => {
         try {
-          Haptics.selectionAsync();
+          (global as any).hapticClick();
           const result = onValueChange(newValue);
           if (result instanceof Promise) {
             await result;
@@ -145,7 +144,7 @@ export const Switch = forwardRef<SwitchRef, SwitchProps>(
       loadingProgress.value = withTiming(1, { duration: 200 });
 
       try {
-        Haptics.selectionAsync();
+        (global as any).hapticClick();
 
         const result = onValueChange(newValue);
         if (result instanceof Promise) {

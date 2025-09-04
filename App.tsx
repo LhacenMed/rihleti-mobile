@@ -1,4 +1,5 @@
 import "./global.css";
+import "@/utils/haptic"; // Initialize global haptic function
 import { View, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
@@ -289,23 +290,6 @@ const AppNavigator = () => {
 // App Initialization Component
 const AppContent = () => {
   const { isReady } = useAppReady();
-
-  // TODO: Remove this useEffect when you find a new custom lottie loader or uncomment this when you want to use this loader from components/ui/loader.tsx
-  // useEffect(() => {
-  //   const initializeData = async () => {
-  //     try {
-  //       // Initialize app data after resources are loaded
-  //       await loadLoaderFromSupabase();
-  //       await storeLoaderInSupabase();
-  //     } catch (error) {
-  //       console.error("Error initializing app data:", error);
-  //     }
-  //   };
-
-  //   if (isReady) {
-  //     initializeData();
-  //   }
-  // }, [isReady]);
 
   // TODO: Implement an animated splash screen
 

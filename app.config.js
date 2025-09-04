@@ -4,6 +4,7 @@ export default {
     expo: {
         name: "Rihleti",
         slug: "rihleti",
+        scheme: "rihleti",
         version: "1.0.2",
 
         web: {
@@ -20,9 +21,17 @@ export default {
                 "expo-localization",
                 {
                     // Optional: customize permission messages
-                    // locationAlwaysAndWhenInUsePermission: "Allow $(PRODUCT_NAME) to use your location."
-                }
-            ]
+                    locationAlwaysAndWhenInUsePermission: "Allow Rihleti to use your location.",
+                },
+            ],
+            // [
+            //     "expo-build-properties",
+            //     {
+            //         ios: {
+            //             useFrameworks: "static",
+            //         },
+            //     },
+            // ],
         ],
 
         orientation: "portrait",
@@ -36,10 +45,19 @@ export default {
             backgroundColor: "#ffffff",
         },
 
+        // notification: {
+        //             icon: "./assets/notification-icon.png",
+        //             color: "#84cc16",
+        //             iosDisplayInForeground: true,
+        //             androidMode: "default",
+        //             androidCollapsedTitle: "Prayer Time",
+        //         },
+
         assetBundlePatterns: ["**/*"],
 
         ios: {
             supportsTablet: true,
+            bundleIdentifier: "com.rihleti.app",
         },
 
         android: {
@@ -47,13 +65,19 @@ export default {
                 foregroundImage: "./src/assets/adaptive-icon.png",
                 backgroundColor: "#ffffff",
             },
+            package: "com.rihleti.app",
+            // notification: {
+            //     icon: "./assets/notification-icon.png",
+            //     color: "#84cc16",
+            //     androidMode: "default",
+            // },
         },
 
         extra: {
             supabaseUrl: process.env.SUPABASE_URL,
             supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
             eas: {
-                projectId: "your-eas-project-id", // Optional: for EAS builds
+                projectId: "6943ba63-1c3c-445f-8702-6f99899439b5",
             },
         },
     },

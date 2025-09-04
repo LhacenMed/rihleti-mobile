@@ -1,8 +1,8 @@
 import { ScrollView, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import SafeContainer from "@/components/SafeContainer";
+import DropdownMenu from "@/components/blocks/dropdown-menu";
 
 const Messages = () => {
   const navigation = useNavigation();
@@ -39,11 +39,18 @@ const Messages = () => {
     },
   ];
 
+  const items = [
+    { key: "new", title: "New", icon: "plus", iconAndroid: "logo-google" },
+    { key: "all", title: "All", icon: "list", iconAndroid: "list" },
+    { key: "starred", title: "Starred", icon: "star", iconAndroid: "star" },
+  ];
+
   return (
     <SafeContainer
       header={{
         title: "Messages",
         showBackButton: true,
+        rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
         onBackPress: () => navigation.goBack(),
       }}
     >

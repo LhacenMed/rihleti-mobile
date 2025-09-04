@@ -11,7 +11,6 @@ import {
 import { Button as PaperButton } from "react-native-paper";
 import { ModalContentProps } from "@whitespectre/rn-modal-presenter";
 import { useTheme } from "@/contexts/ThemeContext";
-import * as Haptic from "expo-haptics";
 
 // Types
 interface ModalButton {
@@ -84,7 +83,7 @@ const useModalAnimations = () => {
 const useModalEffects = (animateIn: () => void, dismiss: () => void, enabled: boolean = true) => {
   useEffect(() => {
     if (!enabled) return;
-    Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+    (global as any).hapticClick();
     animateIn();
   }, [animateIn, enabled]);
 
@@ -239,7 +238,7 @@ const Modal = ({
   // iOS native alert path when no header is provided
   useEffect(() => {
     if (!iosAlertMode) return;
-    Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+    (global as any).hapticClick();
 
     const mappedButtons = (buttons && buttons.length > 0 ? buttons : [{ text: "OK" }]).map((b) => ({
       text: b.text,

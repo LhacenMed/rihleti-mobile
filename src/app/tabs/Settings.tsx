@@ -8,7 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@/components/ui/modal";
 import { showThemeSwitchModal } from "@/components/blocks/theme-switch-modal";
-import * as Haptic from "expo-haptics";
 import Constants from "expo-constants";
 
 const Settings = () => {
@@ -41,7 +40,7 @@ const Settings = () => {
 
     if (Platform.OS === "ios") {
       // Use native iOS Alert
-      Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+      (global as any).hapticClick();
       Alert.alert(
         "Confirm log out?",
         "Logging out won't delete any data. You can sign back into this account anytime.",
@@ -114,12 +113,7 @@ const Settings = () => {
         {/* About Section */}
         <MenuGroup title="About">
           <MenuItem icon="document-text-outline" title="Terms of Use" isFirst isLast={false} />
-          <MenuItem
-            icon="shield-outline"
-            title="Privacy Policy"
-            isFirst={false}
-            isLast={false}
-          />
+          <MenuItem icon="shield-outline" title="Privacy Policy" isFirst={false} isLast={false} />
           <MenuItem
             icon="information-circle-outline"
             title="Check for Updates"

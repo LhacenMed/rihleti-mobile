@@ -10,7 +10,6 @@ import Animated, {
   withTiming,
   ReduceMotion,
 } from "react-native-reanimated";
-import * as Haptic from "expo-haptics";
 
 type SearchModalProps = {
   departure: string;
@@ -52,7 +51,7 @@ const SearchModal = ({ dismiss, departure, destination }: SearchModalProps & Mod
   };
 
   useEffect(() => {
-    Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+    (global as any).hapticClick();
     // Expand to full size
     animateSize(400, 380);
     scale.value = withSpring(1, springConfig);

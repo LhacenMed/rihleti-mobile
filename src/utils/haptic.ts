@@ -1,15 +1,15 @@
 import * as Haptic from "expo-haptics";
-// import { trigger } from "react-native-haptic-feedback";
+import { trigger } from "react-native-haptic-feedback";
 
-// const options = {
-//   enableVibrateFallback: true,
-//   ignoreAndroidSystemSettings: false,
-// };
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 // Universal haptic function accessible globally
 const hapticClick = () => {
-  Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
-  // trigger("effectClick", options);
+  // Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+  trigger("effectClick", options);
 };
 
 const hapticHeavyClick = () => {

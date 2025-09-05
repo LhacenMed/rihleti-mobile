@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, BackHandler } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/contexts/ThemeContext";
 import { ModalContentProps, showModal } from "@whitespectre/rn-modal-presenter";
@@ -20,7 +20,7 @@ const SearchModal = ({ dismiss, departure, destination }: SearchModalProps & Mod
   const { isDark } = useTheme();
   const height = useSharedValue(80);
   const width = useSharedValue(420);
-  const translateY = useSharedValue(47);
+  const translateY = useSharedValue(45);
   const scale = useSharedValue(0.7);
   const opacity = useSharedValue(1);
 
@@ -55,18 +55,27 @@ const SearchModal = ({ dismiss, departure, destination }: SearchModalProps & Mod
     // Expand to full size
     animateSize(400, 380);
     scale.value = withSpring(1, springConfig);
-    translateY.value = withSpring(47, springConfig);
+    translateY.value = withSpring(45, springConfig);
+
+    const onBackPress = () => {
+      animateOut();
+      return true; // prevent default behavior (exit app or bubble)
+    };
+    const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   const animateOut = () => {
     scale.value = withSpring(0.7, springOutConfig);
-    translateY.value = withSpring(47, springOutConfig);
+    translateY.value = withSpring(45, springOutConfig);
     animateOutSize(80, 420);
 
     // Start fade-out near the end of the animation
-    setTimeout(() => {
-      opacity.value = withTiming(0, { duration: 100 });
-    }, 100);
+    // setTimeout(() => {
+    //   opacity.value = withTiming(0, { duration: 100 });
+    // }, 100);
 
     // Dismiss modal after fade completes
     setTimeout(() => {
@@ -90,7 +99,7 @@ const SearchModal = ({ dismiss, departure, destination }: SearchModalProps & Mod
       </TouchableWithoutFeedback>
       <Animated.View
         style={[modalStyle, { padding: 10 }]}
-        className="absolute top-0 -translate-y-5 overflow-hidden rounded-2xl border border-muted-foreground bg-secondary p-6"
+        className="absolute top-0 overflow-hidden rounded-2xl bg-card"
       >
         {/* Header */}
         <View className="relative mb-6 flex-row items-center justify-center">

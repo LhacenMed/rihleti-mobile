@@ -9,11 +9,14 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  Linking,
 } from "react-native";
 import { WebView } from "react-native-webview";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/contexts/ThemeContext";
+import { ArrowTopRightOnSquareIcon } from "react-native-heroicons/mini";
+import SafeContainer from "@/components/SafeContainer";
 
 interface RouteParams {
   link: string;
@@ -31,6 +34,7 @@ export default function WebViewScreen() {
   const [displayUrl, setDisplayUrl] = useState("");
   const [isUrlEditing, setIsUrlEditing] = useState(false);
   const [editableUrl, setEditableUrl] = useState(link);
+  const [pageTitle, setPageTitle] = useState<string | null>(null);
   const progressAnim = useRef(new Animated.Value(0)).current;
   const screenWidth = Dimensions.get("window").width;
   const webViewRef = useRef(null);
@@ -55,6 +59,16 @@ export default function WebViewScreen() {
     navigation.goBack();
   };
 
+  const handleOpenInBrowser = async () => {
+    try {
+      // Ensure URL has protocol
+      const urlToOpen = currentUrl.startsWith("http") ? currentUrl : `https://${currentUrl}`;
+      await Linking.openURL(urlToOpen);
+    } catch (error) {
+      Alert.alert("Unable to open link", "Please try again later.");
+    }
+  };
+
   const handleLoadProgress = (syntheticEvent: any) => {
     const { nativeEvent } = syntheticEvent;
     const progress = nativeEvent.progress;
@@ -68,6 +82,13 @@ export default function WebViewScreen() {
 
   const handleNavigationStateChange = (navState: any) => {
     setCurrentUrl(navState.url);
+    if (typeof navState.url === "string") {
+      if (navState.url === link) {
+        setPageTitle(null);
+      } else if (navState.title && typeof navState.title === "string") {
+        setPageTitle(navState.title);
+      }
+    }
   };
 
   const handleUrlPress = () => {
@@ -129,15 +150,26 @@ export default function WebViewScreen() {
         {/* Top row with back button and title */}
         <View className="mb-3 flex-row items-center">
           <View className="w-16 items-start">
-            <TouchableOpacity onPress={handleGoBack} className="px-2">
-              {/* <Text className="text-base font-medium text-primary">Back</Text> */}
-              <Ionicons size={24} name="chevron-back" color="hsl(15 87% 56%)" />
+            <TouchableOpacity onPress={handleGoBack}>
+              <Ionicons
+                size={20}
+                name="chevron-back"
+                color={isDark ? "white" : "black"}
+                className="-ml-1"
+              />
             </TouchableOpacity>
           </View>
           <View className="flex-1 items-center">
-            <Text className="text-base font-semibold text-foreground">{title}</Text>
+            <Text className="text-center text-base font-semibold text-foreground">
+              {pageTitle || title}
+            </Text>
           </View>
-          <View className="w-16" />
+          <View className="w-16 items-end">
+            <TouchableOpacity onPress={handleOpenInBrowser}>
+              {/* <Ionicons size={20} name="open-outline" color={isDark ? "white" : "black"} /> */}
+              <ArrowTopRightOnSquareIcon size={20} color={isDark ? "white" : "black"} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* URL Bar */}

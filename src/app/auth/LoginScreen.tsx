@@ -67,6 +67,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         Alert.alert("Error", "Login failed. Please try again.");
       }
     } finally {
+      await new Promise((r) => setTimeout(r, 1000));
       setLoading(false);
     }
   };

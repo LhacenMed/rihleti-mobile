@@ -3,13 +3,13 @@ import React from "react";
 import {
   View,
   ViewStyle,
-  Platform,
+  // Platform,
   StatusBar,
   SafeAreaView,
   Text,
   TouchableOpacity,
   TextStyle,
-  TouchableNativeFeedback,
+  // TouchableNativeFeedback,
   TouchableWithoutFeedback,
 } from "react-native";
 // import { SparklesIcon as SparklesIconMicro } from "react-native-heroicons/micro";
@@ -20,6 +20,8 @@ import {
 // import { ChevronLeftIcon } from "react-native-heroicons/mini";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+// import { StatusBar } from "expo-status-bar";
 
 interface HeaderProps {
   title?: string;
@@ -47,6 +49,7 @@ interface SafeContainerProps {
 const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, className, header }) => {
   const { isDark } = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   // Default back functionality with haptic feedback
   const handleBackPress = () => {
@@ -64,7 +67,8 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
         {/* Header with status bar area */}
         <SafeAreaView
           style={[
-            { paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 },
+            // { paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 },
+            { paddingTop: insets.top },
             header.headerStyle,
           ]}
           className="border-b border-border bg-card"
@@ -142,7 +146,8 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
     <SafeAreaView
       style={[
         {
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+          // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+          paddingTop: insets.top,
         },
         style,
       ]}

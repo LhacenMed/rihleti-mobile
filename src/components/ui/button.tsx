@@ -16,10 +16,10 @@ import { Loader } from "@/components/ui/loader";
 // Button variant configurations using Tailwind-style class names
 const buttonVariants = {
   variant: {
-    default: "bg-primary border border-primary",
+    default: "bg-primary border-none",
     primary: "bg-blue-500 border border-blue-500",
     destructive: "bg-red-500 border border-red-500",
-    outline: "bg-transparent border border-gray-200",
+    outline: "bg-transparent border border-border",
     secondary: "bg-gray-100 border border-gray-100",
     ghost: "bg-transparent border border-transparent",
     link: "bg-transparent border border-transparent",

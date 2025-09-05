@@ -23,7 +23,7 @@ const TabBar: React.FC<TabBarProps> = ({
 
   const animateTab = (index: number, focused: boolean) => {
     Animated.spring(animatedValues[index], {
-      toValue: focused ? -8 : 0,
+      toValue: focused ? -5 : 5,
       useNativeDriver: true,
       tension: 100,
       friction: 8,
@@ -69,12 +69,14 @@ const TabBar: React.FC<TabBarProps> = ({
   };
 
   return (
-    <View className="flex-row border-t border-border bg-background pb-2.5 pt-2.5">
+    <View className="flex-row border-t border-border bg-card">
       {state.routes.map((route: any, index: number) => {
         // const { options } = descriptors[route.key];
         const isFocused = state.index === index;
 
         const onPress = () => {
+          (global as any).hapticClick();
+
           const event = navigation.emit({
             type: "tabPress",
             target: route.key,
@@ -86,7 +88,10 @@ const TabBar: React.FC<TabBarProps> = ({
         };
 
         return (
-          <View key={route.key} style={{ flex: 1, paddingVertical: 10, alignItems: "center" , justifyContent: "center"}}>
+          <View
+            key={route.key}
+            style={{ flex: 1, paddingVertical: 15, alignItems: "center", justifyContent: "center" }}
+          >
             <Tooltip
               title={getTooltipText(route.name)}
               enterTouchDelay={500}
@@ -109,9 +114,10 @@ const TabBar: React.FC<TabBarProps> = ({
                   className="text-center text-xs font-medium text-foreground"
                   style={{
                     opacity: animatedValues[index].interpolate({
-                      inputRange: [-8, 0],
+                      inputRange: [-5, 0],
                       outputRange: [1, 0],
                     }),
+                    transform: [{ translateY: 4 }],
                   }}
                 >
                   {route.name}

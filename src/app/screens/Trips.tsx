@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Bars3BottomLeftIcon } from "react-native-heroicons/solid";
 import { useTheme } from "@/contexts/ThemeContext";
 import { showSearchModal } from "@/components/blocks/search-modal";
+import DropdownMenu from "@/components/blocks/dropdown-menu";
 
 type TripsScreenProps = {
   route: {
@@ -204,9 +205,14 @@ export default function TripsScreen({ route }: TripsScreenProps) {
         titleComponent: <TripTitleComponent />,
         bottomComponent: <TripsFilter />,
         rightComponent: (
-          <TouchableOpacity>
-            <Ionicons name="ellipsis-vertical" size={20} color={isDark ? "#fff" : "#000"} />
-          </TouchableOpacity>
+          <DropdownMenu
+            items={[
+              { key: "new", title: "New", icon: "plus", iconAndroid: "logo-google" },
+              { key: "all", title: "All", icon: "list", iconAndroid: "list" },
+              { key: "starred", title: "Starred", icon: "star", iconAndroid: "star" },
+            ]}
+            onSelect={() => {}}
+          />
         ),
         showBackButton: true,
         onBackPress: () => navigation.goBack(),

@@ -93,7 +93,7 @@ const Input = React.forwardRef<TextInput, InputProps>(
           <TextInput
             ref={ref}
             secureTextEntry={isPassword ? !showPassword : false}
-            className={`mb-3 rounded-lg border border-[#333] bg-transparent px-4 py-3 text-base text-foreground ${
+            className={`mb-3 overflow-hidden rounded-lg border border-border bg-transparent px-4 py-3 text-base text-foreground ${
               error ? "border border-red-500" : ""
             } ${actionIcon || isPassword ? "pr-16" : ""} ${inputClassName}`}
             placeholderTextColor="#6B7280"
@@ -140,7 +140,7 @@ const Input = React.forwardRef<TextInput, InputProps>(
             {isPassword ? (
               <TouchableWithoutFeedback onPress={togglePasswordVisibility}>
                 <View
-                  className="items-center justify-center rounded-md border border-[#333]"
+                  className="items-center justify-center rounded-md border border-border bg-background"
                   style={{
                     width: 35,
                     height: 24,

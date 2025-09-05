@@ -84,7 +84,6 @@ export default function WelcomeScreen({ navigation }: Props) {
         <View className="mb-4">
           <Button
             variant="outline"
-            className="border-gray-600 bg-gray-800"
             onPress={handlePresentEmailModal}
             textClassName="text-white"
           >
@@ -98,7 +97,6 @@ export default function WelcomeScreen({ navigation }: Props) {
           <Button
             variant="outline"
             onPress={() => navigation.navigate("Login")}
-            className="border-gray-600 bg-gray-800"
             textClassName="text-white"
           >
             <Text className="text-md ml-4 text-foreground">Continue with email</Text>

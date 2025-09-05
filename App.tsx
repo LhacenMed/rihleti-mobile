@@ -8,6 +8,10 @@ import { View, TouchableOpacity } from "react-native";
 // Expo
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
+import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
+import ExploreIcon from "@/components/icons/tab-icons/ExploreIcon";
+import BookingsIcon from "@/components/icons/tab-icons/BookingsIcon";
+import SettingsIcon from "@/components/icons/tab-icons/SettingsIcon";
 
 // React Navigation
 import { NavigationContainer, getFocusedRouteNameFromRoute } from "@react-navigation/native";
@@ -93,6 +97,7 @@ const RootStack = createStackNavigator<RootStackParamList>();
 // Material Top Tabs Navigator
 const TopTabsNavigator = () => {
   const { swipeEnabled } = useFeatures();
+  const { isDark } = useTheme();
   return (
     <Tab.Navigator
       tabBarPosition="bottom"
@@ -100,21 +105,55 @@ const TopTabsNavigator = () => {
       // comment if you want to use the default tab bar
       tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
-        tabBarStyle: { position: "relative", paddingBottom: 15 },
+        tabBarStyle: {
+          position: "relative",
+          backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+          borderTopColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+          borderTopWidth: 1,
+          paddingVertical: 10,
+        },
         tabBarActiveTintColor: "black",
-        tabBarLabelStyle: { fontSize: 20 },
+        // tabBarLabelStyle: { fontSize: 20 },
         tabBarShowIcon: true,
         tabBarShowLabel: false,
         tabBarIndicatorStyle: { display: "none" },
-        tabBarPressColor: "transparent",
+        tabBarPressColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
         swipeEnabled, // Controlled by FeaturesContext
         animationEnabled: false, // Make swipe animation disabled when pressing a tab button
       }}
     >
-      <Tab.Screen name="Home" component={Home} options={{ tabBarLabel: "Home" }} />
-      <Tab.Screen name="Explore" component={Explore} options={{ tabBarLabel: "Explore" }} />
-      <Tab.Screen name="Bookings" component={Bookings} options={{ tabBarLabel: "Bookings" }} />
-      <Tab.Screen name="Settings" component={Settings} options={{ tabBarLabel: "Settings" }} />
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ focused }) => <HomeIcon isFocused={focused} width={24} height={24} />,
+        }}
+      />
+      <Tab.Screen
+        name="Explore"
+        component={Explore}
+        options={{
+          tabBarLabel: "Explore",
+          tabBarIcon: ({ focused }) => <ExploreIcon isFocused={focused} width={24} height={24} />,
+        }}
+      />
+      <Tab.Screen
+        name="Bookings"
+        component={Bookings}
+        options={{
+          tabBarLabel: "Bookings",
+          tabBarIcon: ({ focused }) => <BookingsIcon isFocused={focused} width={24} height={24} />,
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          tabBarLabel: "Settings",
+          tabBarIcon: ({ focused }) => <SettingsIcon isFocused={focused} width={24} height={24} />,
+        }}
+      />
     </Tab.Navigator>
   );
 };
@@ -146,7 +185,7 @@ const AppNavigator = () => {
                     color: isDark ? "#fff" : "#000",
                   },
                   headerStyle: {
-                    backgroundColor: isDark ? "#000" : "#fff",
+                    backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
                     elevation: 0,
                     shadowOpacity: 0,
                     borderBottomWidth: 1,
@@ -319,7 +358,7 @@ export default function App() {
               <PaperProvider>
                 <ModalPresenterParent>
                   <BottomSheetModalProvider>
-                    <StatusBar style="auto" />
+                    <StatusBar style="auto" translucent />
                     <AppContent />
                     <Toast
                       config={toastConfig}

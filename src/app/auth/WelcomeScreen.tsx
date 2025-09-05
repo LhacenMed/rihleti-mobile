@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { GoogleLogo, RihletiLogo } from "@/components/icons";
 // import { Ionicons } from "@expo/vector-icons";
 import SafeContainer from "@/components/SafeContainer";
+import { useAnimatedKeyboard } from "react-native-reanimated";
 
 interface Props {
   navigation: any;
@@ -26,6 +27,10 @@ interface Props {
 
 const LinkText = ({ children, onPress }: { children: React.ReactNode; onPress: () => void }) => {
   const [pressed, setPressed] = useState(false);
+  const keyboard = useAnimatedKeyboard({
+    isStatusBarTranslucentAndroid: true,
+    isNavigationBarTranslucentAndroid: true,
+  });
 
   return (
     <Pressable

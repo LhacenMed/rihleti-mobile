@@ -8,8 +8,8 @@ const options = {
 
 // Universal haptic function accessible globally
 const hapticClick = () => {
-  // Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
-  trigger("effectClick", options);
+  Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+  // trigger("effectClick", options);
 };
 
 const hapticHeavyClick = () => {

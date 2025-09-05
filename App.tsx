@@ -4,9 +4,11 @@ import "@/utils/haptic"; // Initialize global haptic function
 
 // React and React Native core
 import { View, TouchableOpacity } from "react-native";
+import changeNavigationBarColor from "react-native-navigation-bar-color";
 
 // Expo
 import { StatusBar } from "expo-status-bar";
+import * as SystemUI from "expo-system-ui";
 import { Ionicons } from "@expo/vector-icons";
 import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
 import ExploreIcon from "@/components/icons/tab-icons/ExploreIcon";
@@ -60,6 +62,8 @@ import Bookings from "@/app/tabs/Bookings";
 import Explore from "@/app/tabs/Explore";
 import Home from "@/app/tabs/Home";
 import Settings from "@/app/tabs/Settings";
+import { useAnimatedKeyboard } from "react-native-reanimated";
+import React from "react";
 
 type RootStackParamList = {
   // Auth Screens
@@ -158,118 +162,128 @@ const TopTabsNavigator = () => {
   );
 };
 
+// Create header right component to avoid hook call in options
+const HeaderRight = () => {
+  const { isDark } = useTheme();
+
+  return (
+    <View className="mr-4 flex-row items-center space-x-3">
+      <TouchableOpacity className="p-2">
+        <Ionicons name="search" size={22} color={isDark ? "#fff" : "#000"} />
+      </TouchableOpacity>
+      <TouchableOpacity className="p-2">
+        <Ionicons name="ellipsis-vertical" size={22} color={isDark ? "#fff" : "#000"} />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 // Screen configurations
-const getAuthenticatedScreens = () => [
-  <RootStack.Screen
-    key="MainApp"
-    name="MainApp"
-    component={TopTabsNavigator}
-    options={({ route }: any) => {
-      const { isDark } = useTheme();
-      const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
-      return {
-        headerShown: true,
-        headerTitle: routeName,
-        headerTitleStyle: {
-          fontWeight: "bold",
-          fontSize: 20,
-          color: isDark ? "#fff" : "#000",
-        },
-        headerStyle: {
-          backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-          elevation: 0,
-          shadowOpacity: 0,
-          borderBottomWidth: 1,
-          borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-          height: 90,
-        },
-        headerRight: () => (
-          <View className="mr-4 flex-row items-center space-x-3">
-            <TouchableOpacity className="p-2">
-              <Ionicons name="search" size={22} color={isDark ? "#fff" : "#000"} />
-            </TouchableOpacity>
-            <TouchableOpacity className="p-2">
-              <Ionicons name="ellipsis-vertical" size={22} color={isDark ? "#fff" : "#000"} />
-            </TouchableOpacity>
-          </View>
-        ),
+const getAuthenticatedScreens = (isDark: Boolean) => {
+  // const { isDark } = useTheme();
+
+  return [
+    <RootStack.Screen
+      key="MainApp"
+      name="MainApp"
+      component={TopTabsNavigator}
+      options={({ route }: any) => {
+        const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
+        return {
+          headerShown: true,
+          headerTitle: routeName,
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 20,
+            color: isDark ? "#fff" : "#000",
+          },
+          headerStyle: {
+            backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 1,
+            borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+            height: 90,
+          },
+          headerRight: () => <HeaderRight />,
+          ...TransitionPresets.SlideFromRightIOS,
+        };
+      }}
+    />,
+    <RootStack.Screen
+      key="Account"
+      name="Account"
+      component={Account}
+      options={{
+        headerShown: false,
+        ...TransitionPresets.ModalPresentationIOS,
+      }}
+    />,
+    <RootStack.Screen
+      key="SettingsTest"
+      name="SettingsTest"
+      component={SettingsTest}
+      options={{
+        headerShown: false,
         ...TransitionPresets.SlideFromRightIOS,
-      };
-    }}
-  />,
-  <RootStack.Screen
-    key="Account"
-    name="Account"
-    component={Account}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.ModalPresentationIOS,
-    }}
-  />,
-  <RootStack.Screen
-    key="SettingsTest"
-    name="SettingsTest"
-    component={SettingsTest}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.SlideFromRightIOS,
-    }}
-  />,
-  <RootStack.Screen
-    key="Preferences"
-    name="Preferences"
-    component={Preferences}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.SlideFromRightIOS,
-    }}
-  />,
-  <RootStack.Screen
-    key="Messages"
-    name="Messages"
-    component={Messages}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.SlideFromRightIOS,
-    }}
-  />,
-  <RootStack.Screen
-    key="DepartureLocation"
-    name="DepartureLocation"
-    component={DepartureLocationScreen}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.SlideFromRightIOS,
-    }}
-  />,
-  <RootStack.Screen
-    key="DestinationLocation"
-    name="DestinationLocation"
-    component={DestinationLocationScreen}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.SlideFromRightIOS,
-    }}
-  />,
-  <RootStack.Screen
-    key="Trips"
-    name="Trips"
-    component={TripsScreen}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.SlideFromRightIOS,
-    }}
-  />,
-  <RootStack.Screen
-    key="TripDetails"
-    name="TripDetails"
-    component={TripDetailsScreen}
-    options={{
-      headerShown: false,
-      ...TransitionPresets.SlideFromRightIOS,
-    }}
-  />,
-];
+      }}
+    />,
+    <RootStack.Screen
+      key="Preferences"
+      name="Preferences"
+      component={Preferences}
+      options={{
+        headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}
+    />,
+    <RootStack.Screen
+      key="Messages"
+      name="Messages"
+      component={Messages}
+      options={{
+        headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}
+    />,
+    <RootStack.Screen
+      key="DepartureLocation"
+      name="DepartureLocation"
+      component={DepartureLocationScreen}
+      options={{
+        headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}
+    />,
+    <RootStack.Screen
+      key="DestinationLocation"
+      name="DestinationLocation"
+      component={DestinationLocationScreen}
+      options={{
+        headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}
+    />,
+    <RootStack.Screen
+      key="Trips"
+      name="Trips"
+      component={TripsScreen}
+      options={{
+        headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}
+    />,
+    <RootStack.Screen
+      key="TripDetails"
+      name="TripDetails"
+      component={TripDetailsScreen}
+      options={{
+        headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
+      }}
+    />,
+  ];
+};
 
 const getUnauthenticatedScreens = () => [
   <RootStack.Screen
@@ -325,6 +339,11 @@ const getSharedScreens = () => [
 // Main Navigation Component
 const AppNavigator = () => {
   const { user } = useAuth();
+  const { isDark } = useTheme();
+  const keyboard = useAnimatedKeyboard({
+    isStatusBarTranslucentAndroid: true,
+    isNavigationBarTranslucentAndroid: true,
+  });
 
   return (
     <NavigationContainer>
@@ -332,7 +351,7 @@ const AppNavigator = () => {
         {user ? (
           // Authenticated user screens
           <>
-            {getAuthenticatedScreens()}
+            {getAuthenticatedScreens(isDark)}
             {getSharedScreens()}
           </>
         ) : (
@@ -362,6 +381,12 @@ const AppContent = () => {
 };
 
 export default function App() {
+  // React.useEffect(() => {
+  //   changeNavigationBarColor("#1e1e1e", true); // true = light icons
+  // }, []);
+  // React.useEffect(() => {
+  //   SystemUI.setBackgroundColorAsync("#1e1e1e");
+  // }, []);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>

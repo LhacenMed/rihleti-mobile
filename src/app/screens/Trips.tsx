@@ -204,16 +204,16 @@ export default function TripsScreen({ route }: TripsScreenProps) {
       header={{
         titleComponent: <TripTitleComponent />,
         bottomComponent: <TripsFilter />,
-        rightComponent: (
-          <DropdownMenu
-            items={[
-              { key: "new", title: "New", icon: "plus", iconAndroid: "logo-google" },
-              { key: "all", title: "All", icon: "list", iconAndroid: "list" },
-              { key: "starred", title: "Starred", icon: "star", iconAndroid: "star" },
-            ]}
-            onSelect={() => {}}
-          />
-        ),
+        // rightComponent: (
+        //   <DropdownMenu
+        //     items={[
+        //       { key: "new", title: "New", icon: "plus", iconAndroid: "logo-google" },
+        //       { key: "all", title: "All", icon: "list", iconAndroid: "list" },
+        //       { key: "starred", title: "Starred", icon: "star", iconAndroid: "star" },
+        //     ]}
+        //     onSelect={() => {}}
+        //   />
+        // ),
         showBackButton: true,
         onBackPress: () => navigation.goBack(),
       }}

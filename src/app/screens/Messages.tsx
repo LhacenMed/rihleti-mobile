@@ -50,7 +50,7 @@ const Messages = () => {
       header={{
         title: "Messages",
         showBackButton: true,
-        rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
+        // rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
         onBackPress: () => navigation.goBack(),
       }}
     >

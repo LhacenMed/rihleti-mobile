@@ -3,8 +3,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StatusBar,
-  SafeAreaView,
+  // StatusBar,
+  // SafeAreaView,
   // TouchableWithoutFeedback,
   Pressable,
 } from "react-native";
@@ -60,9 +60,13 @@ export default function WelcomeScreen({ navigation }: Props) {
   return (
     <SafeContainer>
       {/* Contact us Button */}
-      <View className="absolute right-4 top-0 z-10">
-        <TouchableOpacity>
-          <Text className="text-base font-medium text-muted-foreground">Contact us</Text>
+      <View className="absolute right-4 top-0">
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SettingsTest");
+          }}
+        >
+          <Text className="text-base font-medium text-muted-foreground">Skip</Text>
         </TouchableOpacity>
       </View>
 
@@ -82,11 +86,7 @@ export default function WelcomeScreen({ navigation }: Props) {
 
         {/* Continue with Google Button */}
         <View className="mb-4">
-          <Button
-            variant="outline"
-            onPress={handlePresentEmailModal}
-            textClassName="text-white"
-          >
+          <Button variant="outline" onPress={handlePresentEmailModal} textClassName="text-white">
             <GoogleLogo size={20} />
             <Text className="text-md ml-4 text-foreground">Continue with Google</Text>
           </Button>

@@ -158,175 +158,188 @@ const TopTabsNavigator = () => {
   );
 };
 
+// Screen configurations
+const getAuthenticatedScreens = () => [
+  <RootStack.Screen
+    key="MainApp"
+    name="MainApp"
+    component={TopTabsNavigator}
+    options={({ route }: any) => {
+      const { isDark } = useTheme();
+      const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
+      return {
+        headerShown: true,
+        headerTitle: routeName,
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 20,
+          color: isDark ? "#fff" : "#000",
+        },
+        headerStyle: {
+          backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+          height: 90,
+        },
+        headerRight: () => (
+          <View className="mr-4 flex-row items-center space-x-3">
+            <TouchableOpacity className="p-2">
+              <Ionicons name="search" size={22} color={isDark ? "#fff" : "#000"} />
+            </TouchableOpacity>
+            <TouchableOpacity className="p-2">
+              <Ionicons name="ellipsis-vertical" size={22} color={isDark ? "#fff" : "#000"} />
+            </TouchableOpacity>
+          </View>
+        ),
+        ...TransitionPresets.SlideFromRightIOS,
+      };
+    }}
+  />,
+  <RootStack.Screen
+    key="Account"
+    name="Account"
+    component={Account}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.ModalPresentationIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="SettingsTest"
+    name="SettingsTest"
+    component={SettingsTest}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="Preferences"
+    name="Preferences"
+    component={Preferences}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="Messages"
+    name="Messages"
+    component={Messages}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="DepartureLocation"
+    name="DepartureLocation"
+    component={DepartureLocationScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="DestinationLocation"
+    name="DestinationLocation"
+    component={DestinationLocationScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="Trips"
+    name="Trips"
+    component={TripsScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="TripDetails"
+    name="TripDetails"
+    component={TripDetailsScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+];
+
+const getUnauthenticatedScreens = () => [
+  <RootStack.Screen
+    key="Welcome"
+    name="Welcome"
+    component={WelcomeScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.ModalSlideFromBottomIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="Login"
+    name="Login"
+    component={LoginScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="SignUp"
+    name="SignUp"
+    component={SignupScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="VerifyOTP"
+    name="VerifyOTP"
+    component={VerifyOTPScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+];
+
+const getSharedScreens = () => [
+  <RootStack.Screen
+    key="WebView"
+    name="WebView"
+    component={WebViewScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.ModalPresentationIOS,
+    }}
+  />,
+];
+
 // Main Navigation Component
 const AppNavigator = () => {
   const { user } = useAuth();
-  const { isDark } = useTheme();
 
   return (
     <NavigationContainer>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          // Authenticated screens
+          // Authenticated user screens
           <>
-            {/* Main app screen */}
-            <RootStack.Screen
-              name="MainApp"
-              component={TopTabsNavigator}
-              options={({ route }: any) => {
-                // Get the focused route name from the nested tab navigator
-                const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
-                return {
-                  headerShown: true,
-                  headerTitle: routeName,
-                  headerTitleStyle: {
-                    fontWeight: "bold",
-                    fontSize: 20,
-                    color: isDark ? "#fff" : "#000",
-                  },
-                  headerStyle: {
-                    backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-                    elevation: 0,
-                    shadowOpacity: 0,
-                    borderBottomWidth: 1,
-                    borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-                    height: 90,
-                  },
-                  headerRight: () => (
-                    <View className="mr-4 flex-row items-center space-x-3">
-                      <TouchableOpacity className="p-2">
-                        <Ionicons name="search" size={22} color={isDark ? "#fff" : "#000"} />
-                      </TouchableOpacity>
-                      <TouchableOpacity className="p-2">
-                        <Ionicons
-                          name="ellipsis-vertical"
-                          size={22}
-                          color={isDark ? "#fff" : "#000"}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  ),
-                  ...TransitionPresets.SlideFromRightIOS,
-                };
-              }}
-            />
-            {/* Other app screens */}
-            <RootStack.Screen
-              name="Account"
-              component={Account}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.ModalPresentationIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="SettingsTest"
-              component={SettingsTest}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="Preferences"
-              component={Preferences}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="WebView"
-              component={WebViewScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="Messages"
-              component={Messages}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="DepartureLocation"
-              component={DepartureLocationScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="DestinationLocation"
-              component={DestinationLocationScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="Trips"
-              component={TripsScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="TripDetails"
-              component={TripDetailsScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
+            {getAuthenticatedScreens()}
+            {getSharedScreens()}
           </>
         ) : (
-          // Unauthenticated screens
+          // Unauthenticated user screens
           <>
-            <RootStack.Screen
-              name="Welcome"
-              component={WelcomeScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.ModalSlideFromBottomIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="SignUp"
-              component={SignupScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="VerifyOTP"
-              component={VerifyOTPScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            />
-            <RootStack.Screen
-              name="WebView"
-              component={WebViewScreen}
-              options={{
-                headerShown: false,
-                ...TransitionPresets.ModalPresentationIOS,
-              }}
-            />
+            {getUnauthenticatedScreens()}
+            {getSharedScreens()}
           </>
         )}
       </RootStack.Navigator>

@@ -1,20 +1,11 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TouchableOpacity, Alert, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 import { Input } from "@/components/ui/input";
 import SafeContainer from "@/components/SafeContainer";
 import { supabase } from "@/lib/supabase";
 import { verifyEmail } from "@/utils/auth-helpers";
-import { Loader } from "@/components/ui/loader";
 import Button from "@/components/ui/button";
 import * as z from "zod";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -34,7 +25,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { isDark } = useTheme();
 
-  const keyboard = useAnimatedKeyboard();
+  const keyboard = useAnimatedKeyboard({
+    isStatusBarTranslucentAndroid: true,
+    isNavigationBarTranslucentAndroid: true,
+  });
 
   const animatedStyle = useAnimatedStyle(() => ({
     paddingBottom: Math.max(40, keyboard.height.value + (Platform.OS === "android" ? 20 : 0)),

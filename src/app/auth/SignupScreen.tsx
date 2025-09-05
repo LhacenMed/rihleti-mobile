@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Platform, ActivityIndicator } from "react-native";
+import { useState } from "react";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import { verifyEmail, sendVerificationEmail } from "@/utils/auth-helpers";
@@ -22,7 +22,10 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { isDark } = useTheme();
 
-  const keyboard = useAnimatedKeyboard();
+  const keyboard = useAnimatedKeyboard({
+    isStatusBarTranslucentAndroid: true,
+    isNavigationBarTranslucentAndroid: true,
+  });
 
   const animatedStyle = useAnimatedStyle(() => ({
     paddingBottom: Math.max(40, keyboard.height.value + (Platform.OS === "android" ? 20 : 0)),
@@ -196,8 +199,9 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
           textClassName={`text-base font-semibold py-[2px]`}
           onPress={handleContinue}
           disabled={!isFormValid || loading}
+          loading={loading}
         >
-          {loading ? <ActivityIndicator color="#666" /> : "Create Account"}
+          Create Account
         </Button>
       </Animated.View>
     </SafeContainer>

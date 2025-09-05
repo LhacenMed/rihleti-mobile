@@ -220,15 +220,6 @@ const getAuthenticatedScreens = (isDark: Boolean) => {
       }}
     />,
     <RootStack.Screen
-      key="SettingsTest"
-      name="SettingsTest"
-      component={SettingsTest}
-      options={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}
-    />,
-    <RootStack.Screen
       key="Preferences"
       name="Preferences"
       component={Preferences}
@@ -285,7 +276,7 @@ const getAuthenticatedScreens = (isDark: Boolean) => {
   ];
 };
 
-const getUnauthenticatedScreens = () => [
+const getUnauthenticatedScreens = (isDark: Boolean) => [
   <RootStack.Screen
     key="Welcome"
     name="Welcome"
@@ -324,7 +315,16 @@ const getUnauthenticatedScreens = () => [
   />,
 ];
 
-const getSharedScreens = () => [
+const getSharedScreens = (isDark: Boolean) => [
+  <RootStack.Screen
+    key="SettingsTest"
+    name="SettingsTest"
+    component={SettingsTest}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
   <RootStack.Screen
     key="WebView"
     name="WebView"
@@ -352,13 +352,13 @@ const AppNavigator = () => {
           // Authenticated user screens
           <>
             {getAuthenticatedScreens(isDark)}
-            {getSharedScreens()}
+            {getSharedScreens(isDark)}
           </>
         ) : (
           // Unauthenticated user screens
           <>
-            {getUnauthenticatedScreens()}
-            {getSharedScreens()}
+            {getUnauthenticatedScreens(isDark)}
+            {getSharedScreens(isDark)}
           </>
         )}
       </RootStack.Navigator>

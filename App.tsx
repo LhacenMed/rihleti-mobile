@@ -1,3 +1,5 @@
+import "react-native-gesture-handler";
+
 // Global styles and utilities
 import "./global.css";
 import "@/utils/haptic"; // Initialize global haptic function
@@ -8,7 +10,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 
 // Expo
 import { StatusBar } from "expo-status-bar";
-import * as SystemUI from "expo-system-ui";
+// import * as SystemUI from "expo-system-ui";
 import { Ionicons } from "@expo/vector-icons";
 import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
 import ExploreIcon from "@/components/icons/tab-icons/ExploreIcon";

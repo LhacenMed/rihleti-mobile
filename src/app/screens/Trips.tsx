@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Bars3BottomLeftIcon } from "react-native-heroicons/solid";
 import { useTheme } from "@/contexts/ThemeContext";
 import { showSearchModal } from "@/components/blocks/search-modal";
-import DropdownMenu from "@/components/blocks/dropdown-menu";
+// import DropdownMenu from "@/components/blocks/dropdown-menu";
 
 type TripsScreenProps = {
   route: {

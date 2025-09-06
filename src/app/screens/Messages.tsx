@@ -2,7 +2,7 @@ import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import SafeContainer from "@/components/SafeContainer";
-import DropdownMenu from "@/components/blocks/dropdown-menu";
+// import DropdownMenu from "@/components/blocks/dropdown-menu";
 
 const Messages = () => {
   const navigation = useNavigation();

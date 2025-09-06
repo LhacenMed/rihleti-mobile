@@ -88,6 +88,7 @@ const LocationInputs = ({
   useFocusEffect(
     useCallback(() => {
       const refreshLocationData = async () => {
+        // await new Promise((r) => setTimeout(r, 1000));
         try {
           const storedDepartureCity = await AsyncStorage.getItem("departureCityName");
           const storedDestinationCity = await AsyncStorage.getItem("destinationCityName");
@@ -110,6 +111,7 @@ const LocationInputs = ({
 
   useEffect(() => {
     const fetchUserApiAddress = async () => {
+      await new Promise((r) => setTimeout(r, 1000));
       setLoading(true);
       try {
         const storedDepartureCityName = await AsyncStorage.getItem("departureCityName");

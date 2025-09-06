@@ -1,5 +1,6 @@
 // theme-switch-modal.tsx
 import { useState, useRef } from "react";
+import { View, Text, Pressable, Platform } from "react-native";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import { RadioButton } from "react-native-paper";
 import Modal from "@/components/ui/modal";
@@ -33,23 +34,43 @@ export const showThemeSwitchModal = () => {
     };
 
     return (
-      <RadioButton.Group onValueChange={handleThemeSelect} value={selectedTheme}>
+      <View>
         {themeOptions.map((option) => (
-          <RadioButton.Item
+          <Pressable
             key={option.value}
-            label={option.label}
-            value={option.value}
-            color={isDark ? "hsl(15 87% 56%)" : "hsl(15 87% 56%)"}
-            uncheckedColor={isDark ? "#ccc" : "#555"}
-            labelStyle={{
-              color: isDark ? "#fff" : "#000",
-              fontSize: 15,
-              // fontFamily: "Outfit-Regular",
+            onPress={() => handleThemeSelect(option.value)}
+            android_ripple={{
+              color: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+              borderless: false,
             }}
-            rippleColor="transparent"
-          />
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 12,
+              paddingHorizontal: 16,
+              minHeight: 48,
+            }}
+          >
+            <Text
+              style={{
+                color: isDark ? "#fff" : "#000",
+                fontSize: 15,
+                marginLeft: 8,
+                flex: 1,
+              }}
+            >
+              {option.label}
+            </Text>
+            <RadioButton
+              value={option.value}
+              status={selectedTheme === option.value ? "checked" : "unchecked"}
+              onPress={() => handleThemeSelect(option.value)}
+              color={isDark ? "hsl(15 87% 56%)" : "hsl(15 87% 56%)"}
+              uncheckedColor={isDark ? "#ccc" : "#555"}
+            />
+          </Pressable>
         ))}
-      </RadioButton.Group>
+      </View>
     );
   };
 

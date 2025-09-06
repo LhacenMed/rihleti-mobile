@@ -153,7 +153,7 @@ export default function WebViewScreen() {
             <TouchableOpacity onPress={handleGoBack}>
               <Ionicons
                 size={20}
-                name="chevron-back"
+                name="arrow-back"
                 color={isDark ? "white" : "black"}
                 className="-ml-1"
               />

@@ -163,7 +163,7 @@ const ModalBody = ({
   subtitle?: string;
 }) => {
   if (hasHeader && children) {
-    return <View className="px-4 py-5">{children}</View>;
+    return children;
   }
 
   if (title && subtitle) {

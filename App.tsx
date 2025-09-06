@@ -184,93 +184,12 @@ const getAuthenticatedScreens = (isDark: Boolean) => {
 
   return [
     <RootStack.Screen
-      key="MainApp"
-      name="MainApp"
-      component={TopTabsNavigator}
-      options={({ route }: any) => {
-        const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
-        return {
-          headerShown: true,
-          headerTitle: routeName,
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 20,
-            color: isDark ? "#fff" : "#000",
-          },
-          headerStyle: {
-            backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 1,
-            borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-            height: 90,
-          },
-          headerRight: () => <HeaderRight />,
-          ...TransitionPresets.SlideFromRightIOS,
-        };
-      }}
-    />,
-    <RootStack.Screen
       key="Account"
       name="Account"
       component={Account}
       options={{
         headerShown: false,
         ...TransitionPresets.ModalPresentationIOS,
-      }}
-    />,
-    <RootStack.Screen
-      key="Preferences"
-      name="Preferences"
-      component={Preferences}
-      options={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}
-    />,
-    <RootStack.Screen
-      key="Messages"
-      name="Messages"
-      component={Messages}
-      options={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}
-    />,
-    <RootStack.Screen
-      key="DepartureLocation"
-      name="DepartureLocation"
-      component={DepartureLocationScreen}
-      options={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}
-    />,
-    <RootStack.Screen
-      key="DestinationLocation"
-      name="DestinationLocation"
-      component={DestinationLocationScreen}
-      options={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}
-    />,
-    <RootStack.Screen
-      key="Trips"
-      name="Trips"
-      component={TripsScreen}
-      options={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}
-    />,
-    <RootStack.Screen
-      key="TripDetails"
-      name="TripDetails"
-      component={TripDetailsScreen}
-      options={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
       }}
     />,
   ];
@@ -316,6 +235,88 @@ const getUnauthenticatedScreens = (isDark: Boolean) => [
 ];
 
 const getSharedScreens = (isDark: Boolean) => [
+  <RootStack.Screen
+    key="MainApp"
+    name="MainApp"
+    component={TopTabsNavigator}
+    options={({ route }: any) => {
+      const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
+      return {
+        headerShown: true,
+        headerTitle: routeName,
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 20,
+          color: isDark ? "#fff" : "#000",
+        },
+        headerStyle: {
+          backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+          height: 90,
+        },
+        headerLeft: () => null,
+        headerRight: () => <HeaderRight />,
+        ...TransitionPresets.SlideFromRightIOS,
+      };
+    }}
+  />,
+  <RootStack.Screen
+    key="Preferences"
+    name="Preferences"
+    component={Preferences}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="Messages"
+    name="Messages"
+    component={Messages}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="DepartureLocation"
+    name="DepartureLocation"
+    component={DepartureLocationScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="DestinationLocation"
+    name="DestinationLocation"
+    component={DestinationLocationScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="Trips"
+    name="Trips"
+    component={TripsScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
+  <RootStack.Screen
+    key="TripDetails"
+    name="TripDetails"
+    component={TripDetailsScreen}
+    options={{
+      headerShown: false,
+      ...TransitionPresets.SlideFromRightIOS,
+    }}
+  />,
   <RootStack.Screen
     key="SettingsTest"
     name="SettingsTest"

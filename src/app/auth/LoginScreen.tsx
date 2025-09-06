@@ -132,7 +132,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleBackPress}
           className="h-11 w-11 items-start justify-center"
         >
-          <Ionicons name="chevron-back" size={24} color={isDark ? "#fff" : "#000"} />
+          <Ionicons name="arrow-back" size={24} color={isDark ? "#fff" : "#000"} />
         </TouchableOpacity>
       </View>
 

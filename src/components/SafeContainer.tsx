@@ -88,7 +88,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
               {header.showBackButton ? (
                 <View>
                   <TouchableWithoutFeedback onPress={handleBackPress}>
-                    <Ionicons name="chevron-back" size={24} color={isDark ? "#fff" : "#000"} />
+                    <Ionicons name="arrow-back" size={24} color={isDark ? "#fff" : "#000"} />
                   </TouchableWithoutFeedback>
                 </View>
               ) : header.leftComponent ? (

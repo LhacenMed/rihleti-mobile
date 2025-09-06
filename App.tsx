@@ -3,8 +3,8 @@ import "./global.css";
 import "@/utils/haptic"; // Initialize global haptic function
 
 // React and React Native core
-import { View, TouchableOpacity } from "react-native";
-import changeNavigationBarColor from "react-native-navigation-bar-color";
+import { View, TouchableOpacity, Text } from "react-native";
+// import changeNavigationBarColor from "react-native-navigation-bar-color";
 
 // Expo
 import { StatusBar } from "expo-status-bar";
@@ -367,6 +367,42 @@ const AppNavigator = () => {
   );
 };
 
+// Error Boundary Component
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error?: Error }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("App Error Boundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+          <Text style={{ fontSize: 18, textAlign: "center", marginBottom: 20 }}>
+            Something went wrong. Please restart the app.
+          </Text>
+          <Text style={{ fontSize: 14, textAlign: "center", color: "#666" }}>
+            {this.state.error?.message}
+          </Text>
+        </View>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 // App Initialization Component
 const AppContent = () => {
   const { isReady } = useAppReady();
@@ -378,7 +414,11 @@ const AppContent = () => {
     return null;
   }
 
-  return <AppNavigator />;
+  return (
+    <ErrorBoundary>
+      <AppNavigator />
+    </ErrorBoundary>
+  );
 };
 
 export default function App() {

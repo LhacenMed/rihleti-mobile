@@ -3,12 +3,24 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Keep splash screen visible while loading
-SplashScreen.preventAutoHideAsync();
-
 export const useAppReady = () => {
   const [isReady, setIsReady] = useState(false);
   const { loading: authLoading } = useAuth();
+
+  // Prevent splash screen from auto-hiding
+  useEffect(() => {
+    SplashScreen.preventAutoHideAsync();
+  }, []);
+
+  // Add timeout to prevent infinite loading
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      console.warn("App initialization timeout - forcing ready state");
+      setIsReady(true);
+    }, 10000); // 10 second timeout
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   // Load fonts
   const [fontsLoaded, fontError] = useFonts({
@@ -23,15 +35,18 @@ export const useAppReady = () => {
   useEffect(() => {
     const prepareApp = async () => {
       try {
+        console.log("App initialization started", { fontsLoaded, authLoading, fontError });
+
         // Wait for all resources to be ready
         if (!fontsLoaded || authLoading) {
+          console.log("Waiting for resources...", { fontsLoaded, authLoading });
           return;
         }
 
         // Handle font loading errors
         if (fontError) {
           console.warn("Font loading error:", fontError);
-          // You can decide whether to continue or show an error
+          // Continue anyway to prevent infinite loading
         }
 
         // Add any additional initialization here
@@ -42,6 +57,7 @@ export const useAppReady = () => {
         // Small delay to ensure smooth transition
         await new Promise((resolve) => setTimeout(resolve, 100));
 
+        console.log("App initialization completed successfully");
         setIsReady(true);
       } catch (error) {
         console.error("App initialization error:", error);

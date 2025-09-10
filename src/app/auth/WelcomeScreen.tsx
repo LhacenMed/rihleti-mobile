@@ -68,7 +68,7 @@ export default function WelcomeScreen({ navigation }: Props) {
       <View className="absolute right-4 top-0">
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MainApp");
+            navigation.navigate("SettingsTest");
           }}
         >
           <Text className="text-base font-medium text-muted-foreground">Skip</Text>

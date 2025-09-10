@@ -66,6 +66,7 @@ export default {
                 backgroundColor: "#ffffff",
             },
             package: "com.rihleti.app",
+            // edgeToEdgeEnabled: false,
             // notification: {
             //     icon: "./assets/notification-icon.png",
             //     color: "#84cc16",

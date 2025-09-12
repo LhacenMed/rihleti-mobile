@@ -25,6 +25,7 @@ export default {
                 },
             ],
             "expo-asset",
+            "expo-router",
             // [
             //     "expo-build-properties",
             //     {

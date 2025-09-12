@@ -1,216 +1,132 @@
 # Complete Migration Guide: React Navigation to Expo Router
 
 ## Overview
-This guide will help you migrate your Rihleti mobile app from React Navigation to Expo Router while preserving your custom transition animations using the `TransitionPresets`.
 
-## Phase 1: Install Dependencies and Setup
+This guide will walk you through migrating your Rihleti mobile app from React Navigation to Expo Router, implementing file-based routing, authentication flows, and maintaining all current functionality.
 
-### 1.1 Install Expo Router
+## Prerequisites
+
+Before starting the migration:
+- Ensure you're using Expo SDK 50+ (recommended: SDK 52+)
+- Backup your current project
+- Review the current navigation structure in your App.tsx
+
+## Step 1: Install Expo Router
+
 ```bash
+# Install Expo Router
 npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar
+
+# Remove React Navigation dependencies (if no longer needed elsewhere)
+npm uninstall @react-navigation/native @react-navigation/stack @react-navigation/material-top-tabs react-native-gesture-handler
 ```
 
-### 1.2 Update package.json
-Add the following to your `package.json`:
+## Step 2: Update Configuration Files
+
+### 2.1 Update `package.json`
+Add the main entry point for Expo Router:
+
 ```json
 {
   "main": "expo-router/entry"
 }
 ```
 
-### 1.3 Update app.config.js
-Add the Expo Router plugin:
+### 2.2 Update `app.config.js`
 ```javascript
 export default {
   expo: {
+    name: "rihleti",
+    slug: "rihleti",
+    scheme: "rihleti", // Add this for deep linking
     // ... your existing config
-    plugins: [
-      "expo-router",
-      // ... your other plugins
-    ],
-    scheme: "rihleti", // Replace with your app scheme
   },
 };
 ```
 
-### 1.4 Create metro.config.js (if not already configured)
+### 2.3 Update `metro.config.js`
 ```javascript
-const { getDefaultConfig } = require('expo/metro-config');
+const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require('nativewind/metro');
 
-const config = getDefaultConfig(__dirname);
+const config = getDefaultConfig(__dirname, {
+  // Enable CSS support
+  isCSSEnabled: true,
+});
 
 module.exports = withNativeWind(config, { input: './global.css' });
 ```
 
-## Phase 2: Create Custom Stack with TransitionPresets
+## Step 3: Restructure Project Directory
 
-### 2.1 Create Custom Stack Layout Component
-Create `src/components/layouts/CustomStack.tsx`:
+Create the new file structure following Expo Router conventions:
 
-```tsx
-import { ParamListBase, StackNavigationState } from '@react-navigation/native';
-import {
-  createStackNavigator,
-  StackNavigationEventMap,
-  StackNavigationOptions,
-  TransitionPresets,
-} from '@react-navigation/stack';
-import { withLayoutContext } from 'expo-router';
-
-const { Navigator } = createStackNavigator();
-
-export const CustomStack = withLayoutContext<
-  StackNavigationOptions,
-  typeof Navigator,
-  StackNavigationState<ParamListBase>,
-  StackNavigationEventMap
->(Navigator);
-
-// Export transition presets for easy use
-export { TransitionPresets };
+### 3.1 Create New Directory Structure
+```
+src/
+├── app/
+│   ├── _layout.tsx              # Root layout
+│   ├── index.tsx                # Root redirect/initial screen
+│   ├── +not-found.tsx           # 404 page
+│   │
+│   ├── (auth)/                  # Auth group (hidden from URL)
+│   │   ├── _layout.tsx          # Auth layout
+│   │   ├── welcome.tsx          # WelcomeScreen
+│   │   ├── login.tsx            # LoginScreen
+│   │   ├── signup.tsx           # SignupScreen
+│   │   └── verify-otp.tsx       # VerifyOTPScreen
+│   │
+│   ├── (app)/                   # Authenticated app group
+│   │   ├── _layout.tsx          # App layout with tabs
+│   │   ├── (tabs)/              # Tab navigation
+│   │   │   ├── _layout.tsx      # Tab layout
+│   │   │   ├── index.tsx        # Home tab (Home.tsx)
+│   │   │   ├── explore.tsx      # Explore tab
+│   │   │   ├── bookings.tsx     # Bookings tab
+│   │   │   └── settings.tsx     # Settings tab
+│   │   │
+│   │   ├── account.tsx          # Modal screen
+│   │   ├── messages.tsx         # Stack screen
+│   │   ├── preferences.tsx      # Stack screen
+│   │   ├── departure-location.tsx
+│   │   ├── destination-location.tsx
+│   │   ├── trips.tsx
+│   │   └── trip-details.tsx
+│   │
+│   ├── settings-test.tsx        # Shared screen
+│   └── webview.tsx              # Shared modal screen
+│
+├── components/ (existing structure)
+├── contexts/ (existing structure)
+├── hooks/ (existing structure)
+├── lib/ (existing structure)
+├── types/ (existing structure)
+└── utils/ (existing structure)
 ```
 
-### 2.2 Create Custom Tabs Component
-Create `src/components/layouts/CustomTabs.tsx`:
+## Step 4: Create Layout Files
 
-```tsx
-import { ParamListBase, TabNavigationState } from '@react-navigation/native';
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabNavigationEventMap,
-  MaterialTopTabNavigationOptions,
-} from '@react-navigation/material-top-tabs';
-import { withLayoutContext } from 'expo-router';
-
-const { Navigator } = createMaterialTopTabNavigator();
-
-export const CustomTabs = withLayoutContext<
-  MaterialTopTabNavigationOptions,
-  typeof Navigator,
-  TabNavigationState<ParamListBase>,
-  MaterialTopTabNavigationEventMap
->(Navigator);
-```
-
-## Phase 3: Restructure Your App Directory
-
-### 3.1 Create New App Structure
-Move and restructure your files according to Expo Router conventions:
-
-```md
-app/
-├── _layout.tsx                 (Root layout - replaces App.tsx logic)
-├── index.tsx                   (Landing/Welcome screen)
-├── (auth)/
-│   ├── _layout.tsx            (Auth stack layout)
-│   ├── login.tsx              (LoginScreen)
-│   ├── signup.tsx             (SignupScreen)
-│   └── verify-otp.tsx         (VerifyOTPScreen)
-├── (tabs)/
-│   ├── _layout.tsx            (Tabs layout with custom TabBar)
-│   ├── index.tsx              (Home tab - default route)
-│   ├── explore.tsx            (Explore tab)
-│   ├── bookings.tsx           (Bookings tab)
-│   └── settings.tsx           (Settings tab)
-├── account.tsx                (Account screen)
-├── messages.tsx               (Messages screen)
-├── preferences.tsx            (Preferences screen)
-├── departure-location.tsx     (DepartureLocation screen)
-├── destination-location.tsx   (DestinationLocation screen)
-├── trips.tsx                  (Trips screen)
-├── trip-details.tsx           (TripDetails screen)
-├── settings-test.tsx          (SettingsTest screen)
-└── webview.tsx               (WebView screen)
-```
-
-### 3.2 Move Your Existing Components
-Keep your existing structure for components:
-```bash
-# Keep these as-is:
-src/components/
-src/contexts/
-src/hooks/
-src/lib/
-src/types/
-src/utils/
-src/assets/
-```
-
-## Phase 4: Create Layout Files
-
-### 4.1 Root Layout (`app/_layout.tsx`)
-```tsx
+### 4.1 Root Layout (`src/app/_layout.tsx`)
+```typescript
 import "react-native-gesture-handler";
 import "../global.css";
 import "@/utils/haptic";
 
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
-import { PaperProvider } from "react-native-paper";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
 import Toast from "react-native-toast-message";
-import { Slot } from "expo-router";
-import React from "react";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { PaperProvider } from "react-native-paper";
+import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
 
-import { ThemeProvider } from "@/contexts/ThemeContext";
-import { FeaturesProvider } from "@/contexts/FeaturesContext";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { toastConfig } from "@/components/ui/toast";
-import { useAppReady } from "@/hooks/useAppReady";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { FeaturesProvider } from "@/contexts/FeaturesContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
-// Error Boundary Component
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error?: Error }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("App Error Boundary caught an error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
-          <Text style={{ fontSize: 18, textAlign: "center", marginBottom: 20 }}>
-            Something went wrong. Please restart the app.
-          </Text>
-          <Text style={{ fontSize: 14, textAlign: "center", color: "#666" }}>
-            {this.state.error?.message}
-          </Text>
-        </View>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-function AppContent() {
-  const { isReady } = useAppReady();
-
-  if (!isReady) {
-    return null;
-  }
-
-  return (
-    <ErrorBoundary>
-      <Slot />
-    </ErrorBoundary>
-  );
-}
-
-export default function Layout() {
+export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
@@ -221,7 +137,25 @@ export default function Layout() {
                 <ModalPresenterParent>
                   <BottomSheetModalProvider>
                     <StatusBar style="auto" translucent />
-                    <AppContent />
+                    <Stack screenOptions={{ headerShown: false }}>
+                      <Stack.Screen name="index" />
+                      <Stack.Screen name="(auth)" />
+                      <Stack.Screen name="(app)" />
+                      <Stack.Screen 
+                        name="settings-test" 
+                        options={{ 
+                          presentation: "modal",
+                          headerShown: false 
+                        }} 
+                      />
+                      <Stack.Screen 
+                        name="webview" 
+                        options={{ 
+                          presentation: "modal",
+                          headerShown: false 
+                        }} 
+                      />
+                    </Stack>
                     <Toast
                       config={toastConfig}
                       position="top"
@@ -242,47 +176,107 @@ export default function Layout() {
 }
 ```
 
-### 4.2 Auth Stack Layout (`app/(auth)/_layout.tsx`)
-```tsx
-import { CustomStack, TransitionPresets } from "@/components/layouts/CustomStack";
+### 4.2 Root Index with Authentication Logic (`src/app/index.tsx`)
+```typescript
+import { Redirect } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
+import { useAppReady } from "@/hooks/useAppReady";
+import { View } from "react-native";
+
+export default function Index() {
+  const { user } = useAuth();
+  const { isReady } = useAppReady();
+
+  // Show loading while app initializes
+  if (!isReady) {
+    return <View style={{ flex: 1 }} />; // or your loading component
+  }
+
+  // Redirect based on authentication status
+  if (user) {
+    return <Redirect href="/(app)/(tabs)" />;
+  } else {
+    return <Redirect href="/(auth)/welcome" />;
+  }
+}
+```
+
+### 4.3 Auth Layout (`src/app/(auth)/_layout.tsx`)
+```typescript
+import { Stack } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
+import { Redirect } from "expo-router";
 
 export default function AuthLayout() {
+  const { user } = useAuth();
+
+  // Redirect authenticated users away from auth screens
+  if (user) {
+    return <Redirect href="/(app)/(tabs)" />;
+  }
+
   return (
-    <CustomStack
-      screenOptions={{
-        headerShown: false,
-        ...TransitionPresets.SlideFromRightIOS,
-      }}
-    >
-      <CustomStack.Screen name="login" />
-      <CustomStack.Screen name="signup" />
-      <CustomStack.Screen 
-        name="verify-otp" 
-        options={{
-          ...TransitionPresets.SlideFromRightIOS,
-        }}
-      />
-    </CustomStack>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="welcome" />
+      <Stack.Screen name="login" />
+      <Stack.Screen name="signup" />
+      <Stack.Screen name="verify-otp" />
+    </Stack>
   );
 }
 ```
 
-### 4.3 Main Tabs Layout (`app/(tabs)/_layout.tsx`)
-```tsx
+### 4.4 App Layout with Protected Routes (`src/app/(app)/_layout.tsx`)
+```typescript
+import { Stack } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
+import { Redirect } from "expo-router";
+
+export default function AppLayout() {
+  const { user } = useAuth();
+
+  // Protect all app routes - redirect to auth if not logged in
+  if (!user) {
+    return <Redirect href="/(auth)/welcome" />;
+  }
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen 
+        name="account" 
+        options={{ 
+          presentation: "modal",
+          headerShown: false 
+        }} 
+      />
+      <Stack.Screen name="messages" />
+      <Stack.Screen name="preferences" />
+      <Stack.Screen name="departure-location" />
+      <Stack.Screen name="destination-location" />
+      <Stack.Screen name="trips" />
+      <Stack.Screen name="trip-details" />
+    </Stack>
+  );
+}
+```
+
+### 4.5 Tabs Layout (`src/app/(app)/(tabs)/_layout.tsx`)
+```typescript
+import { Tabs } from "expo-router";
 import { View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { CustomTabs } from "@/components/layouts/CustomTabs";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useFeatures } from "@/contexts/FeaturesContext";
-import TabBar from "@/components/TabBar";
+
+// Import your custom tab icons
 import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
 import ExploreIcon from "@/components/icons/tab-icons/ExploreIcon";
 import BookingsIcon from "@/components/icons/tab-icons/BookingsIcon";
 import SettingsIcon from "@/components/icons/tab-icons/SettingsIcon";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
-// Header Right Component
-const HeaderRight = () => {
+// Header right component
+function HeaderRight() {
   const { isDark } = useTheme();
 
   return (
@@ -295,328 +289,387 @@ const HeaderRight = () => {
       </TouchableOpacity>
     </View>
   );
-};
+}
 
-export default function TabsLayout() {
-  const { swipeEnabled } = useFeatures();
+export default function TabLayout() {
   const { isDark } = useTheme();
+  const { swipeEnabled } = useFeatures();
 
   return (
-    <CustomTabs
-      tabBarPosition="bottom"
-      initialRouteName="index"
-      tabBar={(props) => <TabBar {...props} />}
-      screenOptions={({ route }: any) => {
-        const routeName = getFocusedRouteNameFromRoute(route) ?? "Home";
-        return {
-          tabBarStyle: {
-            position: "relative",
-            backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-            borderTopColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-            borderTopWidth: 1,
-            paddingVertical: 10,
-          },
-          tabBarActiveTintColor: "black",
-          tabBarShowIcon: true,
-          tabBarShowLabel: false,
-          tabBarIndicatorStyle: { display: "none" },
-          tabBarPressColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-          swipeEnabled,
-          animationEnabled: false,
-          headerShown: true,
-          headerTitle: routeName,
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 20,
-            color: isDark ? "#fff" : "#000",
-          },
-          headerStyle: {
-            backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 1,
-            borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-            height: 90,
-          },
-          headerLeft: () => null,
-          headerRight: () => <HeaderRight />,
-        };
+    <Tabs
+      screenOptions={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+          height: 90,
+        },
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 20,
+          color: isDark ? "#fff" : "#000",
+        },
+        headerLeft: () => null,
+        headerRight: () => <HeaderRight />,
+        tabBarStyle: {
+          position: "relative",
+          backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+          borderTopColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+          borderTopWidth: 1,
+          paddingVertical: 10,
+        },
+        tabBarActiveTintColor: isDark ? "#fff" : "#000",
+        tabBarInactiveTintColor: isDark ? "#666" : "#999",
+        tabBarShowLabel: false,
+        tabBarPressColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
       }}
     >
-      <CustomTabs.Screen
+      <Tabs.Screen
         name="index"
         options={{
-          tabBarLabel: "Home",
+          title: "Home",
+          headerTitle: "Home",
           tabBarIcon: ({ focused }) => (
             <HomeIcon isFocused={focused} width={24} height={24} />
           ),
         }}
       />
-      <CustomTabs.Screen
+      <Tabs.Screen
         name="explore"
         options={{
-          tabBarLabel: "Explore",
+          title: "Explore",
+          headerTitle: "Explore",
           tabBarIcon: ({ focused }) => (
             <ExploreIcon isFocused={focused} width={24} height={24} />
           ),
         }}
       />
-      <CustomTabs.Screen
+      <Tabs.Screen
         name="bookings"
         options={{
-          tabBarLabel: "Bookings",
+          title: "Bookings",
+          headerTitle: "Bookings",
           tabBarIcon: ({ focused }) => (
             <BookingsIcon isFocused={focused} width={24} height={24} />
           ),
         }}
       />
-      <CustomTabs.Screen
+      <Tabs.Screen
         name="settings"
         options={{
-          tabBarLabel: "Settings",
+          title: "Settings",
+          headerTitle: "Settings",
           tabBarIcon: ({ focused }) => (
             <SettingsIcon isFocused={focused} width={24} height={24} />
           ),
         }}
       />
-    </CustomTabs>
+    </Tabs>
   );
 }
 ```
 
-## Phase 5: Create Screen Files
+## Step 5: Migrate Screen Components
 
-### 5.1 Landing Page (`app/index.tsx`)
-```tsx
-import { useAuth } from "@/contexts/AuthContext";
-import { Redirect } from "expo-router";
-import WelcomeScreen from "@/app/screens/WelcomeScreen";
+### 5.1 Convert Auth Screens
 
-export default function Index() {
-  const { user } = useAuth();
-  
-  if (user) {
-    return <Redirect href="/(tabs)" />;
-  }
-  
-  return <WelcomeScreen />;
-}
+Create these files with your existing screen components:
+
+**`src/app/(auth)/welcome.tsx`**
+```typescript
+import WelcomeScreen from "@/app/auth/WelcomeScreen";
+export default WelcomeScreen;
 ```
 
-### 5.2 Auth Screens
-Create `app/(auth)/login.tsx`:
-```tsx
+**`src/app/(auth)/login.tsx`**
+```typescript
 import LoginScreen from "@/app/auth/LoginScreen";
 export default LoginScreen;
 ```
 
-Create `app/(auth)/signup.tsx`:
-```tsx
+**`src/app/(auth)/signup.tsx`**
+```typescript
 import SignupScreen from "@/app/auth/SignupScreen";
 export default SignupScreen;
 ```
 
-Create `app/(auth)/verify-otp.tsx`:
-```tsx
+**`src/app/(auth)/verify-otp.tsx`**
+```typescript
 import VerifyOTPScreen from "@/app/auth/VerifyOTPScreen";
 export default VerifyOTPScreen;
 ```
 
-### 5.3 Tab Screens
-Create `app/(tabs)/index.tsx` (Home):
-```tsx
+### 5.2 Convert Tab Screens
+
+**`src/app/(app)/(tabs)/index.tsx`**
+```typescript
 import Home from "@/app/tabs/Home";
 export default Home;
 ```
 
-Create `app/(tabs)/explore.tsx`:
-```tsx
+**`src/app/(app)/(tabs)/explore.tsx`**
+```typescript
 import Explore from "@/app/tabs/Explore";
 export default Explore;
 ```
 
-Create `app/(tabs)/bookings.tsx`:
-```tsx
+**`src/app/(app)/(tabs)/bookings.tsx`**
+```typescript
 import Bookings from "@/app/tabs/Bookings";
 export default Bookings;
 ```
 
-Create `app/(tabs)/settings.tsx`:
-```tsx
+**`src/app/(app)/(tabs)/settings.tsx`**
+```typescript
 import Settings from "@/app/tabs/Settings";
 export default Settings;
 ```
 
-### 5.4 Other Screens with Custom Transitions
-Create `app/account.tsx`:
-```tsx
-import { CustomStack, TransitionPresets } from "@/components/layouts/CustomStack";
+### 5.3 Convert Other App Screens
+
+Create files for all other screens following the same pattern:
+
+**`src/app/(app)/account.tsx`**
+```typescript
 import Account from "@/app/screens/Account";
-
-export default function AccountPage() {
-  return (
-    <>
-      <CustomStack.Screen
-        options={{
-          headerShown: false,
-          ...TransitionPresets.ModalPresentationIOS,
-        }}
-      />
-      <Account />
-    </>
-  );
-}
+export default Account;
 ```
 
-Create similar files for other screens:
-- `app/preferences.tsx`
-- `app/messages.tsx`  
-- `app/departure-location.tsx`
-- `app/destination-location.tsx`
-- `app/trips.tsx`
-- `app/trip-details.tsx`
-- `app/settings-test.tsx`
-- `app/webview.tsx`
-
-Each following this pattern:
-```tsx
-import { CustomStack, TransitionPresets } from "@/components/layouts/CustomStack";
-import YourScreen from "@/app/screens/YourScreen";
-
-export default function YourPage() {
-  return (
-    <>
-      <CustomStack.Screen
-        options={{
-          headerShown: false,
-          ...TransitionPresets.SlideFromRightIOS, // or your desired transition
-        }}
-      />
-      <YourScreen />
-    </>
-  );
-}
+**`src/app/(app)/messages.tsx`**
+```typescript
+import Messages from "@/app/screens/Messages";
+export default Messages;
 ```
 
-## Phase 6: Update Navigation Calls
+Continue this pattern for all remaining screens...
 
-### 6.1 Replace Navigation Imports
-In your screen components, replace:
-```tsx
-// OLD
+### 5.4 Convert Shared Screens
+
+**`src/app/settings-test.tsx`**
+```typescript
+import SettingsTest from "@/app/screens/SettingsTest";
+export default SettingsTest;
+```
+
+**`src/app/webview.tsx`**
+```typescript
+import WebViewScreen from "@/app/screens/WebView";
+export default WebViewScreen;
+```
+
+## Step 6: Update Navigation Calls
+
+### 6.1 Replace Navigation Hooks
+
+Replace all React Navigation hooks and navigation calls in your components:
+
+```typescript
+// Before (React Navigation)
 import { useNavigation } from "@react-navigation/native";
 const navigation = useNavigation();
-navigation.navigate("ScreenName", params);
+navigation.navigate("SomeScreen", { param: value });
 
-// NEW
-import { useRouter } from "expo-router";
-const router = useRouter();
-router.push("/screen-name"); // or router.push({ pathname: "/screen-name", params: { ... } });
+// After (Expo Router)
+import { router } from "expo-router";
+router.push("/some-screen?param=value");
+// or
+router.push({ pathname: "/some-screen", params: { param: value } });
 ```
 
-### 6.2 Update Parameter Passing
-```tsx
-// OLD
-navigation.navigate("TripDetails", { tripId: "123" });
+### 6.2 Update Navigation Methods
 
-// NEW
-router.push({ pathname: "/trip-details", params: { tripId: "123" } });
-```
+| React Navigation        | Expo Router           | Description                |
+| ----------------------- | --------------------- | -------------------------- |
+| `navigation.navigate()` | `router.push()`       | Navigate to route          |
+| `navigation.replace()`  | `router.replace()`    | Replace current route      |
+| `navigation.goBack()`   | `router.back()`       | Go back                    |
+| `navigation.popToTop()` | `router.dismissAll()` | Dismiss all modals/screens |
+| `navigation.reset()`    | `router.replace()`    | Reset navigation state     |
 
-### 6.3 Handle Authentication Routing
-In your `AuthContext.tsx`, update the authentication flow:
-```tsx
-import { useRouter, useSegments } from "expo-router";
+## Step 7: Handle Parameters and Dynamic Routes
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-  const segments = useSegments();
+### 7.1 Dynamic Routes
+For screens that need parameters, create dynamic route files:
+
+**`src/app/(app)/trip-details/[tripId].tsx`**
+```typescript
+import { useLocalSearchParams } from "expo-router";
+import TripDetailsScreen from "@/app/screens/TripDetails";
+
+export default function TripDetailsRoute() {
+  const { tripId } = useLocalSearchParams();
   
-  useEffect(() => {
-    const inAuthGroup = segments[0] === "(auth)";
-    
-    if (!user && !inAuthGroup) {
-      // Redirect to auth if not authenticated
-      router.replace("/(auth)/login");
-    } else if (user && inAuthGroup) {
-      // Redirect to main app if authenticated
-      router.replace("/(tabs)");
-    }
-  }, [user, segments]);
-
-  // ... rest of your auth logic
+  return <TripDetailsScreen tripId={tripId as string} />;
 }
 ```
 
-## Phase 7: Update TypeScript Types
+**`src/app/(app)/trips/[departure]/[destination].tsx`**
+```typescript
+import { useLocalSearchParams } from "expo-router";
+import TripsScreen from "@/app/screens/Trips";
 
-### 7.1 Remove Old Navigation Types
-Remove the old `RootStackParamList` from your App.tsx.
-
-### 7.2 Enable Typed Routes (Optional)
-Add to your `app.config.js`:
-```javascript
-export default {
-  expo: {
-    experiments: {
-      typedRoutes: true
-    }
-  }
+export default function TripsRoute() {
+  const { departure, destination } = useLocalSearchParams();
+  
+  return (
+    <TripsScreen 
+      departure={departure as string} 
+      destination={destination as string} 
+    />
+  );
 }
 ```
 
-## Phase 8: Clean Up
+### 7.2 Update Parameter Passing
 
-### 8.1 Remove Old Files
-- Delete the old `App.tsx` file
-- Remove unused React Navigation imports from components
+Update your existing screen components to use Expo Router parameters:
 
-### 8.2 Update package.json
-Remove these dependencies if no longer needed:
-```bash
-npm uninstall @react-navigation/native @react-navigation/stack @react-navigation/material-top-tabs
+```typescript
+// In your existing screens, replace props with useLocalSearchParams
+import { useLocalSearchParams } from "expo-router";
+
+export default function SomeScreen() {
+  const params = useLocalSearchParams();
+  // Use params instead of route.params
+}
 ```
 
-### 8.3 Test Your App
-```bash
-npx expo start --clear
+## Step 8: Create 404 Page
+
+**`src/app/+not-found.tsx`**
+```typescript
+import { Stack } from "expo-router";
+import { View, Text, TouchableOpacity } from "react-native";
+import { router } from "expo-router";
+
+export default function NotFoundScreen() {
+  return (
+    <>
+      <Stack.Screen options={{ title: "Oops!" }} />
+      <View className="flex-1 items-center justify-center p-5">
+        <Text className="text-xl font-bold">This screen doesn't exist.</Text>
+        <TouchableOpacity
+          onPress={() => router.replace("/")}
+          className="mt-4 py-2 px-4 bg-blue-500 rounded"
+        >
+          <Text className="text-white">Go to home screen</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+}
 ```
 
-## Phase 9: Advanced Features (Optional)
+## Step 9: Update Existing Components
 
-### 9.1 Add Deep Linking Support
-Your app now automatically supports deep linking to any screen via URLs!
+### 9.1 Update Navigation Calls in Components
 
-### 9.2 Add Web Support
-Your navigation now works on web out of the box.
+Go through your existing components and update navigation calls:
+
+```typescript
+// Before
+const navigation = useNavigation();
+navigation.navigate("Account");
+
+// After  
+import { router } from "expo-router";
+router.push("/(app)/account");
+```
+
+### 9.2 Update Deep Linking
+
+If you have deep linking set up, update your URL schemes to match the new file-based routes.
+
+## Step 10: Clean Up
+
+### 10.1 Remove Old Navigation Code
+
+1. Delete the old `App.tsx` content related to navigation
+2. Remove unused React Navigation imports
+3. Clean up any navigation-specific utility functions
+
+### 10.2 Update Imports
+
+Update any imports that reference the old navigation structure.
+
+## Step 11: Testing
+
+### 11.1 Test Authentication Flow
+1. Test login/logout functionality
+2. Verify protected routes work correctly
+3. Check redirect behavior
+
+### 11.2 Test Navigation
+1. Test all tab navigation
+2. Test modal presentations
+3. Test parameter passing
+4. Test back navigation behavior
+
+### 11.3 Test Deep Links
+```bash
+# Test deep links (Android)
+adb shell am start -W -a android.intent.action.VIEW -d "rihleti://some-route" com.yourcompany.rihleti
+
+# Test deep links (iOS Simulator)
+xcrun simctl openurl booted rihleti://some-route
+```
+
+## Step 12: Optional Enhancements
+
+### 12.1 Add Loading States
+Consider adding loading states for route transitions using Expo Router's built-in loading mechanisms.
+
+### 12.2 Add Error Boundaries
+Implement error boundaries for better error handling with Expo Router.
+
+### 12.3 Optimize Bundle Size
+Remove any unused React Navigation dependencies to reduce bundle size.
+
+## Common Pitfalls and Solutions
+
+### Authentication Issues
+- **Problem**: Users can navigate to protected routes by typing URLs
+- **Solution**: Use the layout-based protection shown in Step 4.4
+
+### Parameter Passing
+- **Problem**: Complex objects as parameters
+- **Solution**: Use serializable parameters only, pass complex data via context or global state
+
+### Tab Bar Customization
+- **Problem**: Custom tab bar not working
+- **Solution**: Use Expo Router's built-in tab customization options or create custom tab bar component
+
+### Modal Behavior
+- **Problem**: Modals don't behave as expected
+- **Solution**: Use `presentation: "modal"` in screen options and proper routing patterns
 
 ## Migration Checklist
 
-- [ ] Install Expo Router dependencies
-- [ ] Update package.json main entry
-- [ ] Create custom stack and tabs components
-- [ ] Restructure app directory
+- [ ] Install Expo Router and dependencies
+- [ ] Update configuration files
+- [ ] Create new directory structure
 - [ ] Create all layout files
-- [ ] Create all screen files with transitions
-- [ ] Update navigation calls in components
-- [ ] Update authentication routing
-- [ ] Remove old navigation dependencies
-- [ ] Test the app thoroughly
+- [ ] Migrate all screen components
+- [ ] Update navigation calls throughout the app
+- [ ] Handle dynamic routes and parameters
+- [ ] Create 404 page
+- [ ] Test authentication flow
+- [ ] Test all navigation patterns
+- [ ] Test parameter passing
 - [ ] Test deep linking
-- [ ] Test on all platforms (iOS, Android, Web)
+- [ ] Clean up old navigation code
+- [ ] Update documentation
 
-## Troubleshooting
+## Conclusion
 
-### Common Issues:
-1. **Import paths**: Make sure all your `@/` imports still work with the new structure
-2. **Context providers**: Ensure all context providers are properly wrapped in the root layout
-3. **Screen transitions**: Test that all your custom transitions work as expected
-4. **Tab navigation**: Verify that your custom TabBar component works with the new tabs setup
+This migration will give you:
+- **File-based routing**: More intuitive and organized navigation structure
+- **Better developer experience**: Automatic route generation and type safety
+- **Improved performance**: Optimized routing and lazy loading
+- **Universal compatibility**: Better web support out of the box
+- **Simpler authentication**: Layout-based route protection
 
-### Performance Tips:
-- Use lazy loading for screens that aren't immediately needed
-- Optimize your bundle size by removing unused React Navigation dependencies
-- Test memory usage to ensure the custom stack doesn't cause issues
-
-This migration preserves all your existing custom transitions while giving you the benefits of Expo Router's file-based routing system!
+The migration requires careful attention to authentication flow and parameter passing, but the result is a more maintainable and scalable navigation system.

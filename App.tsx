@@ -219,6 +219,7 @@ const getAuthenticatedScreens = (isDark: Boolean) => {
       component={Preferences}
       options={{
         headerShown: false,
+        // animation: "none",
         ...TransitionPresets.SlideFromRightIOS,
       }}
     />,

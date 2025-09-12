@@ -24,6 +24,7 @@ export default {
                     locationAlwaysAndWhenInUsePermission: "Allow Rihleti to use your location.",
                 },
             ],
+            "expo-asset",
             // [
             //     "expo-build-properties",
             //     {
@@ -66,7 +67,7 @@ export default {
                 backgroundColor: "#ffffff",
             },
             package: "com.rihleti.app",
-            // edgeToEdgeEnabled: false,
+            edgeToEdgeEnabled: true,
             // notification: {
             //     icon: "./assets/notification-icon.png",
             //     color: "#84cc16",
@@ -77,8 +78,11 @@ export default {
         extra: {
             supabaseUrl: process.env.SUPABASE_URL,
             supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+            // eas: {
+            //     projectId: "6943ba63-1c3c-445f-8702-6f99899439b5",
+            // },
             eas: {
-                projectId: "6943ba63-1c3c-445f-8702-6f99899439b5",
+                projectId: "fc452bc0-0445-447b-a43b-416976fdaa69",
             },
         },
     },

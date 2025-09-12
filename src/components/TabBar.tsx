@@ -106,68 +106,68 @@ const TabBar: React.FC<TabBarProps> = ({
           paddingBottom: insets.bottom,
         }}
       > */}
-        {state.routes.map((route: any, index: number) => {
-          // const { options } = descriptors[route.key];
-          const isFocused = state.index === index;
+      {state.routes.map((route: any, index: number) => {
+        // const { options } = descriptors[route.key];
+        const isFocused = state.index === index;
 
-          const onPress = () => {
-            (global as any).hapticClick();
+        const onPress = () => {
+          (global as any).hapticClick();
 
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            }
-          };
+          const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true,
+          });
+          if (!isFocused && !event.defaultPrevented) {
+            navigation.navigate(route.name);
+          }
+        };
 
-          return (
-            <View
-              key={route.key}
-              style={{
-                flex: 1,
-                paddingVertical: 15,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+        return (
+          <View
+            key={route.key}
+            style={{
+              flex: 1,
+              paddingVertical: 15,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Tooltip
+              title={getTooltipText(route.name)}
+              enterTouchDelay={500}
+              leaveTouchDelay={1000}
             >
-              <Tooltip
-                title={getTooltipText(route.name)}
-                enterTouchDelay={500}
-                leaveTouchDelay={1000}
+              <TouchableOpacity
+                onPress={onPress}
+                // className="flex-1 items-center justify-center py-2"
+                activeOpacity={1}
               >
-                <TouchableOpacity
-                  onPress={onPress}
-                  // className="flex-1 items-center justify-center py-2"
-                  activeOpacity={1}
+                <Animated.View
+                  className="items-center justify-center"
+                  style={{
+                    transform: [{ translateY: animatedValues[index] }],
+                  }}
                 >
-                  <Animated.View
-                    className="items-center justify-center"
-                    style={{
-                      transform: [{ translateY: animatedValues[index] }],
-                    }}
-                  >
-                    {renderIcon(route.name, isFocused)}
-                  </Animated.View>
-                  <Animated.Text
-                    className="text-center text-xs font-medium text-foreground"
-                    style={{
-                      opacity: animatedValues[index].interpolate({
-                        inputRange: [-5, 0],
-                        outputRange: [1, 0],
-                      }),
-                      transform: [{ translateY: 4 }],
-                    }}
-                  >
-                    {route.name}
-                  </Animated.Text>
-                </TouchableOpacity>
-              </Tooltip>
-            </View>
-          );
-        })}
+                  {renderIcon(route.name, isFocused)}
+                </Animated.View>
+                <Animated.Text
+                  className="text-center text-xs font-medium text-foreground"
+                  style={{
+                    opacity: animatedValues[index].interpolate({
+                      inputRange: [-5, 0],
+                      outputRange: [1, 0],
+                    }),
+                    transform: [{ translateY: 4 }],
+                  }}
+                >
+                  {route.name}
+                </Animated.Text>
+              </TouchableOpacity>
+            </Tooltip>
+          </View>
+        );
+      })}
       {/* </View> */}
     </View>
   );

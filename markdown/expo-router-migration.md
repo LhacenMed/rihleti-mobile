@@ -98,7 +98,7 @@ export const CustomTabs = withLayoutContext<
 ### 3.1 Create New App Structure
 Move and restructure your files according to Expo Router conventions:
 
-```
+```md
 app/
 ├── _layout.tsx                 (Root layout - replaces App.tsx logic)
 ├── index.tsx                   (Landing/Welcome screen)

@@ -10,15 +10,13 @@ import Button from "@/components/ui/button";
 import * as z from "zod";
 import { useTheme } from "@/contexts/ThemeContext";
 
-interface Props {
-  navigation?: any;
-}
+import { router } from "expo-router";
 
 // Login validation schemas
 const emailSchema = z.string().email({ message: "Invalid email address" });
 const passwordSchema = z.string().min(1, { message: "Password is required" });
 
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
+const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPasswordScreen, setShowPasswordScreen] = useState<boolean>(false);
@@ -86,7 +84,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       console.log("Send OTP to:", email);
 
       // Navigate to OTP verification screen
-      // navigation?.navigate("VerifyOTP", { email });
+      router.push({
+        pathname: "/(auth)/verify-otp",
+        params: { email },
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         Alert.alert("Validation Error", error.message);
@@ -117,8 +118,8 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const handleBackPress = (): void => {
     if (showPasswordScreen) {
       setShowPasswordScreen(false);
-    } else if (navigation) {
-      navigation.goBack();
+    } else {
+      router.back();
     }
   };
 

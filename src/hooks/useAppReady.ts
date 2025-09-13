@@ -15,7 +15,7 @@ export const useAppReady = () => {
   // Add timeout to prevent infinite loading
   useEffect(() => {
     const timeout = setTimeout(() => {
-      console.warn("App initialization timeout - forcing ready state");
+      // console.warn("App initialization timeout - forcing ready state");
       setIsReady(true);
     }, 10000); // 10 second timeout
 
@@ -35,11 +35,11 @@ export const useAppReady = () => {
   useEffect(() => {
     const prepareApp = async () => {
       try {
-        console.log("App initialization started", { fontsLoaded, authLoading, fontError });
+        // console.log("App initialization started", { fontsLoaded, authLoading, fontError });
 
         // Wait for all resources to be ready
         if (!fontsLoaded || authLoading) {
-          console.log("Waiting for resources...", { fontsLoaded, authLoading });
+          // console.log("Waiting for resources...", { fontsLoaded, authLoading });
           return;
         }
 
@@ -57,7 +57,7 @@ export const useAppReady = () => {
         // Small delay to ensure smooth transition
         await new Promise((resolve) => setTimeout(resolve, 100));
 
-        console.log("App initialization completed successfully");
+        // console.log("App initialization completed successfully");
         setIsReady(true);
       } catch (error) {
         console.error("App initialization error:", error);

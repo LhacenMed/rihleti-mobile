@@ -4,6 +4,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { router } from "expo-router";
 // import { Location } from "@/types/location";
 
 type LocationInputsProps = {
@@ -17,7 +18,7 @@ const LocationInputs = ({
   onDestinationPress,
   onLocationsChange,
 }: LocationInputsProps) => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const animatedBgFrom = useRef(new Animated.Value(0)).current;
   const animatedBgTo = useRef(new Animated.Value(0)).current;
   const [departureCityName, setDepartureCityName] = useState<string | null>(null);
@@ -183,12 +184,14 @@ const LocationInputs = ({
 
   const handleDepartureInputPress = () => {
     onDeparturePress?.();
-    navigation.navigate("DepartureLocation" as never);
+    // navigation.navigate("DepartureLocation" as never);
+    router.push("/(app)/departure-location");
   };
 
   const handleDestinationInputPress = () => {
     onDestinationPress?.();
-    navigation.navigate("DestinationLocation" as never);
+    // navigation.navigate("DestinationLocation" as never);
+    router.push("/(app)/destination-location");
   };
 
   const handleSwapPressIn = () => {

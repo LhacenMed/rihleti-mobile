@@ -19,11 +19,11 @@ const Settings = () => {
   const backgroundColor = isDark ? "#171717" : "rgb(249, 249, 249)";
 
   const navigateToAccount = () => {
-    navigation.navigate("Account" as never);
+    navigation.navigate("account" as never);
   };
 
   const navigateToPreferences = () => {
-    navigation.navigate("Preferences" as never);
+    navigation.navigate("preferences" as never);
   };
 
   const handleLogout = async () => {

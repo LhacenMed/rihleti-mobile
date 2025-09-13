@@ -1,7 +1,6 @@
 import { useRef, useCallback, useState } from "react";
 import { Platform, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { router } from "expo-router";
 import LocationInputs from "@/components/blocks/location-inputs";
 import SafeContainer from "@/components/SafeContainer";
 import EmailBottomSheet from "@/components/blocks/email-bottom-sheet";
@@ -12,17 +11,7 @@ import { showSearchModal } from "@/components/blocks/search-modal";
 import { Loader } from "@/components/ui/loader";
 import { useTheme } from "@/contexts/ThemeContext";
 
-type RootStackParamList = {
-  Trips: {
-    departure: string;
-    destination: string;
-  };
-};
-
-type NavigationProp = StackNavigationProp<RootStackParamList>;
-
 export default function Page() {
-  const navigation = useNavigation<NavigationProp>();
   const locationBottomSheetRef = useRef<BottomSheetModal>(null);
   const [departureLocation, setDepartureLocation] = useState<string | null>(null);
   const [destinationLocation, setDestinationLocation] = useState<string | null>(null);
@@ -48,11 +37,10 @@ export default function Page() {
     }
 
     // Navigate to trips screen
-    navigation.navigate("Trips", {
-      departure: departureLocation,
-      destination: destinationLocation,
+    router.push({
+      pathname: `/(app)/trips/${departureLocation}/${destinationLocation}`,
     });
-  }, [departureLocation, destinationLocation, navigation]);
+  }, [departureLocation, destinationLocation]);
 
   return (
     <SafeContainer className="px-4 pt-10" style={{ paddingTop: Platform.OS === "ios" ? 10 : 0 }}>

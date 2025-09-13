@@ -2,19 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import Toast from "react-native-toast-message";
 import { verifyOtp } from "../../utils/auth-helpers";
+import { useLocalSearchParams, router } from "expo-router";
 
-interface VerifyOTPScreenProps {
-  route: {
-    params: {
-      email: string;
-      name: string;
-    };
-  };
-  navigation: any;
-}
-
-export default function VerifyOTPScreen({ route, navigation }: VerifyOTPScreenProps) {
-  const { email, name } = route.params;
+export default function VerifyOTPScreen() {
+  const { email, name } = useLocalSearchParams();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const inputRefs = useRef<TextInput[]>([]);
@@ -124,7 +115,7 @@ export default function VerifyOTPScreen({ route, navigation }: VerifyOTPScreenPr
           <Text style={styles.buttonText}>{loading ? "Verifying..." : "Verify Email"}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.editButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.editButton} onPress={() => router.back()}>
           <Text style={styles.editButtonText}>Edit Email Address</Text>
         </TouchableOpacity>
       </View>

@@ -21,9 +21,7 @@ import { GoogleLogo, RihletiLogo } from "@/components/icons";
 import SafeContainer from "@/components/SafeContainer";
 import { useAnimatedKeyboard } from "react-native-reanimated";
 
-interface Props {
-  navigation: any;
-}
+import { router } from "expo-router";
 
 const LinkText = ({ children, onPress }: { children: React.ReactNode; onPress: () => void }) => {
   const [pressed, setPressed] = useState(false);
@@ -45,22 +43,22 @@ const LinkText = ({ children, onPress }: { children: React.ReactNode; onPress: (
   );
 };
 
-export default function WelcomeScreen({ navigation }: Props) {
+export default function WelcomeScreen() {
   const emailBottomSheetRef = useRef<BottomSheetModal>(null);
 
   const handlePresentEmailModal = useCallback(() => {
     emailBottomSheetRef.current?.present();
   }, []);
 
-  const handleEmailSubmit = useCallback(
-    (email: string) => {
-      console.log("Email submitted:", email);
-      emailBottomSheetRef.current?.dismiss();
-      // Navigate to next screen or handle email submission
-      navigation.navigate("SignUp", { email });
-    },
-    [navigation]
-  );
+  const handleEmailSubmit = useCallback((email: string) => {
+    console.log("Email submitted:", email);
+    emailBottomSheetRef.current?.dismiss();
+    // Navigate to next screen or handle email submission
+    router.push({
+      pathname: "/(auth)/signup",
+      params: { email },
+    });
+  }, []);
 
   return (
     <SafeContainer>
@@ -68,7 +66,7 @@ export default function WelcomeScreen({ navigation }: Props) {
       <View className="absolute right-4 top-0">
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("SettingsTest");
+            router.push("/(app)/settings-test");
           }}
         >
           <Text className="text-base font-medium text-muted-foreground">Skip</Text>
@@ -84,7 +82,7 @@ export default function WelcomeScreen({ navigation }: Props) {
       <View className="px-6 pb-12">
         {/* Sign up free Button */}
         <View className="mb-4">
-          <Button variant="default" onPress={() => navigation.navigate("SignUp")}>
+          <Button variant="default" onPress={() => router.push("/(auth)/signup")}>
             <Text className="text-md text-white">Sign up free</Text>
           </Button>
         </View>
@@ -101,7 +99,7 @@ export default function WelcomeScreen({ navigation }: Props) {
         <View className="mb-8">
           <Button
             variant="outline"
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => router.push("/(auth)/login")}
             textClassName="text-white"
           >
             <Text className="text-md ml-4 text-foreground">Continue with email</Text>
@@ -116,9 +114,12 @@ export default function WelcomeScreen({ navigation }: Props) {
             </Text>
             <LinkText
               onPress={() =>
-                navigation.navigate("WebView", {
-                  link: "https://rihleti.vercel.app/legal/terms-of-service",
-                  title: "Terms of Use",
+                router.push({
+                  pathname: "/webview",
+                  params: {
+                    link: "https://rihleti.vercel.app/legal/terms-of-service",
+                    title: "Terms of Use",
+                  },
                 })
               }
             >
@@ -127,9 +128,12 @@ export default function WelcomeScreen({ navigation }: Props) {
             <Text className="text-center text-sm leading-5 text-gray-400"> and </Text>
             <LinkText
               onPress={() =>
-                navigation.navigate("WebView", {
-                  link: "https://rihleti.vercel.app/legal/privacy-policy",
-                  title: "Privacy Policy",
+                router.push({
+                  pathname: "/webview",
+                  params: {
+                    link: "https://rihleti.vercel.app/legal/privacy-policy",
+                    title: "Privacy Policy",
+                  },
                 })
               }
             >

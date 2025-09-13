@@ -1,13 +1,9 @@
 import React from "react";
 import { Text, View, Button, TouchableOpacity } from "react-native";
-import { NavigationProp } from "@react-navigation/native";
+import { router } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@/components/ui/modal";
-
-interface RouterProps {
-  navigation: NavigationProp<any, any>;
-}
 
 // Helper function to show the logout confirmation modal
 const showLogoutModal = (onConfirmLogout: () => void) => {
@@ -36,23 +32,24 @@ const showLogoutModal = (onConfirmLogout: () => void) => {
   });
 };
 
-const Page = ({ navigation }: RouterProps) => {
+const Page = () => {
+  // const router = useRouter();
   const { signOut } = useAuth();
 
   const navigateToSplash = () => {
-    navigation.navigate("Splash");
+    router.push("/(auth)/welcome");
   };
   const navigateToWelcomeScreen = () => {
-    navigation.navigate("WelcomeScreen");
+    router.push("/(auth)/welcome");
   };
   const navigateToLoginScreenTest = () => {
-    navigation.navigate("LoginScreenTest");
+    router.push("/(auth)/login");
   };
   const navigateToSettingsScreenTest = () => {
-    navigation.navigate("SettingsTest");
+    router.push("/settings-test");
   };
   const navigateToTrips = () => {
-    navigation.navigate("TripsScreen");
+    router.push("/(app)/trips");
   };
   const clearOnboarding = async () => {
     try {
@@ -67,10 +64,7 @@ const Page = ({ navigation }: RouterProps) => {
       // await FIREBASE_AUTH.signOut();
       // await AsyncStorage.setItem("@viewedOnboarding", "true");
       await signOut();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "WelcomeScreen" }],
-      });
+      router.replace("/(auth)/welcome");
     } catch (error) {
       console.error("Error during logout", error);
     }

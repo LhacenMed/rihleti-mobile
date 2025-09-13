@@ -1,11 +1,11 @@
 import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { ThemeDemo } from "../../components/ThemeDemo";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 const Bookings = () => {
-  const navigation = useNavigation();
+  // const router = useRouter();
 
   return (
     <ScrollView className="flex-1 bg-background">
@@ -19,8 +19,7 @@ const Bookings = () => {
 
         <TouchableOpacity
           className="mb-6 flex-row items-center rounded-lg border border-border bg-card p-4"
-          // @ts-ignore
-          onPress={() => navigation.navigate("Messages")}
+          onPress={() => router.push("/(app)/messages")}
         >
           <Ionicons name="chatbubbles-outline" size={24} color="#64748b" />
           <Text className="ml-3 text-lg text-foreground">Messages</Text>

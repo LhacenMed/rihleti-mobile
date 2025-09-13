@@ -5,8 +5,7 @@ import TripCard from "@/components/blocks/trip-card";
 import { fetchTripsByLocations, fetchTripsByExactLocations } from "@/utils/trips-service";
 import { TripWithRoute } from "@/types/trips";
 // import Loader from "@/components/ui/loader";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { router } from "expo-router";
 import { Button, ProgressBar } from "react-native-paper";
 // import { LinearProgress } from "react-native-elements";
 import TripCardSkeleton from "@/components/blocks/trip-card-skeleton";
@@ -32,7 +31,6 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const navigation = useNavigation<StackNavigationProp<any>>();
   const { isDark } = useTheme();
 
   const fetchTrips = async () => {
@@ -62,7 +60,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
 
   const handleTripPress = (trip: TripWithRoute) => {
     // Navigate to trip details screen with trip ID
-    navigation.navigate("TripDetails", { tripId: trip.id });
+    router.push(`/(app)/trip-details/${trip.id}`);
   };
 
   const renderContent = () => {
@@ -215,7 +213,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
         //   />
         // ),
         showBackButton: true,
-        onBackPress: () => navigation.goBack(),
+        onBackPress: () => router.back(),
       }}
     >
       {loading ? (

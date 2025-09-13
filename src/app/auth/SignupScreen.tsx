@@ -10,12 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/contexts/ThemeContext";
 import * as z from "zod";
+import { router } from "expo-router";
 
-interface SignupScreenProps {
-  navigation: any; // Replace with proper navigation type
-}
-
-export default function SignupScreen({ navigation }: SignupScreenProps) {
+export default function SignupScreen() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -91,9 +88,12 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
       });
 
       // Navigate to OTP verification screen
-      navigation.navigate("VerifyOTP", {
-        email: email,
-        name: name,
+      router.push({
+        pathname: "/(auth)/verify-otp",
+        params: {
+          email: email,
+          name: name,
+        },
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -120,9 +120,7 @@ export default function SignupScreen({ navigation }: SignupScreenProps) {
   };
 
   const handleBackPress = (): void => {
-    if (navigation) {
-      navigation.goBack();
-    }
+    router.back();
   };
 
   const isFormValid = name && email && password;

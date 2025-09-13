@@ -1,7 +1,10 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
 
-const config = getDefaultConfig(__dirname);
+const config = getDefaultConfig(__dirname, {
+    // Enable CSS support
+    isCSSEnabled: true,
+});
 
 // Add SVG transformer
 const { transformer, resolver } = config;

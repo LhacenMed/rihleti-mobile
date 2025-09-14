@@ -19,7 +19,7 @@ export default function AuthLayout() {
         name="login"
         options={{
           headerShown: false,
-          animation: "ios_from_right",
+          // animation: "ios_from_right",
         }}
       />
       <Stack.Screen name="signup" />

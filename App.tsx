@@ -6,7 +6,6 @@ import "@/utils/haptic"; // Initialize global haptic function
 
 // React and React Native core
 import { View, TouchableOpacity, Text } from "react-native";
-// import changeNavigationBarColor from "react-native-navigation-bar-color";
 
 // Expo
 import { StatusBar } from "expo-status-bar";

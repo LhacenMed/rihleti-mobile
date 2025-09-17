@@ -13,7 +13,14 @@ const Bookings = () => {
   };
 
   return (
-    <SafeContainer>
+    <SafeContainer
+      header={{
+        title: "Bookings",
+        // showBackButton: true,
+        // rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
+        // onBackPress: () => navigation.goBack(),
+      }}
+    >
       <ScrollView className="flex-1 bg-background">
         <View className="p-4">
           <View className="mb-6 rounded-lg border border-border bg-card p-4">

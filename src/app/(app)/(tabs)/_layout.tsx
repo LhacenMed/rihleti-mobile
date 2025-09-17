@@ -1,8 +1,9 @@
 import { Tabs } from "expo-router";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useFeatures } from "@/contexts/FeaturesContext";
+import { BlurView } from "expo-blur";
 
 // Import your custom tab icons
 import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
@@ -53,46 +54,54 @@ export default function TabLayout() {
       // tabBarStyle={{ backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)", }}
       // tabBarActiveTintColor={isDark ? "#fff" : "#000"}
       // tabBarInactiveTintColor={isDark ? "#666" : "#999"}
-      screenOptions={
-        {
-          headerShown: false,
-          // headerStyle: {
-          //   backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-          //   elevation: 0,
-          //   shadowOpacity: 0,
-          //   borderBottomWidth: 1,
-          //   borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-          //   height: 90,
-          // },
-          // headerTitleStyle: {
-          //   fontWeight: "bold",
-          //   fontSize: 20,
-          //   color: isDark ? "#fff" : "#000",
-          // },
-          // headerLeft: () => null,
-          // headerRight: () => <HeaderRight />,
-          tabBarStyle: {
-            position: "relative",
-            backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-            borderTopColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-            borderTopWidth: 1,
-            paddingVertical: 10,
-          },
-          tabBarActiveTintColor: isDark ? "#fff" : "#000",
-          tabBarInactiveTintColor: isDark ? "#666" : "#999",
-          tabBarShowLabel: false,
-          // tabBarPressColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-        }
-      }
+      screenOptions={{
+        headerShown: false,
+        // headerStyle: {
+        //   backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+        //   elevation: 0,
+        //   shadowOpacity: 0,
+        //   borderBottomWidth: 1,
+        //   borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+        //   height: 90,
+        // },
+        // headerTitleStyle: {
+        //   fontWeight: "bold",
+        //   fontSize: 20,
+        //   color: isDark ? "#fff" : "#000",
+        // },
+        // headerLeft: () => null,
+        // headerRight: () => <HeaderRight />,
+        tabBarStyle: {
+          position: "absolute",
+          backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
+          // backgroundColor: "transparent",
+          borderTopColor: isDark ? "hsl(0 0% 25%)" : "hsl(0 0% 90%)",
+          borderTopWidth: 1,
+          // paddingVertical: 10,
+        },
+        tabBarActiveTintColor: isDark ? "#fff" : "#000",
+        tabBarInactiveTintColor: isDark ? "#666" : "#999",
+        tabBarShowLabel: false,
+        // tabBarPressColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+        // tabBarBackground: () => (
+        //   <View style={StyleSheet.absoluteFill}>
+        //     <BlurView
+        //       intensity={80}
+        //       tint={isDark ? "dark" : "light"}
+        //       style={StyleSheet.absoluteFill}
+        //       experimentalBlurMethod="dimezisBlurView"
+        //     />
+        //     <View style={StyleSheet.absoluteFill} pointerEvents="none" />
+        //   </View>
+        // ),
+      }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
           headerTitle: "Home",
-          tabBarIcon: ({ focused }) => (
-            <HomeIcon isFocused={focused} width={24} height={24} />
-          ),
+          tabBarIcon: ({ focused }) => <HomeIcon isFocused={focused} width={24} height={24} />,
           // tabBarIcon: () => ({ sfSymbol: "house" }),
           // tabBarIcon: ({ focused }) =>
           //   focused
@@ -105,9 +114,7 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           headerTitle: "Explore",
-          tabBarIcon: ({ focused }) => (
-            <ExploreIcon isFocused={focused} width={24} height={24} />
-          ),
+          tabBarIcon: ({ focused }) => <ExploreIcon isFocused={focused} width={24} height={24} />,
           // tabBarIcon: () => ({ sfSymbol: "house" }),
           // tabBarIcon: ({ focused }) =>
           //   focused
@@ -120,9 +127,7 @@ export default function TabLayout() {
         options={{
           title: "Bookings",
           headerTitle: "Bookings",
-          tabBarIcon: ({ focused }) => (
-            <BookingsIcon isFocused={focused} width={24} height={24} />
-          ),
+          tabBarIcon: ({ focused }) => <BookingsIcon isFocused={focused} width={24} height={24} />,
           // tabBarIcon: () => ({ sfSymbol: "house" }),
           // tabBarIcon: ({ focused }) =>
           //   focused
@@ -135,9 +140,7 @@ export default function TabLayout() {
         options={{
           title: "Settings",
           headerTitle: "Settings",
-          tabBarIcon: ({ focused }) => (
-            <SettingsIcon isFocused={focused} width={24} height={24} />
-          ),
+          tabBarIcon: ({ focused }) => <SettingsIcon isFocused={focused} width={24} height={24} />,
           // tabBarIcon: () => ({ sfSymbol: "house" }),
           // tabBarIcon: ({ focused }) =>
           //   focused

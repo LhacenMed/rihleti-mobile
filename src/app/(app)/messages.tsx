@@ -4,24 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import SafeContainer from "@/components/SafeContainer";
 // import DropdownMenu from "@/components/blocks/dropdown-menu";
 import { BlurView } from "expo-blur";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  runOnJS,
-} from "react-native-reanimated";
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 const Messages = () => {
-  const navigation = useNavigation();
-
-  // Animated values for BlurView position
-  const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
-  const scale = useSharedValue(1);
-
   // Sample messages data
   const messages = [
     {
@@ -60,51 +44,13 @@ const Messages = () => {
     { key: "starred", title: "Starred", icon: "star", iconAndroid: "star" },
   ];
 
-  // Gesture handler for pan gestures
-  const pan = Gesture.Pan()
-    .onStart(() => {
-      scale.value = withSpring(1.05); // Slightly scale up when dragging starts
-    })
-    .onUpdate((event) => {
-      translateX.value = event.translationX;
-      translateY.value = event.translationY;
-    })
-    .onEnd((event) => {
-      scale.value = withSpring(1); // Scale back to normal when dragging ends
-
-      // Optional: Add boundary constraints or snap back to center
-      // You can uncomment and modify these lines to add boundaries
-      /*
-      const maxX = 100; // Adjust based on your screen width
-      const maxY = 200; // Adjust based on your screen height
-      
-      if (Math.abs(translateX.value) > maxX) {
-        translateX.value = withSpring(translateX.value > 0 ? maxX : -maxX);
-      }
-      if (Math.abs(translateY.value) > maxY) {
-        translateY.value = withSpring(translateY.value > 0 ? maxY : -maxY);
-      }
-      */
-    });
-
-  // Animated style for the BlurView
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: translateX.value },
-        { translateY: translateY.value },
-        { scale: scale.value },
-      ],
-    };
-  });
-
   return (
     <SafeContainer
       header={{
         title: "Messages",
         showBackButton: true,
         // rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
-        onBackPress: () => navigation.goBack(),
+        // onBackPress: () => navigation.goBack(),
       }}
     >
       <ScrollView>
@@ -114,7 +60,7 @@ const Messages = () => {
             <Text className="text-muted-foreground">You have 2 unread messages</Text>
           </View>
 
-          <View
+          {/* <View
             style={{
               position: "absolute",
               top: 0,
@@ -157,7 +103,7 @@ const Messages = () => {
                 </View>
               </AnimatedBlurView>
             </GestureDetector>
-          </View>
+          </View> */}
 
           {messages.map((message) => (
             <TouchableOpacity

@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import "../../global.css";
 import "@/utils/haptic";
 
-import { Stack } from "expo-router";
+import { withLayoutContext } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -15,6 +15,10 @@ import { toastConfig } from "@/components/ui/toast";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { FeaturesProvider } from "@/contexts/FeaturesContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
+
+const { Navigator } = createStackNavigator();
+const RootStack = withLayoutContext(Navigator);
 
 export default function RootLayout() {
   return (
@@ -27,31 +31,38 @@ export default function RootLayout() {
                 <ModalPresenterParent>
                   <BottomSheetModalProvider>
                     <StatusBar style="auto" translucent />
-                    <Stack screenOptions={{ headerShown: false }}>
-                      <Stack.Screen name="index" />
-                      <Stack.Screen name="(auth)" />
-                      <Stack.Screen name="(app)" />
-                      <Stack.Screen 
-                        name="settings-test" 
-                        options={{ 
+                    <RootStack
+                      screenOptions={{
+                        headerShown: false,
+                        ...TransitionPresets.SlideFromRightIOS,
+                        gestureEnabled: true,
+                      }}
+                    >
+                      <RootStack.Screen name="index" />
+                      <RootStack.Screen name="(auth)" />
+                      <RootStack.Screen name="(app)" />
+                      <RootStack.Screen
+                        name="settings-test"
+                        options={{
                           presentation: "modal",
-                          headerShown: false 
-                        }} 
+                          headerShown: false,
+                        }}
                       />
-                      <Stack.Screen 
-                        name="recording" 
-                        options={{ 
-                          headerShown: false 
-                        }} 
+                      <RootStack.Screen
+                        name="recording"
+                        options={{
+                          headerShown: false,
+                        }}
                       />
-                      <Stack.Screen 
-                        name="webview" 
-                        options={{ 
+                      <RootStack.Screen
+                        name="webview"
+                        options={{
                           presentation: "modal",
-                          headerShown: false 
-                        }} 
+                          headerShown: false,
+                          ...TransitionPresets.ModalPresentationIOS,
+                        }}
                       />
-                    </Stack>
+                    </RootStack>
                     <Toast
                       config={toastConfig}
                       position="top"

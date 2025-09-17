@@ -30,10 +30,11 @@ import {
   StyleProp,
   Platform,
   Animated,
-  ActivityIndicator,
+  // ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Loader } from "@/components/ui/loader";
+import { Button } from "react-native-paper";
 
 interface MenuItemProps {
   icon?: string;
@@ -83,8 +84,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const backgroundColor = isDark ? "#1E1E1E" : "#ffffff";
-  const dimBackgroundColor = isDark ? "#2A2A2A" : "rgb(241, 241, 241)";
-  const dangerDimBackgroundColor = isDark ? "#2A1F1F" : "#FFE8E8";
+  const dimBackgroundColor = isDark ? "rgba(225, 225, 225, 0.12)" : "rgba(0, 0, 0, 0.12)";
+  const dangerDimBackgroundColor = isDark ? "rgba(255, 69, 69, 0.18)" : "rgba(255, 69, 69, 0.18)";
   const borderBottomColor = isDark ? "#404040" : "rgb(210, 210, 210)";
   const normalTextColor = isDark ? "#ffffff" : "#171717";
   const dangerTextColor = isDark ? "#FF4545" : "#FF4545";
@@ -140,6 +141,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
             : {
                 color: rippleColor,
                 borderless: false,
+                foreground: true
               }
         }
       >

@@ -1,6 +1,7 @@
-import { Stack } from "expo-router";
+import { withLayoutContext } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Redirect } from "expo-router";
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 
 export default function AuthLayout() {
   const { user } = useAuth();
@@ -10,20 +11,26 @@ export default function AuthLayout() {
     return <Redirect href="/(app)/(tabs)" />;
   }
 
+  const { Navigator } = createStackNavigator();
+  const AuthStack = withLayoutContext(Navigator);
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name="welcome"
-      />
-      <Stack.Screen
+    <AuthStack
+      screenOptions={{
+        headerShown: false,
+        ...TransitionPresets.SlideFromRightIOS,
+        gestureEnabled: true,
+      }}
+    >
+      <AuthStack.Screen name="welcome" />
+      <AuthStack.Screen
         name="login"
         options={{
           headerShown: false,
-          // animation: "ios_from_right",
         }}
       />
-      <Stack.Screen name="signup" />
-      <Stack.Screen name="verify-otp" />
-    </Stack>
+      <AuthStack.Screen name="signup" />
+      <AuthStack.Screen name="verify-otp" />
+    </AuthStack>
   );
 }

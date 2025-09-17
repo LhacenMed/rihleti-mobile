@@ -22,6 +22,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
 // import { StatusBar } from "expo-status-bar";
 
 interface HeaderProps {
@@ -58,7 +59,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
     if (header?.onBackPress) {
       header.onBackPress();
     } else {
-      navigation.goBack();
+      router.back();
     }
   };
 
@@ -81,7 +82,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
               justifyContent: "space-between",
               paddingHorizontal: 16,
               paddingVertical: 12,
-              // marginBottom: 16,
+              marginBottom: header.bottomComponent ? 0 : -10,
             }}
           >
             {/* Left Section */}
@@ -132,7 +133,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
 
           {/* Optional bottom component below header row */}
           {header.bottomComponent && (
-            <View style={{ paddingBottom: 12 }}>{header.bottomComponent}</View>
+            <View>{header.bottomComponent}</View>
           )}
         </SafeAreaView>
 

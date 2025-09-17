@@ -9,6 +9,7 @@ import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@/components/ui/modal";
 import { showThemeSwitchModal } from "@/components/blocks/theme-switch-modal";
 import Constants from "expo-constants";
+import SafeContainer from "@/components/SafeContainer";
 
 const Settings = () => {
   const [logoutLoading, setLogoutLoading] = useState(false);
@@ -78,18 +79,24 @@ const Settings = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <SafeContainer
+      header={{
+        title: "Settings",
+        // showBackButton: true,
+        // rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
+        // onBackPress: () => navigation.goBack(),
+      }}
+    >
       <ScrollView
-        style={[styles.scrollViewContainer, { backgroundColor }]}
-        contentContainerStyle={{ paddingTop: 20 }}
+        // style={[styles.scrollViewContainer]}
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: 70 }}
         showsVerticalScrollIndicator={false}
         // scrollEnabled
       >
         {/* Theme Section */}
         {/* <View className="mb-8 px-4">
-          <ThemeSwitcher />
-        </View> */}
-
+            <ThemeSwitcher />
+          </View> */}
         {/* Profile Section */}
         <MenuGroup title="Profile">
           <MenuItem
@@ -176,7 +183,7 @@ const Settings = () => {
           Version {Constants.expoConfig?.version || "1.0.0"}
         </Text>
       </ScrollView>
-    </View>
+    </SafeContainer>
   );
 };
 

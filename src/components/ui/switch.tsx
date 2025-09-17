@@ -237,7 +237,9 @@ export const Switch = forwardRef<SwitchRef, SwitchProps>(
         const newValue = translateX.value > midpoint;
 
         translateX.value = withSpring(isOn ? switchWidth - thumbSize - padding : 0, springConfig);
-        runOnJS(handleValueChange)(newValue);
+        if (newValue !== isOn) {
+          runOnJS(handleValueChange)(newValue);
+        }
       })
       .onFinalize(() => {
         isDragging.value = false;

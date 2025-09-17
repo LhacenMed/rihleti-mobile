@@ -36,7 +36,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   const fetchTrips = async () => {
     try {
       setLoading(true);
-      await new Promise((r) => setTimeout(r, 3000));
+      // await new Promise((r) => setTimeout(r, 3000));
       setError(null);
       const fetchedTrips = await fetchTripsByExactLocations(departure, destination);
       setTrips(fetchedTrips);

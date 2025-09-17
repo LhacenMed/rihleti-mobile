@@ -1,5 +1,5 @@
 import { useRef, useCallback, useState } from "react";
-import { Platform, Text } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { router } from "expo-router";
 import LocationInputs from "@/components/blocks/location-inputs";
 import SafeContainer from "@/components/SafeContainer";
@@ -43,33 +43,38 @@ export default function Home() {
   }, [departureLocation, destinationLocation]);
 
   return (
-    <SafeContainer className="px-4 pt-10" style={{ paddingTop: Platform.OS === "ios" ? 10 : 0 }}>
-      <LocationInputs onLocationsChange={handleLocationsChange} />
-
-      {/* Search Button */}
-      <Button className="items-center rounded-2xl bg-[#FF5A1F] p-4" onPress={handleSearchPress}>
-        <Text className="font-outfit-bold text-base text-white">Search</Text>
-      </Button>
-
-      <Button
-        variant="outline"
-        className="mt-10"
-        // onPress={handlePresentEmailModal}
-        onPress={() => showSearchModal("Nouakchott", "Wad Naga")}
-      >
-        Departure
-      </Button>
-
-      {/* <Loader color={isDark ? "white" : "black"} /> */}
-
-      {/* Locations BottomSheet */}
-      <EmailBottomSheet
-        ref={locationBottomSheetRef}
-        onEmailSubmit={() => {}}
-        title="Continue with Email"
-        placeholder="Enter your email address"
-        buttonText="Continue"
-      />
+    <SafeContainer
+      header={{
+        title: "Home",
+        // showBackButton: true,
+        // rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
+        // onBackPress: () => navigation.goBack(),
+      }}
+    >
+      <View className="px-4 pt-10">
+        <LocationInputs onLocationsChange={handleLocationsChange} />
+        {/* Search Button */}
+        <Button className="items-center rounded-2xl bg-[#FF5A1F] p-4" onPress={handleSearchPress}>
+          <Text className="font-outfit-bold text-base text-white">Search</Text>
+        </Button>
+        <Button
+          variant="outline"
+          className="mt-10"
+          // onPress={handlePresentEmailModal}
+          onPress={() => showSearchModal("Nouakchott", "Wad Naga")}
+        >
+          Departure
+        </Button>
+        {/* <Loader color={isDark ? "white" : "black"} /> */}
+        {/* Locations BottomSheet */}
+        <EmailBottomSheet
+          ref={locationBottomSheetRef}
+          onEmailSubmit={() => {}}
+          title="Continue with Email"
+          placeholder="Enter your email address"
+          buttonText="Continue"
+        />
+      </View>
     </SafeContainer>
   );
 }

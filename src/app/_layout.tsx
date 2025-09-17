@@ -39,6 +39,12 @@ export default function RootLayout() {
                         }} 
                       />
                       <Stack.Screen 
+                        name="recording" 
+                        options={{ 
+                          headerShown: false 
+                        }} 
+                      />
+                      <Stack.Screen 
                         name="webview" 
                         options={{ 
                           presentation: "modal",

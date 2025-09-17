@@ -5,13 +5,14 @@ import {
   ViewStyle,
   // Platform,
   StatusBar,
-  SafeAreaView,
+  // SafeAreaView,
   Text,
   TouchableOpacity,
   TextStyle,
   // TouchableNativeFeedback,
   TouchableWithoutFeedback,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 // import { SparklesIcon as SparklesIconMicro } from "react-native-heroicons/micro";
 // // Old solid style from heroicons v1
 // import { SparklesIcon as SparklesIconMini } from "react-native-heroicons/mini";
@@ -68,7 +69,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
         <SafeAreaView
           style={[
             // { paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 },
-            { paddingTop: insets.top },
+            // { paddingTop: insets.top },
             header.headerStyle,
           ]}
           className="border-b border-border bg-card"
@@ -147,7 +148,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
       style={[
         {
           // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-          paddingTop: insets.top,
+          // paddingTop: insets.top,
         },
         style,
       ]}

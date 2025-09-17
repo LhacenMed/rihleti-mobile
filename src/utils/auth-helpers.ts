@@ -2,7 +2,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../lib/supabase";
 import Toast from "react-native-toast-message";
 
-const API_BASE_URL = "https://rihleti.vercel.app";
+// const API_BASE_URL = "https://rihleti.vercel.app";
+
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "https://rihleti.vercel.app";
 
 interface EmailVerificationResult {
   is_deliverable: boolean;

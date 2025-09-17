@@ -24,16 +24,24 @@ export default {
                     locationAlwaysAndWhenInUsePermission: "Allow Rihleti to use your location.",
                 },
             ],
+            "expo-font",
             "expo-asset",
             "expo-router",
-            // [
-            //     "expo-build-properties",
-            //     {
-            //         ios: {
-            //             useFrameworks: "static",
-            //         },
-            //     },
-            // ],
+            // "react-native-bottom-tabs",
+            [
+                "expo-build-properties",
+                {
+                    ios: {
+                        useFrameworks: "static",
+                    },
+                },
+            ],
+            [
+                "expo-audio",
+                {
+                    microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone.",
+                },
+            ],
         ],
 
         orientation: "portrait",
@@ -47,13 +55,13 @@ export default {
             backgroundColor: "#ffffff",
         },
 
-        // notification: {
-        //             icon: "./assets/notification-icon.png",
-        //             color: "#84cc16",
-        //             iosDisplayInForeground: true,
-        //             androidMode: "default",
-        //             androidCollapsedTitle: "Prayer Time",
-        //         },
+        notification: {
+            icon: "./src/assets/notification-icon.png",
+            color: "#84cc16",
+            iosDisplayInForeground: true,
+            androidMode: "default",
+            androidCollapsedTitle: "Prayer Time",
+        },
 
         assetBundlePatterns: ["**/*"],
 
@@ -69,11 +77,11 @@ export default {
             },
             package: "com.rihleti.app",
             edgeToEdgeEnabled: true,
-            // notification: {
-            //     icon: "./assets/notification-icon.png",
-            //     color: "#84cc16",
-            //     androidMode: "default",
-            // },
+            notification: {
+                icon: "./src/assets/notification-icon.png",
+                color: "#84cc16",
+                androidMode: "default",
+            },
         },
 
         extra: {

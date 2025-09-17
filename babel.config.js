@@ -12,6 +12,7 @@ module.exports = function(api) {
                     root: ["./src"],
                     alias: {
                         "@": ["./src"],
+                        "react-native-vector-icons": "@expo/vector-icons",
                     },
                 },
             ],

@@ -1,10 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../lib/supabase";
 import Toast from "react-native-toast-message";
-
-// const API_BASE_URL = "https://rihleti.vercel.app";
+import { StreamChat } from "stream-chat";
+import Constants from "expo-constants";
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "https://rihleti.vercel.app";
+const supabaseUrl = Constants.expoConfig?.extra?.supabaseUrl;
+const supabaseServiceRole = Constants.expoConfig?.extra?.supabaseServiceRole;
+const streamApiKey = Constants.expoConfig?.extra?.streamApiKey;
+const streamApiSecret = Constants.expoConfig?.extra?.streamApiSecret;
 
 interface EmailVerificationResult {
   is_deliverable: boolean;
@@ -12,7 +16,7 @@ interface EmailVerificationResult {
   status: string;
 }
 
-// Email verification using the deployed API
+// Email verification
 export async function verifyEmail(email: string): Promise<{ isValid: boolean; error?: string }> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/reoon?email=${encodeURIComponent(email)}`, {
@@ -20,9 +24,7 @@ export async function verifyEmail(email: string): Promise<{ isValid: boolean; er
       headers: { Accept: "application/json" },
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to verify email");
-    }
+    if (!response.ok) throw new Error("Failed to verify email");
 
     const data: EmailVerificationResult = await response.json();
 
@@ -48,7 +50,7 @@ export async function verifyEmail(email: string): Promise<{ isValid: boolean; er
   }
 }
 
-// Send verification email using the deployed API
+// Send verification email
 export async function sendVerificationEmail(
   email: string,
   password: string
@@ -62,7 +64,7 @@ export async function sendVerificationEmail(
         email,
         password,
         isPasswordReset: false,
-        origin: API_BASE_URL, // Important for proper redirect URLs
+        origin: API_BASE_URL,
       }),
     });
 
@@ -83,13 +85,12 @@ export async function sendVerificationEmail(
   }
 }
 
-// Verify OTP using the deployed API
+// Verify OTP, update metadata, and connect to Stream
 export async function verifyOtp(
   email: string,
   otp: string,
   name: string
 ): Promise<{ success: boolean; error?: string }> {
-  // Input validation
   if (!email || !email.includes("@")) {
     return { success: false, error: "Invalid email format" };
   }
@@ -98,7 +99,6 @@ export async function verifyOtp(
   }
 
   try {
-    // Use your existing Supabase client to verify OTP
     const { data, error } = await supabase.auth.verifyOtp({
       token: otp,
       email,
@@ -106,18 +106,18 @@ export async function verifyOtp(
     });
 
     if (error) throw error;
-
     const userId = data.user?.id;
-    if (!userId) throw new Error("User ID not found");
+    const accessToken = data.session?.access_token;
+    if (!userId || !accessToken) throw new Error("User ID or session not found");
 
-    // Update user metadata using the deployed API
+    // Update user metadata
     const updateResponse = await fetch(`${API_BASE_URL}/api/auth/update-user-metadata`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId,
         metadata: {
-          role: "client", // Default role
+          role: "client",
           name,
           onboarded: false,
           email_verified: true,
@@ -126,18 +126,71 @@ export async function verifyOtp(
       }),
     });
 
-    const result = await updateResponse.json();
     if (!updateResponse.ok) {
+      const result = await updateResponse.json();
       throw new Error(result.error || "Failed to update user metadata");
     }
 
-    // Clear stored verification data
+    // Fetch Stream token
+    const streamResponse = await fetch("/api/stream-chat-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+
+    if (!streamResponse.ok) {
+      throw new Error("Failed to fetch Stream token");
+    }
+    const { token, user } = await streamResponse.json();
+
+    // Connect Stream client
+    const client = StreamChat.getInstance(streamApiKey!);
+    await client.connectUser({ id: user.id, name: user.name, image: user.avatar }, token);
+
     await AsyncStorage.removeItem("verificationEmail");
     await AsyncStorage.removeItem("verificationTokenData");
 
     return { success: true };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Verification failed";
+    return { success: false, error: errorMessage };
+  }
+}
+
+// Login helper
+export async function loginWithEmail(
+  email: string,
+  password: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+
+    const accessToken = data.session?.access_token;
+    if (!accessToken) throw new Error("No access token returned");
+
+    // Call Stream API route
+    const streamResponse = await fetch("/api/stream-chat-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ access_token: accessToken }),
+    });
+
+    if (!streamResponse.ok) throw new Error("Failed to fetch Stream token");
+    const { token, user } = await streamResponse.json();
+    console.log("Stream token: ", token + ", User data: ", user)
+
+    // Connect Stream client
+    const client = StreamChat.getInstance(streamApiKey!);
+    await client.connectUser({ id: user.id, name: user.name, image: user.avatar }, token);
+
+    return { success: true };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Login failed";
     return { success: false, error: errorMessage };
   }
 }

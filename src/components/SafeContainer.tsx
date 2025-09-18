@@ -132,9 +132,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
           </View>
 
           {/* Optional bottom component below header row */}
-          {header.bottomComponent && (
-            <View>{header.bottomComponent}</View>
-          )}
+          {header.bottomComponent && <View>{header.bottomComponent}</View>}
         </SafeAreaView>
 
         {/* Content area */}

@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 import { Input } from "@/components/ui/input";
 import SafeContainer from "@/components/SafeContainer";
-import { supabase } from "@/lib/supabase";
-import { verifyEmail } from "@/utils/auth-helpers";
+// import { supabase } from "@/lib/supabase";
+import { verifyEmail, loginWithEmail } from "@/utils/auth-helpers";
 import Button from "@/components/ui/button";
 import * as z from "zod";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -13,7 +13,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { router } from "expo-router";
 
 // Login validation schemas
-const emailSchema = z.string().email({ message: "Invalid email address" });
+const emailSchema = z.email({ message: "Invalid email address" });
 const passwordSchema = z.string().min(1, { message: "Password is required" });
 
 const LoginScreen: React.FC = () => {
@@ -41,22 +41,22 @@ const LoginScreen: React.FC = () => {
       emailSchema.parse(email);
       passwordSchema.parse(password);
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Use the login helper which handles Supabase + Stream token
+      const { success, error } = await loginWithEmail(email, password);
 
-      if (error) {
-        Alert.alert("Login Failed", error.message);
+      if (!success) {
+        Alert.alert("Login Failed", error || "Unknown error");
         return;
       }
 
-      // Navigation will be handled by auth context
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        Alert.alert("Validation Error", error.message);
+      // Navigate to the main app/home screen
+      router.push("/(app)/(tabs)"); // replace with your actual home route
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        Alert.alert("Validation Error", err.message);
       } else {
         Alert.alert("Error", "Login failed. Please try again.");
+        console.error(err);
       }
     } finally {
       await new Promise((r) => setTimeout(r, 1000));

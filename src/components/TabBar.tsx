@@ -1,7 +1,8 @@
 import React from "react";
-import { View, TouchableOpacity, Animated, Dimensions } from "react-native";
+import { View, TouchableOpacity, Animated, Dimensions, StyleSheet, Platform } from "react-native";
 import { Tooltip } from "react-native-paper";
-// import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import { BlurView } from "expo-blur";
 import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
 import ExploreIcon from "@/components/icons/tab-icons/ExploreIcon";
 import BookingsIcon from "@/components/icons/tab-icons/BookingsIcon";
@@ -13,16 +14,12 @@ const { width: screenWidth } = Dimensions.get("window");
 
 interface TabBarProps {
   state: any;
-  // descriptors: any;
+  descriptors: any;
   navigation: any;
 }
 
-const TabBar: React.FC<TabBarProps> = ({
-  state,
-  // descriptors,
-  navigation,
-}) => {
-  // const { isDark } = useTheme();
+const TabBar: React.FC<TabBarProps> = ({ state, descriptors, navigation }) => {
+  const { isDark } = useTheme();
   const animatedValues = React.useRef(state.routes.map(() => new Animated.Value(0))).current;
 
   const animateTab = (index: number, focused: boolean) => {
@@ -45,12 +42,16 @@ const TabBar: React.FC<TabBarProps> = ({
     const iconProps = { isFocused, width: 24, height: 24 };
     switch (routeName) {
       case "Home":
+      case "index":
         return <HomeIcon {...iconProps} />;
       case "Explore":
+      case "explore":
         return <ExploreIcon {...iconProps} />;
       case "Bookings":
+      case "bookings":
         return <BookingsIcon {...iconProps} />;
       case "Settings":
+      case "settings":
         return <SettingsIcon {...iconProps} />;
       default:
         return <HomeIcon {...iconProps} />;
@@ -60,12 +61,16 @@ const TabBar: React.FC<TabBarProps> = ({
   const getTooltipText = (routeName: string) => {
     switch (routeName) {
       case "Home":
+      case "index":
         return "Home";
       case "Explore":
+      case "explore":
         return "Explore";
       case "Bookings":
+      case "bookings":
         return "Bookings";
       case "Settings":
+      case "settings":
         return "Settings";
       default:
         return routeName;
@@ -78,7 +83,39 @@ const TabBar: React.FC<TabBarProps> = ({
   // const tabBarHeight = 70 + insets.bottom; // Adjust based on your actual tab bar height
 
   return (
-    <View className="flex-row border-t border-border bg-card">
+    <View
+      className={
+        Platform.OS === "android"
+          ? "flex-row border-t border-border bg-card"
+          : "flex-row border-t border-border"
+      }
+      style={[
+        {
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 1000,
+        },
+        Platform.select({
+          ios: { backgroundColor: "transparent" },
+          android: undefined,
+          default: undefined,
+        }),
+      ]}
+    >
+      {Platform.OS === "ios" && (
+        <View style={StyleSheet.absoluteFill}>
+          <BlurView
+            intensity={80}
+            tint={isDark ? "dark" : "light"}
+            style={StyleSheet.absoluteFill}
+            // experimentalBlurMethod="dimezisBlurView"
+          />
+          <View style={StyleSheet.absoluteFill} pointerEvents="none" />
+        </View>
+      )}
+
       {/* <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 1000 }}> */}
 
       {/* Backdrop Blur Canvas - positioned to capture screen content behind */}
@@ -107,8 +144,12 @@ const TabBar: React.FC<TabBarProps> = ({
         }}
       > */}
       {state.routes.map((route: any, index: number) => {
-        // const { options } = descriptors[route.key];
+        const { options } = descriptors[route.key];
         const isFocused = state.index === index;
+        const label: string =
+          (typeof options.tabBarLabel === "string" && options.tabBarLabel) ||
+          (typeof options.title === "string" && options.title) ||
+          route.name;
 
         const onPress = () => {
           (global as any).hapticClick();
@@ -129,15 +170,12 @@ const TabBar: React.FC<TabBarProps> = ({
             style={{
               flex: 1,
               paddingVertical: 15,
+              paddingBottom: 25,
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Tooltip
-              title={getTooltipText(route.name)}
-              enterTouchDelay={500}
-              leaveTouchDelay={1000}
-            >
+            <Tooltip title={label} enterTouchDelay={500} leaveTouchDelay={1000}>
               <TouchableOpacity
                 onPress={onPress}
                 // className="flex-1 items-center justify-center py-2"
@@ -161,7 +199,7 @@ const TabBar: React.FC<TabBarProps> = ({
                     transform: [{ translateY: 4 }],
                   }}
                 >
-                  {route.name}
+                  {label}
                 </Animated.Text>
               </TouchableOpacity>
             </Tooltip>

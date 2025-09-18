@@ -10,6 +10,7 @@ export default {
         web: {
             favicon: "./src/assets/favicon.png",
             bundler: "metro",
+            output: "server",
         },
 
         experiments: {
@@ -25,8 +26,7 @@ export default {
                 },
             ],
             "expo-font",
-            "expo-asset",
-            "expo-router",
+            "expo-asset", ["expo-router", { origin: "https://rihleti.vercel.app" }],
             // "react-native-bottom-tabs",
             [
                 "expo-build-properties",
@@ -87,6 +87,9 @@ export default {
         extra: {
             supabaseUrl: process.env.SUPABASE_URL,
             supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+            supabaseServiceRole: process.env.SUPABASE_SERVICE_ROLE_KEY,
+            streamApiKey: process.env.STREAM_API_KEY,
+            streamApiSecret: process.env.STREAM_API_SECRET,
             // eas: {
             //     projectId: "6943ba63-1c3c-445f-8702-6f99899439b5",
             // },

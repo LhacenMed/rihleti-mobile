@@ -1,9 +1,16 @@
-import { Tabs } from "expo-router";
+import { withLayoutContext } from "expo-router";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useFeatures } from "@/contexts/FeaturesContext";
-import { BlurView } from "expo-blur";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import TabBar from "@/components/TabBar";
+
+// Import screens from this folder
+import Home from "./index";
+import Explore from "./explore";
+import Bookings from "./bookings";
+import Settings from "./settings";
 
 // Import your custom tab icons
 import HomeIcon from "@/components/icons/tab-icons/HomeIcon";
@@ -44,108 +51,70 @@ function HeaderRight() {
   );
 }
 
+// Set up Top Tabs wrapped for Expo Router
+const TopTabs = createMaterialTopTabNavigator();
+const Tabs = withLayoutContext(TopTabs.Navigator);
+
 export default function TabLayout() {
   const { isDark } = useTheme();
   const { swipeEnabled } = useFeatures();
 
   return (
     <Tabs
-      // disablePageAnimations
-      // tabBarStyle={{ backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)", }}
-      // tabBarActiveTintColor={isDark ? "#fff" : "#000"}
-      // tabBarInactiveTintColor={isDark ? "#666" : "#999"}
+      tabBarPosition="bottom"
+      initialRouteName="index"
+      tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
-        headerShown: false,
-        // headerStyle: {
-        //   backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-        //   elevation: 0,
-        //   shadowOpacity: 0,
-        //   borderBottomWidth: 1,
-        //   borderBottomColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-        //   height: 90,
-        // },
-        // headerTitleStyle: {
-        //   fontWeight: "bold",
-        //   fontSize: 20,
-        //   color: isDark ? "#fff" : "#000",
-        // },
-        // headerLeft: () => null,
-        // headerRight: () => <HeaderRight />,
         tabBarStyle: {
-          position: "absolute",
+          position: "relative",
           backgroundColor: isDark ? "hsl(0 0% 4%)" : "hsl(0 0% 100%)",
-          // backgroundColor: "transparent",
-          borderTopColor: isDark ? "hsl(0 0% 25%)" : "hsl(0 0% 90%)",
+          borderTopColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
           borderTopWidth: 1,
-          // paddingVertical: 10,
+          paddingVertical: 10,
         },
         tabBarActiveTintColor: isDark ? "#fff" : "#000",
-        tabBarInactiveTintColor: isDark ? "#666" : "#999",
+        tabBarShowIcon: true,
         tabBarShowLabel: false,
-        // tabBarPressColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
-        // tabBarBackground: () => (
-        //   <View style={StyleSheet.absoluteFill}>
-        //     <BlurView
-        //       intensity={80}
-        //       tint={isDark ? "dark" : "light"}
-        //       style={StyleSheet.absoluteFill}
-        //       experimentalBlurMethod="dimezisBlurView"
-        //     />
-        //     <View style={StyleSheet.absoluteFill} pointerEvents="none" />
-        //   </View>
-        // ),
+        tabBarIndicatorStyle: { display: "none" },
+        tabBarPressColor: isDark ? "hsl(0 0% 15%)" : "hsl(0 0% 90%)",
+        swipeEnabled,
+        animationEnabled: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          headerTitle: "Home",
-          tabBarIcon: ({ focused }) => <HomeIcon isFocused={focused} width={24} height={24} />,
-          // tabBarIcon: () => ({ sfSymbol: "house" }),
-          // tabBarIcon: ({ focused }) =>
-          //   focused
-          //     ? require("@/assets/icons/tab-icons/dark/home.png")
-          //     : require("@/assets/icons/tab-icons/dark/home-outlined.png"),
+          tabBarLabel: "Home",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <HomeIcon isFocused={focused} width={24} height={24} />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
-          headerTitle: "Explore",
-          tabBarIcon: ({ focused }) => <ExploreIcon isFocused={focused} width={24} height={24} />,
-          // tabBarIcon: () => ({ sfSymbol: "house" }),
-          // tabBarIcon: ({ focused }) =>
-          //   focused
-          //     ? require("@/assets/icons/tab-icons/dark/explore.png")
-          //     : require("@/assets/icons/tab-icons/dark/explore-outlined.png"),
+          tabBarLabel: "Explore",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <ExploreIcon isFocused={focused} width={24} height={24} />
+          ),
         }}
       />
       <Tabs.Screen
         name="bookings"
         options={{
-          title: "Bookings",
-          headerTitle: "Bookings",
-          tabBarIcon: ({ focused }) => <BookingsIcon isFocused={focused} width={24} height={24} />,
-          // tabBarIcon: () => ({ sfSymbol: "house" }),
-          // tabBarIcon: ({ focused }) =>
-          //   focused
-          //     ? require("@/assets/icons/tab-icons/dark/bookings.png")
-          //     : require("@/assets/icons/tab-icons/dark/bookings-outlined.png"),
+          tabBarLabel: "Bookings",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <BookingsIcon isFocused={focused} width={24} height={24} />
+          ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
-          headerTitle: "Settings",
-          tabBarIcon: ({ focused }) => <SettingsIcon isFocused={focused} width={24} height={24} />,
-          // tabBarIcon: () => ({ sfSymbol: "house" }),
-          // tabBarIcon: ({ focused }) =>
-          //   focused
-          //     ? require("@/assets/icons/tab-icons/dark/settings.png")
-          //     : require("@/assets/icons/tab-icons/dark/settings-outlined.png"),
+          tabBarLabel: "Settings",
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
+            <SettingsIcon isFocused={focused} width={24} height={24} />
+          ),
         }}
       />
     </Tabs>

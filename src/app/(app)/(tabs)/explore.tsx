@@ -14,6 +14,7 @@ import { showModal } from "@whitespectre/rn-modal-presenter";
 import Modal from "@/components/ui/modal";
 import * as Progress from "react-native-progress";
 import SafeContainer from "@/components/SafeContainer";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Helper function to show the logout confirmation modal
 const showLogoutModal = (onConfirmLogout: () => void) => {
@@ -95,14 +96,6 @@ const Explore = () => {
   };
 
   return (
-    <SafeContainer
-      header={{
-        title: "Explore",
-        // showBackButton: true,
-        // rightComponent: <DropdownMenu items={items} onSelect={() => {}} />,
-        // onBackPress: () => navigation.goBack(),
-      }}
-    >
       <View className="flex-1 bg-background">
         <View className="flex-1 items-center justify-center p-5">
           <Text className="mb-4 text-lg text-foreground">Explore Screen</Text>
@@ -126,7 +119,6 @@ const Explore = () => {
           <Progress.Circle indeterminate={true} size={60} style={{ marginTop: 20 }} />
         </View>
       </View>
-    </SafeContainer>
   );
 };
 

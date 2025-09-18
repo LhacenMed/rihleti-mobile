@@ -18,6 +18,10 @@ config.resolver = {
     ...resolver,
     assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
     sourceExts: [...resolver.sourceExts, "svg"],
+    platforms: ["ios", "android", "native", "web"],
+    alias: {
+        "@lottiefiles/dotlottie-react": require.resolve("@lottiefiles/dotlottie-react"),
+    },
 };
 
 module.exports = withNativeWind(config, { input: "./global.css" });

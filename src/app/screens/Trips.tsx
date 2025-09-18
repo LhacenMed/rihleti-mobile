@@ -7,6 +7,7 @@ import { TripWithRoute } from "@/types/trips";
 // import Loader from "@/components/ui/loader";
 import { router } from "expo-router";
 import { Button, ProgressBar } from "react-native-paper";
+import { LinearProgress } from "@expo/ui/jetpack-compose";
 // import { LinearProgress } from "react-native-elements";
 import TripCardSkeleton from "@/components/blocks/trip-card-skeleton";
 import { Ionicons } from "@expo/vector-icons";
@@ -146,7 +147,8 @@ export default function TripsScreen({ route }: TripsScreenProps) {
       </View>
       {loading && (
         <View className="absolute bottom-0 left-0 right-0">
-          <ProgressBar indeterminate color="red" style={{ backgroundColor: "transparent" }} />
+          {/* <ProgressBar indeterminate color="red" style={{ backgroundColor: "transparent" }} /> */}
+          <LinearProgress style={{ backgroundColor: "transparent" }} color="red" />
         </View>
       )}
     </TouchableOpacity>

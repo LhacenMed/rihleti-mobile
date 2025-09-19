@@ -25,21 +25,26 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 
-// SwipeableMessage component with gesture handling
-const SwipeableMessage = ({
+// Message component with gesture handling
+const Message = ({
   text,
   time,
   isSent,
+  isLast,
   onSwipeAction,
 }: {
   text: string;
   time: string;
   isSent: boolean;
+  isLast?: boolean;
   onSwipeAction: () => void;
 }) => {
   const { isDark } = useTheme();
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(1);
+
+  // Character threshold to determine layout (adjust as needed)
+  const CHAR_THRESHOLD = 30;
 
   // Maximum swipe distance (in pixels)
   const MAX_SWIPE_DISTANCE = 100;
@@ -47,6 +52,8 @@ const SwipeableMessage = ({
   const ACTION_THRESHOLD = MAX_SWIPE_DISTANCE * 0.7;
 
   const panGesture = Gesture.Pan()
+    .activeOffsetX([-10, 10]) // Only activate after 10px horizontal movement
+    .failOffsetY([-20, 20]) // Fail if vertical movement exceeds 20px
     .onUpdate((event) => {
       // Only allow left swipe (negative translation)
       const newTranslateX = Math.max(Math.min(event.translationX, 0), -MAX_SWIPE_DISTANCE);
@@ -94,62 +101,94 @@ const SwipeableMessage = ({
   });
 
   return (
-    <View className="relative my-1">
-      {/* Background indicator that appears during swipe */}
-      <Animated.View
-        style={backgroundIndicatorStyle}
-        className="absolute right-4 top-1/2 z-0 flex-row items-center"
-      >
-        <View className="rounded-full bg-primary/20 p-2">
-          <Ionicons name="arrow-undo-outline" size={16} color={isDark ? "white" : "black"} />
-        </View>
-        <Text className="ml-2 text-sm text-primary">Reply</Text>
-      </Animated.View>
-
-      {/* Message content with gesture detector */}
-      <GestureDetector gesture={panGesture}>
+    <GestureDetector gesture={panGesture}>
+      <View className="relative my-1">
+        {/* Background indicator that appears during swipe */}
         <Animated.View
-          style={animatedStyle}
+          style={backgroundIndicatorStyle}
+          className="absolute right-4 top-1/2 z-0 flex-row items-center"
+        >
+          <View className="rounded-full bg-primary/20 p-2">
+            <Ionicons name="arrow-undo-outline" size={16} color={isDark ? "white" : "black"} />
+          </View>
+          <Text className="ml-2 text-sm text-primary">Reply</Text>
+        </Animated.View>
+
+        {/* Message content */}
+        <Animated.View
+          style={[
+            animatedStyle,
+            // isSent && isLast ? { borderBottomRightRadius: 0 } : !isSent && isLast ? { borderBottomLeftRadius: 0 } : {},
+          ]}
           className={`max-w-[75%] flex-1 rounded-2xl p-3 ${
             isSent ? "self-end bg-primary" : "self-start bg-card"
           }`}
         >
-          <Text className={`text-base ${isSent ? "text-white" : "text-foreground"}`}>{text}</Text>
-          <View className="mt-1 flex-row items-center self-end">
-            <Text className={`text-xs ${isSent ? "text-white/60" : "text-muted-foreground"}`}>
-              {time}
+          {text.length < CHAR_THRESHOLD ? (
+            // Inline layout for short messages
+            <Text className={`text-base ${isSent ? "text-white" : "text-foreground"}`}>
+              {text}
+              <Text className={`text-xs ${isSent ? "text-white/60" : "text-muted-foreground"}`}>
+                {"  "}
+                {time}{" "}
+              </Text>
+              {isSent && (
+                <Ionicons
+                  name="checkmark-done"
+                  size={14}
+                  color="white"
+                  className="ml-1 opacity-80"
+                />
+              )}
             </Text>
-            {isSent && (
-              <Ionicons name="checkmark-done" size={14} color="white" className="ml-1 opacity-80" />
-            )}
-          </View>
+          ) : (
+            // Separate layout for long messages
+            <>
+              <Text className={`text-base ${isSent ? "text-white" : "text-foreground"}`}>
+                {text}
+              </Text>
+              <View className="mt-1 flex-row items-center self-end">
+                <Text className={`text-xs ${isSent ? "text-white/60" : "text-muted-foreground"}`}>
+                  {time}
+                </Text>
+                {isSent && (
+                  <Ionicons
+                    name="checkmark-done"
+                    size={14}
+                    color="white"
+                    className="ml-1 opacity-80"
+                  />
+                )}
+              </View>
+            </>
+          )}
         </Animated.View>
-      </GestureDetector>
-    </View>
+      </View>
+    </GestureDetector>
   );
 };
 
 // Regular Message component (non-swipeable, for reference)
-const Message = ({ text, time, isSent }: { text: string; time: string; isSent: boolean }) => {
-  const { isDark } = useTheme();
-  return (
-    <View
-      className={`my-1 max-w-[75%] flex-1 rounded-2xl p-3 ${
-        isSent ? "self-end bg-primary" : "self-start bg-card"
-      }`}
-    >
-      <Text className={`text-base ${isSent ? "text-white" : "text-foreground"}`}>{text}</Text>
-      <View className="mt-1 flex-row items-center self-end">
-        <Text className={`text-xs ${isSent ? "text-white/60" : "text-muted-foreground"}`}>
-          {time}
-        </Text>
-        {isSent && (
-          <Ionicons name="checkmark-done" size={14} color="white" className="ml-1 opacity-80" />
-        )}
-      </View>
-    </View>
-  );
-};
+// const Message = ({ text, time, isSent }: { text: string; time: string; isSent: boolean }) => {
+//   const { isDark } = useTheme();
+//   return (
+//     <View
+//       className={`my-1 max-w-[75%] flex-1 rounded-2xl p-3 ${
+//         isSent ? "self-end bg-primary" : "self-start bg-card"
+//       }`}
+//     >
+//       <Text className={`text-base ${isSent ? "text-white" : "text-foreground"}`}>{text}</Text>
+//       <View className="mt-1 flex-row items-center self-end">
+//         <Text className={`text-xs ${isSent ? "text-white/60" : "text-muted-foreground"}`}>
+//           {time}
+//         </Text>
+//         {isSent && (
+//           <Ionicons name="checkmark-done" size={14} color="white" className="ml-1 opacity-80" />
+//         )}
+//       </View>
+//     </View>
+//   );
+// };
 
 export default function RecordingScreen() {
   const { isDark } = useTheme();
@@ -159,6 +198,7 @@ export default function RecordingScreen() {
 
   // Handle swipe action
   const handleMessageSwipe = (messageText: string) => {
+    (global as any).hapticClick();
     console.log("Swiped message:", messageText);
     // You can implement your swipe action here, such as:
     // - Show reply UI
@@ -259,49 +299,61 @@ export default function RecordingScreen() {
             contentContainerStyle={{ paddingBottom: bottomContainerHeight }}
             showsVerticalScrollIndicator={false}
           >
-            <SwipeableMessage
+            <Message
               text="Hey, how are you?"
               time="10:30"
               isSent={false}
+              isLast
               onSwipeAction={() => handleMessageSwipe("Hey, how are you?")}
             />
-            <SwipeableMessage
+            <Message
               text="I'm doing great! Thanks for asking."
               time="10:32"
               isSent={true}
+              isLast
               onSwipeAction={() => handleMessageSwipe("I'm doing great! Thanks for asking.")}
             />
-            <SwipeableMessage
+            <Message
               text="That's awesome to hear!"
               time="10:33"
               isSent={false}
               onSwipeAction={() => handleMessageSwipe("That's awesome to hear!")}
             />
-            <SwipeableMessage
+            <Message
               text="What are you up to today?"
               time="10:35"
               isSent={false}
+              isLast
               onSwipeAction={() => handleMessageSwipe("What are you up to today?")}
             />
-            <SwipeableMessage
+            <Message
               text="Just working on some projects. You?"
               time="10:40"
               isSent={true}
+              isLast
               onSwipeAction={() => handleMessageSwipe("Just working on some projects. You?")}
             />
-            <SwipeableMessage
+            <Message
               text="Same here, staying busy!"
               time="10:42"
               isSent={false}
               onSwipeAction={() => handleMessageSwipe("Same here, staying busy!")}
             />
-            <SwipeableMessage
+            <Message
               text="Let me know if you need any help with those projects!"
               time="10:45"
               isSent={false}
+              isLast
               onSwipeAction={() =>
                 handleMessageSwipe("Let me know if you need any help with those projects!")
               }
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
             />
           </ScrollView>
 

@@ -13,6 +13,7 @@ import { ModalPresenterParent } from "@whitespectre/rn-modal-presenter";
 
 import { toastConfig } from "@/components/ui/toast";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { StreamChatProvider } from "@/contexts/StreamChatContext";
 import { FeaturesProvider } from "@/contexts/FeaturesContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
@@ -27,6 +28,7 @@ export default function RootLayout() {
         <ThemeProvider>
           <FeaturesProvider>
             <AuthProvider>
+              <StreamChatProvider>
               <PaperProvider>
                 <ModalPresenterParent>
                   <BottomSheetModalProvider>
@@ -74,6 +76,7 @@ export default function RootLayout() {
                   </BottomSheetModalProvider>
                 </ModalPresenterParent>
               </PaperProvider>
+              </StreamChatProvider>
             </AuthProvider>
           </FeaturesProvider>
         </ThemeProvider>

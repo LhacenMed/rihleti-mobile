@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ViewProps } from "react-native";
 import LottieView from "lottie-react-native";
-// import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface LoaderProps extends ViewProps {
   size?: number;
@@ -9,13 +9,8 @@ interface LoaderProps extends ViewProps {
   className?: string;
 }
 
-const Loader: React.FC<LoaderProps> = ({
-  size = 30,
-  color = "#fff",
-  className = "",
-  ...props
-}) => {
-  // const { isDark } = useTheme();
+const Loader: React.FC<LoaderProps> = ({ size = 30, color, className = "", ...props }) => {
+  const { isDark } = useTheme();
   return (
     <View className={className} {...props}>
       <LottieView
@@ -30,7 +25,7 @@ const Loader: React.FC<LoaderProps> = ({
         colorFilters={[
           {
             keypath: "loader",
-            color: color,
+            color: color ? color : isDark ? "#fff" : "#000",
           },
         ]}
       />

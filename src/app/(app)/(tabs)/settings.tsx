@@ -79,106 +79,108 @@ const Settings = () => {
   };
 
   return (
-    <ScrollView
-      // style={[styles.scrollViewContainer]}
-      contentContainerStyle={{
-        paddingTop: 20,
-        paddingBottom: 70,
-        backgroundColor: backgroundColor,
-      }}
-      showsVerticalScrollIndicator={false}
-      // scrollEnabled
-    >
-      {/* Theme Section */}
-      {/* <View className="mb-8 px-4">
-            <ThemeSwitcher />
-          </View> */}
-      {/* Profile Section */}
-      <MenuGroup title="Profile">
-        <MenuItem
-          icon="mail-outline"
-          title="Email"
-          value={user?.email}
-          isFirst
-          isLast={false}
-          onPress={navigateToAccount}
-        />
-        <MenuItem
-          icon="logo-google"
-          title="Google"
-          value={user?.app_metadata.providers?.includes("google") ? "Connected" : "Disconnected"}
-          isFirst={false}
-          isLast
-          showChevron={false}
-          disabled
-        />
-      </MenuGroup>
-      {/* About Section */}
-      <MenuGroup title="About">
-        <MenuItem icon="document-text-outline" title="Terms of Use" isFirst isLast={false} />
-        <MenuItem icon="shield-outline" title="Privacy Policy" isFirst={false} isLast={false} />
-        <MenuItem
-          icon="information-circle-outline"
-          title="Check for Updates"
-          value={Constants.expoConfig?.version || "1.0.0"}
-          isFirst={false}
-          isLast
-        />
-      </MenuGroup>
-      {/* App Section */}
-      <MenuGroup title="App">
-        <MenuItem
-          icon="options-outline"
-          title="Preferences"
-          // value="Controls"
-          isFirst
-          isLast={false}
-          onPress={navigateToPreferences}
-        />
-        <MenuItem
-          icon={isDark ? "moon-outline" : "sunny-outline"}
-          title="Color Scheme"
-          value={theme == "dark" ? "Dark" : theme == "light" ? "Light" : "System"}
-          isLast={false}
-          onPress={() => showThemeSwitchModal()}
-        />
-        <MenuItem
-          icon="earth"
-          title="App Language"
-          value="English"
-          isFirst={false}
-          isLast
-          // onPress={() => setLanguageModalVisible(true)}
-        />
-      </MenuGroup>
-      {/* Contact Section */}
-      <MenuGroup>
-        <MenuItem icon="chatbubble-outline" title="Contact Us" isFirst isLast />
-      </MenuGroup>
-      {/* Danger Zone */}
-      <MenuGroup>
-        <MenuItem
-          icon="log-out-outline"
-          title="Log Out"
-          subtitle=""
-          isDanger
-          isFirst
-          showChevron={false}
-          onPress={handleLogout}
-          loading={logoutLoading}
-        />
-        <MenuItem
-          icon="person-remove-outline"
-          title="Delete Account"
-          isDanger
-          isLast
-          showChevron={false}
-        />
-      </MenuGroup>
-      <Text style={[styles.footerText, { color: "#666666" }]}>
-        Version {Constants.expoConfig?.version || "1.0.0"}
-      </Text>
-    </ScrollView>
+    <SafeContainer style={{ paddingTop: 0 }}>
+      <ScrollView
+        // style={[styles.scrollViewContainer]}
+        contentContainerStyle={{
+          paddingTop: 20,
+          paddingBottom: 70,
+          backgroundColor: backgroundColor,
+        }}
+        showsVerticalScrollIndicator={false}
+        // scrollEnabled
+      >
+        {/* Theme Section */}
+        {/* <View className="mb-8 px-4">
+              <ThemeSwitcher />
+            </View> */}
+        {/* Profile Section */}
+        <MenuGroup title="Profile">
+          <MenuItem
+            icon="mail-outline"
+            title="Email"
+            value={user?.email}
+            isFirst
+            isLast={false}
+            onPress={navigateToAccount}
+          />
+          <MenuItem
+            icon="logo-google"
+            title="Google"
+            value={user?.app_metadata.providers?.includes("google") ? "Connected" : "Disconnected"}
+            isFirst={false}
+            isLast
+            showChevron={false}
+            disabled
+          />
+        </MenuGroup>
+        {/* About Section */}
+        <MenuGroup title="About">
+          <MenuItem icon="document-text-outline" title="Terms of Use" isFirst isLast={false} />
+          <MenuItem icon="shield-outline" title="Privacy Policy" isFirst={false} isLast={false} />
+          <MenuItem
+            icon="information-circle-outline"
+            title="Check for Updates"
+            value={Constants.expoConfig?.version || "1.0.0"}
+            isFirst={false}
+            isLast
+          />
+        </MenuGroup>
+        {/* App Section */}
+        <MenuGroup title="App">
+          <MenuItem
+            icon="options-outline"
+            title="Preferences"
+            // value="Controls"
+            isFirst
+            isLast={false}
+            onPress={navigateToPreferences}
+          />
+          <MenuItem
+            icon={isDark ? "moon-outline" : "sunny-outline"}
+            title="Color Scheme"
+            value={theme == "dark" ? "Dark" : theme == "light" ? "Light" : "System"}
+            isLast={false}
+            onPress={() => showThemeSwitchModal()}
+          />
+          <MenuItem
+            icon="earth"
+            title="App Language"
+            value="English"
+            isFirst={false}
+            isLast
+            // onPress={() => setLanguageModalVisible(true)}
+          />
+        </MenuGroup>
+        {/* Contact Section */}
+        <MenuGroup>
+          <MenuItem icon="chatbubble-outline" title="Contact Us" isFirst isLast />
+        </MenuGroup>
+        {/* Danger Zone */}
+        <MenuGroup>
+          <MenuItem
+            icon="log-out-outline"
+            title="Log Out"
+            subtitle=""
+            isDanger
+            isFirst
+            showChevron={false}
+            onPress={handleLogout}
+            loading={logoutLoading}
+          />
+          <MenuItem
+            icon="person-remove-outline"
+            title="Delete Account"
+            isDanger
+            isLast
+            showChevron={false}
+          />
+        </MenuGroup>
+        <Text style={[styles.footerText, { color: "#666666" }]}>
+          Version {Constants.expoConfig?.version || "1.0.0"}
+        </Text>
+      </ScrollView>
+    </SafeContainer>
   );
 };
 

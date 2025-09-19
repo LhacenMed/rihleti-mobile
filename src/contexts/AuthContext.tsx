@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+import Constants from "expo-constants";
+import { StreamChat } from "stream-chat";
 
 interface AuthContextType {
   user: User | null;
@@ -69,6 +71,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    try {
+      const streamApiKey = Constants.expoConfig?.extra?.streamApiKey as string | undefined;
+      if (streamApiKey) {
+        const client = StreamChat.getInstance(streamApiKey);
+        await client.disconnectUser();
+      }
+    } catch (e) {
+      // no-op
+    }
   };
 
   const value = {

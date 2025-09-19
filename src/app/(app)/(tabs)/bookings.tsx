@@ -13,7 +13,7 @@ const Bookings = () => {
   };
 
   return (
-    
+    <SafeContainer style={{ paddingTop: 0 }}>
       <ScrollView className="flex-1 bg-background">
         <View className="p-4">
           <View className="mb-6 rounded-lg border border-border bg-card p-4">
@@ -32,10 +32,18 @@ const Bookings = () => {
               <Text className="text-xs font-bold text-primary-foreground">2</Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-6 flex-row items-center rounded-lg border border-border bg-card p-4"
+            onPress={() => router.push("/(app)/new-chat")}
+          >
+            <Ionicons name="add" size={24} color="#64748b" />
+            <Text className="ml-3 text-lg text-foreground">Add new chat</Text>
+          </TouchableOpacity>
           <Button onPress={navigateToSettingsScreenTest} title="Open Settings screen (test)" />
           <ThemeDemo />
         </View>
       </ScrollView>
+    </SafeContainer>
   );
 };
 

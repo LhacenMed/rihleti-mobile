@@ -80,6 +80,8 @@ export default function AppLayout() {
         }}
       />
       <AppStack.Screen name="messages" />
+      <AppStack.Screen name="new-chat" />
+      <AppStack.Screen name="chat/[cid]" />
       <AppStack.Screen name="preferences" />
       <AppStack.Screen name="departure-location" />
       <AppStack.Screen name="destination-location" />

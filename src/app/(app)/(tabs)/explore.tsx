@@ -96,6 +96,7 @@ const Explore = () => {
   };
 
   return (
+    <SafeContainer style={{ paddingTop: 0 }}>
       <View className="flex-1 bg-background">
         <View className="flex-1 items-center justify-center p-5">
           <Text className="mb-4 text-lg text-foreground">Explore Screen</Text>
@@ -115,10 +116,11 @@ const Explore = () => {
           <Button onPress={showLogoutConfirmation} title="Logout" />
           <Button onPress={showLogoutConfirmation} title="Open Modal" />
           {/* <ProgressBarAndroid styleAttr="Horizontal" indeterminate={true} /> */}
-          <Progress.Bar indeterminate={true} width={200} />
-          <Progress.Circle indeterminate={true} size={60} style={{ marginTop: 20 }} />
+          {/* <Progress.Bar indeterminate={true} width={200} />
+          <Progress.Circle indeterminate={true} size={60} style={{ marginTop: 20 }} /> */}
         </View>
       </View>
+    </SafeContainer>
   );
 };
 

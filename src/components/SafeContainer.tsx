@@ -28,16 +28,14 @@ import { router } from "expo-router";
 interface HeaderProps {
   title?: string;
   titleComponent?: React.ReactNode;
+  showBackButton?: boolean;
   leftComponent?: React.ReactNode;
+  rightOptions?: boolean;
   rightComponent?: React.ReactNode;
-  onLeftPress?: () => void;
-  onRightPress?: () => void;
-  leftText?: string;
-  rightText?: string;
+  onBackPress?: () => void;
+  onRightOptionsPress?: () => void;
   titleStyle?: TextStyle;
   headerStyle?: ViewStyle;
-  showBackButton?: boolean;
-  onBackPress?: () => void;
   bottomComponent?: React.ReactNode;
 }
 
@@ -67,10 +65,16 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
     return (
       <View style={[{ flex: 1 }, style]}>
         {/* Header with status bar area */}
-        <SafeAreaView
+        <View
           style={[
-            // { paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 },
-            // { paddingTop: insets.top },
+            {
+              // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+              // paddingTop: insets.top,
+              paddingTop: insets.top,
+              paddingBottom: insets.bottom,
+              paddingLeft: insets.left,
+              paddingRight: insets.right,
+            },
             header.headerStyle,
           ]}
           className="border-b border-border bg-card"
@@ -95,10 +99,6 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
                 </View>
               ) : header.leftComponent ? (
                 header.leftComponent
-              ) : header.leftText ? (
-                <TouchableOpacity onPress={header.onLeftPress}>
-                  <Text className="text-base text-primary">{header.leftText}</Text>
-                </TouchableOpacity>
               ) : null}
             </View>
 
@@ -123,9 +123,14 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
             <View style={{ flex: 1, alignItems: "flex-end" }}>
               {header.rightComponent ? (
                 header.rightComponent
-              ) : header.rightText ? (
-                <TouchableOpacity onPress={header.onRightPress}>
-                  <Text className="text-base text-primary">{header.rightText}</Text>
+              ) : header.rightOptions ? (
+                <TouchableOpacity onPress={header.onRightOptionsPress}>
+                  <Ionicons
+                    name="ellipsis-vertical"
+                    size={20}
+                    className="text-foreground"
+                    color={isDark ? "white" : "black"}
+                  />
                 </TouchableOpacity>
               ) : null}
             </View>
@@ -133,7 +138,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
 
           {/* Optional bottom component below header row */}
           {header.bottomComponent && <View>{header.bottomComponent}</View>}
-        </SafeAreaView>
+        </View>
 
         {/* Content area */}
         <View className={`flex-1 bg-background ${className}`}>{children}</View>
@@ -143,18 +148,23 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
 
   // Original SafeContainer without header
   return (
-    <SafeAreaView
+    <View
       style={[
         {
           // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           // paddingTop: insets.top,
+          flex: 1,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
         },
         style,
       ]}
       className="flex-1 bg-background"
     >
       <View className={`flex-1 bg-background ${className}`}>{children}</View>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -26,7 +26,7 @@ import { scheduleOnRN } from "react-native-worklets";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Message component with gesture handling
-const Message = ({
+export const Message = ({
   text,
   time,
   isSent,
@@ -347,6 +347,55 @@ export default function RecordingScreen() {
               onSwipeAction={() =>
                 handleMessageSwipe("Let me know if you need any help with those projects!")
               }
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
+            />
+            <Message
+              text="mani"
+              time="10:45"
+              isSent={true}
+              isLast
+              onSwipeAction={() => handleMessageSwipe("mani")}
             />
             <Message
               text="mani"

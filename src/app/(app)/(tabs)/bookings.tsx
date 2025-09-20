@@ -24,7 +24,7 @@ const Bookings = () => {
           </View>
           <TouchableOpacity
             className="mb-6 flex-row items-center rounded-lg border border-border bg-card p-4"
-            onPress={() => router.push("/(app)/messages")}
+            onPress={() => router.push("/(app)/chat")}
           >
             <Ionicons name="chatbubbles-outline" size={24} color="#64748b" />
             <Text className="ml-3 text-lg text-foreground">Messages</Text>

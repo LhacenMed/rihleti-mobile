@@ -18,23 +18,6 @@ import ExploreIcon from "@/components/icons/tab-icons/ExploreIcon";
 import BookingsIcon from "@/components/icons/tab-icons/BookingsIcon";
 import SettingsIcon from "@/components/icons/tab-icons/SettingsIcon";
 
-// import { withLayoutContext } from "expo-router";
-// import {
-//   createNativeBottomTabNavigator,
-//   NativeBottomTabNavigationOptions,
-//   NativeBottomTabNavigationEventMap,
-// } from "@bottom-tabs/react-navigation";
-// import { ParamListBase, TabNavigationState } from "@react-navigation/native";
-
-// const BottomTabNavigator = createNativeBottomTabNavigator().Navigator;
-
-// const Tabs = withLayoutContext<
-//   NativeBottomTabNavigationOptions,
-//   typeof BottomTabNavigator,
-//   TabNavigationState<ParamListBase>,
-//   NativeBottomTabNavigationEventMap
-// >(BottomTabNavigator);
-
 // Header right component
 function HeaderRight() {
   const { isDark } = useTheme();

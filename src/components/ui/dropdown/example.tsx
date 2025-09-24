@@ -3,99 +3,92 @@ import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { DropdownMenu } from "./index";
 
-// Example usage of the DropdownMenu component
-export const DropdownMenuExample = () => {
-  const menuItems = [
-    { key: "edit", title: "Edit" },
-    { key: "duplicate", title: "Duplicate" },
-    { key: "share", title: "Share" },
-    { key: "delete", title: "Delete", destructive: true },
-  ];
+// Helpers
+const makeIcon = (name: any) => (color: string) => (
+  <Ionicons name={name} size={20} color={color} />
+);
 
-  const handleSelect = (key: string) => {
-    console.log("Selected:", key);
-    // Handle the selection here
-  };
+export const DropdownMenuExample = () => {
+  const handleSelect = (key: string) => console.log("Selected:", key);
 
   return (
-    <View className="flex-1 p-4">
-      <Text className="mb-4 text-lg font-bold">Dropdown Menu Example</Text>
+    <View className="flex-1 gap-8 p-4">
+      <Text className="text-lg font-bold">Dropdown Menu Examples</Text>
 
-      {/* Basic usage */}
+      {/* Basic */}
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
-          <View className="rounded bg-primary p-2">
+          <View className="rounded bg-primary px-3 py-2">
             <Ionicons name="ellipsis-vertical" size={20} color="white" />
           </View>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content align="end">
-          {menuItems.map((item) => (
+        <DropdownMenu.Content align="end" maxHeight={250}>
+          <DropdownMenu.Item title="Mute" icon={makeIcon("volume-mute-outline")} onSelect={() => handleSelect("mute")} />
+          <DropdownMenu.Item title="Video Call" icon={makeIcon("videocam-outline")} onSelect={() => handleSelect("video")} />
+          <DropdownMenu.Item title="Search" icon={makeIcon("search-outline")} onSelect={() => handleSelect("search")} />
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+
+      {/* Grouped + destructive + disabled */}
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <View className="rounded bg-blue-500 px-4 py-2">
+            <Text className="text-white">Grouped</Text>
+          </View>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content align="end" maxHeight={250}>
+          <DropdownMenu.Group first>
+            <DropdownMenu.Item title="Change Wallpaper" icon={makeIcon("image-outline")} onSelect={() => handleSelect("wallpaper")} />
+            <DropdownMenu.Item title="Search" icon={makeIcon("search-outline")} onSelect={() => handleSelect("search")} />
+          </DropdownMenu.Group>
+          <DropdownMenu.Group>
+            <DropdownMenu.Item title="Clear History" icon={makeIcon("brush-outline")} onSelect={() => handleSelect("clear")}  />
+            <DropdownMenu.Item title="Delete chat" icon={makeIcon("trash-outline")} onSelect={() => handleSelect("delete")} destructive />
+          </DropdownMenu.Group>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+
+      {/* Long list (scrolls when exceeding maxHeight) */}
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <View className="rounded bg-emerald-500 px-4 py-2">
+            <Text className="text-white">Many Items</Text>
+          </View>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content align="end" maxHeight={250}>
+          {Array.from({ length: 20 }).map((_, i) => (
             <DropdownMenu.Item
-              key={item.key}
-              onSelect={() => handleSelect(item.key)}
-              destructive={item.destructive}
-            >
-              {item.title}
-            </DropdownMenu.Item>
+              key={`item-${i}`}
+              title={`Item ${i + 1}`}
+              icon={makeIcon("document-text-outline")}
+              onSelect={() => handleSelect(`item-${i + 1}`)}
+            />
           ))}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
 
-      {/* With custom alignment */}
-      <View className="mt-8">
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <View className="rounded bg-blue-500 px-4 py-2">
-              <Text className="text-white">Options Menu</Text>
-            </View>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="end">
-            <DropdownMenu.Item onSelect={() => console.log("Profile")}>
-              View Profile
-            </DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => console.log("Settings")}>Settings</DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => console.log("Help")}>
-              Help & Support
-            </DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => console.log("Logout")} destructive>
-              Logout
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
-      </View>
-
-      {/* Controlled state example */}
+      {/* Controlled state + asChild trigger */}
       <ControlledDropdownExample />
     </View>
   );
 };
 
-// Example with controlled state
 const ControlledDropdownExample = () => {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <View className="mt-8">
-      <Text className="mb-2 text-sm text-gray-600">
-        Controlled dropdown (open: {open ? "yes" : "no"})
-      </Text>
+    <View className="gap-2">
+      <Text className="text-sm text-gray-600">Controlled dropdown (open: {open ? "yes" : "no"})</Text>
       <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-        <DropdownMenu.Trigger>
+        <DropdownMenu.Trigger asChild>
           <View className="rounded bg-gray-200 px-4 py-2">
-            <Text>Controlled Menu</Text>
+            <Text>Open Menu</Text>
           </View>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          <DropdownMenu.Item onSelect={() => console.log("Action 1")}>Action 1</DropdownMenu.Item>
-          <DropdownMenu.Item onSelect={() => console.log("Action 2")}>Action 2</DropdownMenu.Item>
-          <DropdownMenu.Item
-            onSelect={() => {
-              console.log("Close menu");
-              setOpen(false);
-            }}
-          >
-            Close Menu
-          </DropdownMenu.Item>
+        <DropdownMenu.Content align="end" maxHeight={250}>
+          <DropdownMenu.Item title="Profile" icon={makeIcon("person-outline")} onSelect={() => console.log("Profile")} />
+          <DropdownMenu.Item title="Settings" icon={makeIcon("settings-outline")} onSelect={() => console.log("Settings")} />
+          <DropdownMenu.Item title="Close" icon={makeIcon("close-outline")} onSelect={() => setOpen(false)} />
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </View>

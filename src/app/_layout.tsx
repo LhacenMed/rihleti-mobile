@@ -57,6 +57,24 @@ export default function RootLayout() {
                         }}
                       />
                       <RootStack.Screen
+                        name="audio"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <RootStack.Screen
+                        name="audio-av"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <RootStack.Screen
+                        name="voice-recorder"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <RootStack.Screen
                         name="webview"
                         options={{
                           presentation: "modal",

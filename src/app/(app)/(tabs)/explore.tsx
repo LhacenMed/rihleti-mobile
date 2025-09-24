@@ -47,24 +47,42 @@ const Explore = () => {
   // const router = useRouter();
   const { signOut } = useAuth();
 
-  const navigateToSplash = () => {
-    router.push("/(auth)/welcome");
-  };
-  const navigateToWelcomeScreen = () => {
-    router.push("/(auth)/welcome");
-  };
-  const navigateToLoginScreenTest = () => {
-    router.push("/(auth)/login");
-  };
-  const navigateToSettingsScreenTest = () => {
-    router.push("/settings-test");
-  };
-  const navigateToRecording = () => {
-    router.push("/recording");
-  };
   const navigateToTrips = () => {
     router.push("/(app)/trips");
   };
+
+  const navigateToSplash = () => {
+    router.push("/(auth)/welcome");
+  };
+
+  const navigateToWelcomeScreen = () => {
+    router.push("/(auth)/welcome");
+  };
+
+  const navigateToLoginScreenTest = () => {
+    router.push("/(auth)/login");
+  };
+
+  const navigateToSettingsScreenTest = () => {
+    router.push("/settings-test");
+  };
+
+  const navigateToRecording = () => {
+    router.push("/recording");
+  };
+
+  const navigateToAudio = () => {
+    router.push("/audio");
+  };
+
+  const navigateToAudioAV = () => {
+    router.push("/audio-av");
+  };
+
+  const navigateToVoiceRecorder = () => {
+    router.push("/voice-recorder");
+  };
+
   const clearOnboarding = async () => {
     try {
       // await AsyncStorage.removeItem("@viewedOnboarding");
@@ -106,13 +124,16 @@ const Explore = () => {
           <Button onPress={navigateToLoginScreenTest} title="Open Login screen (test)" />
           <Button onPress={navigateToSettingsScreenTest} title="Open Settings screen (test)" />
           <Button onPress={navigateToRecording} title="Open recording screen" />
-          <Button onPress={showToastAndroid} title="Show android toast" />
+          <Button onPress={navigateToAudio} title="Open audio screen" />
+          <Button onPress={navigateToAudioAV} title="Open audio-av screen" />
+          <Button onPress={navigateToVoiceRecorder} title="Open voice recorder screen" />
           <TouchableOpacity
             onPress={clearOnboarding}
             className="mb-12 mt-12 rounded-md bg-destructive p-3"
           >
             <Text className="text-center text-destructive-foreground">Clear Onboarding</Text>
           </TouchableOpacity>
+          <Button onPress={showToastAndroid} title="Show android toast" />
           <Button onPress={showLogoutConfirmation} title="Logout" />
           <Button onPress={showLogoutConfirmation} title="Open Modal" />
           {/* <ProgressBarAndroid styleAttr="Horizontal" indeterminate={true} /> */}

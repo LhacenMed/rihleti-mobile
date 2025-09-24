@@ -21,7 +21,6 @@ export default {
             [
                 "expo-localization",
                 {
-                    // Optional: customize permission messages
                     locationAlwaysAndWhenInUsePermission: "Allow Rihleti to use your location.",
                 },
             ],
@@ -42,6 +41,20 @@ export default {
                     microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone.",
                 },
             ],
+            // [
+            //     "react-native-audio-api",
+            //     {
+            //         iosBackgroundMode: true,
+            //         iosMicrophonePermission: "This app requires access to the microphone to record audio.",
+            //         androidPermissions: [
+            //             "android.permission.MODIFY_AUDIO_SETTINGS",
+            //             "android.permission.FOREGROUND_SERVICE",
+            //             "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+            //         ],
+            //         androidForegroundService: true,
+            //         androidFSTypes: ["mediaPlayback"],
+            //     },
+            // ],
         ],
 
         orientation: "portrait",
@@ -68,6 +81,9 @@ export default {
         ios: {
             supportsTablet: true,
             bundleIdentifier: "com.rihleti.app",
+            infoPlist: {
+                UIBackgroundModes: ["audio"],
+            },
         },
 
         android: {
@@ -77,6 +93,8 @@ export default {
             },
             package: "com.rihleti.app",
             edgeToEdgeEnabled: true,
+            // Explicitly request mic permission to guarantee it in native manifests
+            permissions: ["RECORD_AUDIO"],
             notification: {
                 icon: "./src/assets/notification-icon.png",
                 color: "#84cc16",
@@ -93,8 +111,11 @@ export default {
             // eas: {
             //     projectId: "6943ba63-1c3c-445f-8702-6f99899439b5",
             // },
+            // eas: {
+            //     projectId: "fc452bc0-0445-447b-a43b-416976fdaa69",
+            // },
             eas: {
-                projectId: "fc452bc0-0445-447b-a43b-416976fdaa69",
+                projectId: "dad1c25f-1072-47ef-87db-0f8164e1e933",
             },
         },
     },

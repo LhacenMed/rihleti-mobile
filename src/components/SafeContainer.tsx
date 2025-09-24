@@ -11,6 +11,7 @@ import {
   TextStyle,
   // TouchableNativeFeedback,
   TouchableWithoutFeedback,
+  Platform
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { SparklesIcon as SparklesIconMicro } from "react-native-heroicons/micro";
@@ -71,7 +72,7 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
               // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
               // paddingTop: insets.top,
               paddingTop: insets.top,
-              paddingBottom: insets.bottom,
+              paddingBottom: Platform.OS === "android" ? insets.bottom : 20,
               paddingLeft: insets.left,
               paddingRight: insets.right,
             },
@@ -85,8 +86,8 @@ const SafeContainer: React.FC<SafeContainerProps> = ({ children, style, classNam
               alignItems: "center",
               justifyContent: "space-between",
               paddingHorizontal: 16,
-              paddingVertical: 12,
-              marginBottom: header.bottomComponent ? 0 : -10,
+              paddingTop: 12,
+              marginBottom: header.bottomComponent ? (Platform.OS === "android" ? insets.bottom : 20) : 0,
             }}
           >
             {/* Left Section */}

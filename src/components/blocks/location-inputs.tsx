@@ -1,10 +1,12 @@
-import { useRef, useEffect, useState, useCallback } from "react";
-import { StyleSheet, View, Pressable, Animated, ActivityIndicator, Text } from "react-native";
+import { useEffect, useState, useCallback } from "react";
+import { StyleSheet, View, Pressable, Animated, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
+import { useTheme } from "@/contexts/ThemeContext";
+import { Loader } from "@/components/ui/loader";
 // import { Location } from "@/types/location";
 
 type LocationInputsProps = {
@@ -19,46 +21,37 @@ const LocationInputs = ({
   onLocationsChange,
 }: LocationInputsProps) => {
   // const navigation = useNavigation();
-  const animatedBgFrom = useRef(new Animated.Value(0)).current;
-  const animatedBgTo = useRef(new Animated.Value(0)).current;
+  // const animatedBgFrom = useRef(new Animated.Value(0)).current;
+  // const animatedBgTo = useRef(new Animated.Value(0)).current;
   const [departureCityName, setDepartureCityName] = useState<string | null>(null);
   const [destinationCityName, setDestinationCityName] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isSwapPressed, setIsSwapPressed] = useState<boolean>(false);
+  // const [isSwapPressed, setIsSwapPressed] = useState<boolean>(false);
+  const { isDark } = useTheme();
 
-  const interpolatedBgFrom = animatedBgFrom.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["#1E1E1E", "#2A2A2A"],
-  });
+  // const handlePressInFrom = () => {
+  //   animatedBgFrom.setValue(1);
+  // };
 
-  const interpolatedBgTo = animatedBgTo.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["#1E1E1E", "#2A2A2A"],
-  });
+  // const handlePressOutFrom = () => {
+  //   Animated.timing(animatedBgFrom, {
+  //     toValue: 0,
+  //     duration: 100,
+  //     useNativeDriver: false,
+  //   }).start();
+  // };
 
-  const handlePressInFrom = () => {
-    animatedBgFrom.setValue(1);
-  };
+  // const handlePressInTo = () => {
+  //   animatedBgTo.setValue(1);
+  // };
 
-  const handlePressOutFrom = () => {
-    Animated.timing(animatedBgFrom, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handlePressInTo = () => {
-    animatedBgTo.setValue(1);
-  };
-
-  const handlePressOutTo = () => {
-    Animated.timing(animatedBgTo, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: false,
-    }).start();
-  };
+  // const handlePressOutTo = () => {
+  //   Animated.timing(animatedBgTo, {
+  //     toValue: 0,
+  //     duration: 100,
+  //     useNativeDriver: false,
+  //   }).start();
+  // };
 
   const getUserApiAddress = async () => {
     const response = await fetch("https://ipinfo.io/json");
@@ -194,62 +187,49 @@ const LocationInputs = ({
     router.push("/(app)/destination-location");
   };
 
-  const handleSwapPressIn = () => {
-    setIsSwapPressed(true);
-  };
-
-  const handleSwapPressOut = () => {
-    setIsSwapPressed(false);
-  };
-
   return (
-    <View style={styles.locationContainer}>
-      <Animated.View style={[styles.inputFieldContainer, { backgroundColor: interpolatedBgFrom }]}>
+    <View style={styles.locationContainer} className="bg-card">
+      <Animated.View style={[styles.inputFieldContainer]} className="border-border">
         <Pressable
-          onPressIn={handlePressInFrom}
-          onPressOut={handlePressOutFrom}
+          // onPressIn={handlePressInFrom}
+          // onPressOut={handlePressOutFrom}
           onPress={handleDepartureInputPress}
           style={styles.pressable}
+          className="flex-1 flex-row items-center gap-2"
         >
-          <Text style={departureCityName ? styles.inputLabelWhite : styles.inputLabelGrey}>
+          <Text
+            // style={departureCityName ? styles.inputLabelWhite : styles.inputLabelGrey}
+            className={`text-lg ${departureCityName ? "text-foreground" : "text-muted-foreground"}`}
+          >
             {departureCityName || "From?"}
-            {loading && (
-              <ActivityIndicator
-                size="small"
-                color="#666666"
-                style={{
-                  position: "absolute",
-                  height: 10,
-                  width: 10,
-                  transform: [{ translateX: 10 }],
-                }}
-              />
-            )}
           </Text>
+          {loading && <Loader size={22} />}
         </Pressable>
       </Animated.View>
-      <View style={styles.border} />
-      <Animated.View
-        style={[styles.inputFieldContainerSecond, { backgroundColor: interpolatedBgTo }]}
-      >
+      {/* <View style={styles.border} className="bg-border" /> */}
+      <Animated.View style={[styles.inputFieldContainerSecond]} className="border-border">
         <Pressable
-          onPressIn={handlePressInTo}
-          onPressOut={handlePressOutTo}
+          // onPressIn={handlePressInTo}
+          // onPressOut={handlePressOutTo}
           onPress={handleDestinationInputPress}
           style={styles.pressable}
         >
-          <Text style={destinationCityName ? styles.inputLabelWhite : styles.inputLabelGrey}>
+          <Text
+            // style={destinationCityName ? styles.inputLabelWhite : styles.inputLabelGrey}
+            className={`text-lg ${destinationCityName ? "text-foreground" : "text-muted-foreground"}`}
+          >
             {destinationCityName || "To?"}
           </Text>
         </Pressable>
       </Animated.View>
       <Pressable
-        onPressIn={handleSwapPressIn}
-        onPressOut={handleSwapPressOut}
+        // onPressIn={handleSwapPressIn}
+        // onPressOut={handleSwapPressOut}
         onPress={handleSwitchCities}
-        style={[styles.swapButton, isSwapPressed && styles.swapButtonPressed]}
+        style={styles.swapButton}
+        className="border-border bg-card"
       >
-        <MaterialIcons name="swap-vert" size={24} color="#fff" />
+        <MaterialIcons name="swap-vert" size={24} color={isDark ? "#fff" : "#000"} />
       </Pressable>
     </View>
   );
@@ -257,21 +237,18 @@ const LocationInputs = ({
 
 const styles = StyleSheet.create({
   locationContainer: {
-    backgroundColor: "#1C1C1E",
     borderRadius: 18,
     marginBottom: 16,
     position: "relative",
   },
   inputFieldContainer: {
-    borderColor: "#3A3A3C",
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderTopLeftRadius: 17,
     borderTopRightRadius: 17,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
   inputFieldContainerSecond: {
-    borderColor: "#3A3A3C",
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     borderBottomLeftRadius: 17,
@@ -283,24 +260,7 @@ const styles = StyleSheet.create({
   },
   border: {
     height: 1,
-    backgroundColor: "#3A3A3C",
     marginVertical: -1,
-  },
-  inputLabel: {
-    color: "#666666",
-    fontSize: 16,
-  },
-  inputLabelGrey: {
-    color: "#666666",
-    fontSize: 16,
-  },
-  inputLabelWhite: {
-    color: "#FFFFFF",
-    fontSize: 16,
-  },
-  inputValue: {
-    color: "#00FF00",
-    fontSize: 16,
   },
   swapButton: {
     position: "absolute",
@@ -310,15 +270,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    borderColor: "#3A3A3C",
     borderWidth: 1,
-    backgroundColor: "#1E1E1E",
     justifyContent: "center",
     alignItems: "center",
-  },
-  swapButtonPressed: {
-    backgroundColor: "#2C2C2E",
-    borderColor: "#4A4A4C",
   },
 });
 

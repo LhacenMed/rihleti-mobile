@@ -169,59 +169,61 @@ export const Message = ({
 };
 
 // Regular Message component (non-swipeable, for reference)
-// const Message = ({ text, time, isSent }: { text: string; time: string; isSent: boolean }) => {
-//   const { isDark } = useTheme();
-//   return (
-//     <View
-//       className={`my-1 max-w-[75%] flex-1 rounded-2xl p-3 ${
-//         isSent ? "self-end bg-primary" : "self-start bg-card"
-//       }`}
-//     >
-//       <Text className={`text-base ${isSent ? "text-white" : "text-foreground"}`}>{text}</Text>
-//       <View className="mt-1 flex-row items-center self-end">
-//         <Text className={`text-xs ${isSent ? "text-white/60" : "text-muted-foreground"}`}>
-//           {time}
-//         </Text>
-//         {isSent && (
-//           <Ionicons name="checkmark-done" size={14} color="white" className="ml-1 opacity-80" />
-//         )}
-//       </View>
-//     </View>
-//   );
-// };
+const RegularMessage = ({
+  text,
+  time,
+  isSent,
+}: {
+  text: string;
+  time: string;
+  isSent: boolean;
+}) => {
+  const { isDark } = useTheme();
+  return (
+    <View
+      className={`my-1 max-w-[75%] flex-1 rounded-2xl p-3 ${
+        isSent ? "self-end bg-primary" : "self-start bg-card"
+      }`}
+    >
+      <Text className={`text-base ${isSent ? "text-white" : "text-foreground"}`}>{text}</Text>
+      <View className="mt-1 flex-row items-center self-end">
+        <Text className={`text-xs ${isSent ? "text-white/60" : "text-muted-foreground"}`}>
+          {time}
+        </Text>
+        {isSent && (
+          <Ionicons name="checkmark-done" size={14} color="white" className="ml-1 opacity-80" />
+        )}
+      </View>
+    </View>
+  );
+};
 
 export default function RecordingScreen() {
   const { isDark } = useTheme();
   const [inputText, setInputText] = useState("");
   const [inputHeight, setInputHeight] = useState(44); // Default height for single line
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   // Handle swipe action
   const handleMessageSwipe = (messageText: string) => {
     (global as any).hapticClick();
     console.log("Swiped message:", messageText);
-    // You can implement your swipe action here, such as:
-    // - Show reply UI
-    // - Add to reply queue
-    // - Show action menu
-    // - etc.
   };
 
   // Keyboard listeners
-  useEffect(() => {
-    const showSub = Keyboard.addListener(
-      Platform.OS === "android" ? "keyboardDidShow" : "keyboardWillShow",
-      () => setIsKeyboardVisible(true)
-    );
-    const hideSub = Keyboard.addListener(
-      Platform.OS === "android" ? "keyboardDidHide" : "keyboardWillHide",
-      () => setIsKeyboardVisible(false)
-    );
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const showSub = Keyboard.addListener(
+  //     Platform.OS === "android" ? "keyboardDidShow" : "keyboardWillShow",
+  //     () => setIsKeyboardVisible(true)
+  //   );
+  //   const hideSub = Keyboard.addListener(
+  //     Platform.OS === "android" ? "keyboardDidHide" : "keyboardWillHide",
+  //     () => setIsKeyboardVisible(false)
+  //   );
+  //   return () => {
+  //     showSub.remove();
+  //     hideSub.remove();
+  //   };
+  // }, []);
 
   const keyboard = useAnimatedKeyboard({
     // isStatusBarTranslucentAndroid: true,
@@ -408,7 +410,7 @@ export default function RecordingScreen() {
 
           {/* Bottom input - now with dynamic height */}
           <View
-            className={`flex-row items-end border-t border-border bg-card px-3 py-2 ${isKeyboardVisible ? "" : "pb-5"}`}
+            className={`flex-row items-end border-t border-border bg-card px-3 py-4`}
             style={{ minHeight: 56 }}
           >
             <TouchableOpacity className="mb-2.5">

@@ -19,6 +19,7 @@ import {
   ContextMenu,
 } from "@expo/ui/jetpack-compose";
 // import { fetch } from "expo/fetch";
+import DropdownMenuExample from "@/components/ui/dropdown/example";
 
 export default function Home() {
   const locationBottomSheetRef = useRef<BottomSheetModal>(null);
@@ -176,6 +177,7 @@ export default function Home() {
             <Text className="text-sm text-gray-600">{JSON.stringify(apiData, null, 2)}</Text>
           </View>
         )}
+        <DropdownMenuExample />
       </ScrollView>
     </SafeContainer>
   );

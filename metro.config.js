@@ -1,5 +1,6 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
+// const { wrapWithAudioAPIMetroConfig } = require("react-native-audio-api/metro-config");
 
 const config = getDefaultConfig(__dirname, {
     // Enable CSS support
@@ -25,3 +26,5 @@ config.resolver = {
 };
 
 module.exports = withNativeWind(config, { input: "./global.css" });
+// First apply NativeWind wrapper, then Audio API wrapper
+// module.exports = wrapWithAudioAPIMetroConfig(withNativeWind(config, { input: "./global.css" }));

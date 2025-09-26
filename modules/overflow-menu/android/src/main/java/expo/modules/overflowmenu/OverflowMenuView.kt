@@ -2,11 +2,15 @@
 package expo.modules.overflowmenu
 
 import android.content.Context
-import android.view.Gravity
 import android.view.Menu
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.util.TypedValue
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
@@ -18,29 +22,23 @@ private data class MenuItemSpec(
 )
 
 class OverflowMenuView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
-  // Event dispatched to JS when a menu item is selected.
   private val onItemSelected by EventDispatcher()
 
   private var items: List<MenuItemSpec> = emptyList()
+  private var menuProvider: MenuProvider? = null
+  private var attached = false
 
-  // Simple visual anchor: a centered vertical-ellipsis character.
-  private val anchorView: TextView = TextView(context).apply {
-    text = "\u22EE" // ⋮ vertical ellipsis
-    setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-    isClickable = false
-    isFocusable = false
-    layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-    gravity = Gravity.CENTER
+  private val toolbar: Toolbar = Toolbar(context).apply {
+    layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+    // Height will be controlled by JS style; default WRAP_CONTENT
   }
 
   init {
-    isClickable = true
-    isFocusable = true
-    addView(anchorView)
+    addView(toolbar)
+  }
 
-    setOnClickListener {
-      showMenu()
-    }
+  fun setTitle(title: String?) {
+    toolbar.title = title ?: ""
   }
 
   fun setItems(rawItems: List<Map<String, Any?>>) {
@@ -50,28 +48,90 @@ class OverflowMenuView(context: Context, appContext: AppContext) : ExpoView(cont
       val enabled = (map["enabled"] as? Boolean) ?: true
       MenuItemSpec(id = id, title = title, enabled = enabled)
     }
+    invalidateHostMenu()
   }
 
-  private fun showMenu() {
-    if (items.isEmpty()) return
-    val popup = PopupMenu(context, this)
-    items.forEachIndexed { index, item ->
-      val menuItem = popup.menu.add(Menu.NONE, index, index, item.title)
-      menuItem.isEnabled = item.enabled
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    if (!attached) {
+      attachToActivity()
+      attached = true
     }
-    popup.setOnMenuItemClickListener { menuItem ->
-      val idx = menuItem.itemId
-      val item = items.getOrNull(idx)
-      if (item != null) {
-        val payload = mutableMapOf<String, Any>(
-          "index" to idx,
-          "title" to item.title,
-        )
-        item.id?.let { payload["id"] = it }
-        onItemSelected(payload)
+  }
+
+  override fun onDetachedFromWindow() {
+    detachFromActivity()
+    attached = false
+    super.onDetachedFromWindow()
+  }
+
+  private fun attachToActivity() {
+    val activity = appContext.currentActivity as? AppCompatActivity ?: return
+
+    // Install this toolbar as the activity's support ActionBar for true native behavior
+    activity.setSupportActionBar(toolbar)
+
+    val menuHost = activity as? MenuHost ?: return
+    val lifecycleOwner = activity as? LifecycleOwner ?: return
+
+    val provider = object : MenuProvider {
+      override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        buildMenu(menu)
       }
-      true
+
+      override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        val idx = menuItem.itemId
+        val spec = items.getOrNull(idx)
+        if (spec != null) {
+          val payload = mutableMapOf<String, Any>(
+            "index" to idx,
+            "title" to spec.title,
+          )
+          spec.id?.let { payload["id"] = it }
+          onItemSelected(payload)
+          return true
+        }
+        return false
+      }
+
+      override fun onPrepareMenu(menu: Menu) {
+        // Called before showing; can enable/disable dynamically
+        // Rebuild to reflect latest state
+        menu.clear()
+        buildMenu(menu)
+      }
+
+      private fun buildMenu(menu: Menu) {
+        menu.clear()
+        items.forEachIndexed { index, item ->
+          val mi = menu.add(Menu.NONE, index, index, item.title)
+          mi.isEnabled = item.enabled
+          // By default, items without showAsAction end up in overflow
+        }
+      }
     }
-    popup.show()
+
+    menuHost.addMenuProvider(provider, lifecycleOwner, Lifecycle.State.RESUMED)
+    menuProvider = provider
+
+    // Ensure initial menu state reflects current items
+    invalidateHostMenu()
+  }
+
+  private fun detachFromActivity() {
+    val activity = appContext.currentActivity as? AppCompatActivity ?: return
+    val menuHost = activity as? MenuHost
+    menuProvider?.let { provider ->
+      menuHost?.removeMenuProvider(provider)
+      menuProvider = null
+    }
+    // Optionally detach the toolbar from ActionBar when view is removed
+    activity.setSupportActionBar(null)
+  }
+
+  private fun invalidateHostMenu() {
+    val activity = appContext.currentActivity as? AppCompatActivity ?: return
+    // Invalidate options menu to refresh items
+    activity.invalidateOptionsMenu()
   }
 }

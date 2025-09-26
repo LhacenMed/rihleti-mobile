@@ -1,4 +1,5 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+// modules/overflow-menu/src/OverflowMenu.types.ts
+import type { StyleProp, ViewStyle } from "react-native";
 
 export type ChangeEventPayload = {
   value: string;

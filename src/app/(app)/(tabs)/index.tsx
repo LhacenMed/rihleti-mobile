@@ -88,7 +88,7 @@ export default function Home() {
         >
           Departure
         </Button>
-        {/* <ContextMenu style={{ width: 150, height: 50 }}>
+        <ContextMenu style={{ width: 150, height: 50 }}>
           <ContextMenu.Items>
             <ExpoButton
               variant="outlined"
@@ -118,7 +118,7 @@ export default function Home() {
             </ExpoButton>
           </ContextMenu.Trigger>
         </ContextMenu>
-        <ExpoButton
+        {/* <ExpoButton
           variant="outlined"
           disabled={false}
           onPress={() => {

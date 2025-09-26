@@ -85,6 +85,10 @@ const Explore = () => {
     router.push("/voice-recorder");
   };
 
+  const navigateToOverflowMenuExample = () => {
+    router.push("/overflow-menu-example");
+  };
+
   const clearOnboarding = async () => {
     try {
       // await AsyncStorage.removeItem("@viewedOnboarding");
@@ -129,6 +133,7 @@ const Explore = () => {
           <Button onPress={navigateToAudio}>Open audio screen</Button>
           <Button onPress={navigateToAudioAV}>Open audio-av screen</Button>
           <Button onPress={navigateToVoiceRecorder}>Open voice recorder screen</Button>
+          <Button onPress={navigateToOverflowMenuExample}>Open Overflow Menu example</Button>
           <Button
             onPress={() => {
               const value = overflowMenu.hello();

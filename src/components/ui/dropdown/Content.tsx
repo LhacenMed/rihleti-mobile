@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Modal, TouchableWithoutFeedback, Dimensions, ScrollView, View } from "react-native";
+import { Modal, TouchableWithoutFeedback, Dimensions, ScrollView } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -14,7 +14,7 @@ interface ContentProps {
   align?: "start" | "center" | "end";
   sideOffset?: number;
   className?: string;
-  maxHeight?: number; // maximum dropdown height before content becomes scrollable
+  maxHeight?: number;
 }
 
 export const Content: React.FC<ContentProps> = ({
@@ -28,21 +28,14 @@ export const Content: React.FC<ContentProps> = ({
   const [position, setPosition] = React.useState({ top: 0, left: 0, width: 0 });
   const opacity = useSharedValue(0);
   const [render, setRender] = React.useState(isOpen);
-  const heightFactor = useSharedValue(1);
-  const measuredHeight = useSharedValue(0);
-  const measuredOnce = React.useRef(false);
 
   useEffect(() => {
     if (isOpen) {
-      // Reset animation and measurement state
+      // Reset animation state and mount
       opacity.value = 0;
-      heightFactor.value = 1;
-      measuredOnce.current = false;
-      measuredHeight.value = 0;
       setRender(true);
     } else {
-      // Animate out: fade, slide (via opacity), and fold height to 50%
-      heightFactor.value = withTiming(0.5, { duration: 150 });
+      // Animate out: fade and slide, then unmount
       opacity.value = withTiming(0, { duration: 150 }, (finished) => {
         "worklet";
         if (finished) scheduleOnRN(setRender, false);
@@ -64,13 +57,21 @@ export const Content: React.FC<ContentProps> = ({
     if (isOpen && triggerRef.current) {
       triggerRef.current.measureInWindow((x: number, y: number, width: number, height: number) => {
         const screenWidth = Dimensions.get("window").width;
-        const top = y + height + sideOffset; // position below trigger
-        let left = x;
+        const top = y + height * 2 + sideOffset; // position below trigger
 
-        if (align === "center") left = x + width / 2;
-        else if (align === "end") left = x + width;
+        // Position dropdown to the left of the trigger
+        const dropdownWidth = 200; // Estimated dropdown width (between min 160 and max 280)
+        let left = x - dropdownWidth - sideOffset; // Position to the left with offset
 
-        left = Math.max(8, Math.min(left, screenWidth));
+        // Handle alignment options for left-side positioning
+        if (align === "center") {
+          left = x - dropdownWidth + width / 2;
+        } else if (align === "end") {
+          left = x + width;
+        }
+
+        // Ensure dropdown stays within screen bounds
+        left = Math.max(8, Math.min(left, screenWidth - dropdownWidth));
         setPosition({ top, left, width });
       });
     }
@@ -84,13 +85,6 @@ export const Content: React.FC<ContentProps> = ({
     opacity: opacity.value,
     transform: [{ translateY: interpolate(opacity.value, [0, 1], [-8, 0]) }],
   }));
-
-  // Height unfold in/out (50% <-> 100% of measured content height)
-  const sizeStyle = useAnimatedStyle(() => {
-    const h = measuredHeight.value;
-    if (h <= 0) return {} as any;
-    return { height: h * heightFactor.value } as const;
-  });
 
   if (!render) return null;
 
@@ -110,33 +104,20 @@ export const Content: React.FC<ContentProps> = ({
           <TouchableWithoutFeedback>
             <Animated.View
               ref={contentRef}
-              onLayout={(e) => {
-                if (measuredOnce.current) return;
-                const natural = e.nativeEvent.layout.height;
-                if (natural > 0) {
-                  measuredOnce.current = true;
-                  measuredHeight.value = Math.min(natural, maxHeight);
-                  if (isOpen) {
-                    heightFactor.value = 0.5;
-                    heightFactor.value = withTiming(1, { duration: 150 });
-                  }
-                }
-              }}
               className={`absolute overflow-hidden rounded-lg border border-border bg-background shadow-lg ${className}`}
               style={[
                 {
                   top: position.top,
                   left: position.left,
-                  minWidth: 160,
-                  maxWidth: 280,
-                  zIndex: 50,
+                  minWidth: 150,
+                  // maxWidth: 280,
+                  maxHeight: maxHeight,
                 },
                 contentStyle,
-                sizeStyle,
               ]}
             >
-              <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-                <View className="">{children}</View>
+              <ScrollView showsVerticalScrollIndicator={false} className="w-full">
+                {children}
               </ScrollView>
             </Animated.View>
           </TouchableWithoutFeedback>

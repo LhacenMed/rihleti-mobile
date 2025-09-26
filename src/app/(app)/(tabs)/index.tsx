@@ -20,6 +20,7 @@ import {
 } from "@expo/ui/jetpack-compose";
 // import { fetch } from "expo/fetch";
 import DropdownMenuExample from "@/components/ui/dropdown/example";
+// import PickerDemo from "@/components/ui/ios-picker/index";
 
 export default function Home() {
   const locationBottomSheetRef = useRef<BottomSheetModal>(null);

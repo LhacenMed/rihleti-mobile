@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Bars3BottomLeftIcon } from "react-native-heroicons/solid";
 import { useTheme } from "@/contexts/ThemeContext";
 import { showSearchModal } from "@/components/blocks/search-modal";
-// import DropdownMenu from "@/components/blocks/dropdown-menu";
+import { DropdownMenu } from "@/components/ui/dropdown/index";
 
 type TripsScreenProps = {
   route: {
@@ -25,6 +25,8 @@ type TripsScreenProps = {
   };
 };
 
+const makeIcon = (name: any) => (color: string) => <Ionicons name={name} size={20} color={color} />;
+
 export default function TripsScreen({ route }: TripsScreenProps) {
   const { departure, destination } = route.params;
   const [trips, setTrips] = useState<TripWithRoute[]>([]);
@@ -33,6 +35,8 @@ export default function TripsScreen({ route }: TripsScreenProps) {
   const [error, setError] = useState<string | null>(null);
 
   const { isDark } = useTheme();
+
+  const handleSelect = (key: string) => console.log("Selected:", key);
 
   const fetchTrips = async () => {
     try {
@@ -204,16 +208,33 @@ export default function TripsScreen({ route }: TripsScreenProps) {
       header={{
         titleComponent: <TripTitleComponent />,
         bottomComponent: <TripsFilter />,
-        // rightComponent: (
-        //   <DropdownMenu
-        //     items={[
-        //       { key: "new", title: "New", icon: "plus", iconAndroid: "logo-google" },
-        //       { key: "all", title: "All", icon: "list", iconAndroid: "list" },
-        //       { key: "starred", title: "Starred", icon: "star", iconAndroid: "star" },
-        //     ]}
-        //     onSelect={() => {}}
-        //   />
-        // ),
+        rightOptions: true,
+        rightComponent: (
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <View className="">
+                <Ionicons name="ellipsis-vertical" size={20} color="white" />
+              </View>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content align="end" maxHeight={250}>
+              <DropdownMenu.Item
+                title="Mute"
+                icon={makeIcon("volume-mute-outline")}
+                onSelect={() => handleSelect("mute")}
+              />
+              <DropdownMenu.Item
+                title="Video Call"
+                icon={makeIcon("videocam-outline")}
+                onSelect={() => handleSelect("video")}
+              />
+              <DropdownMenu.Item
+                title="Search"
+                icon={makeIcon("search-outline")}
+                onSelect={() => handleSelect("search")}
+              />
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        ),
         showBackButton: true,
         onBackPress: () => router.back(),
       }}

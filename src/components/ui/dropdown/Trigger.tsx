@@ -1,6 +1,7 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, Pressable } from "react-native";
 import { useDropdown } from "./Root";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface TriggerProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ export const Trigger: React.FC<TriggerProps> = ({
   disabled = false,
 }) => {
   const { isOpen, setIsOpen, triggerRef } = useDropdown();
+  const { isDark } = useTheme();
 
   const handlePress = () => {
     if (!disabled) {
@@ -29,15 +31,27 @@ export const Trigger: React.FC<TriggerProps> = ({
     });
   }
 
+  const rippleColor = isDark ? "rgba(225, 225, 225, 0.12)" : "rgba(0, 0, 0, 0.12)";
+
   return (
-    <TouchableOpacity
+    <Pressable
       ref={triggerRef}
       onPress={handlePress}
       disabled={disabled}
-      activeOpacity={0.7}
-      style={{ alignSelf: "flex-start" }}
+      // activeOpacity={0.7}
+      android_ripple={
+        disabled
+          ? undefined
+          : {
+              color: rippleColor,
+              borderless: false,
+              foreground: true,
+            }
+      }
+      style={{ alignSelf: "flex-end" }}
+      className="rounded-full bg-transparent"
     >
       {children}
-    </TouchableOpacity>
+    </Pressable>
   );
 };

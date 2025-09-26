@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { DropdownMenu } from "./index";
+import { DropdownMenu } from "@/components/ui/dropdown/index";
 
 // Helpers
 const makeIcon = (name: any) => (color: string) => (
@@ -22,7 +22,7 @@ export const DropdownMenuExample = () => {
             <Ionicons name="ellipsis-vertical" size={20} color="white" />
           </View>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content align="end" maxHeight={250}>
+        <DropdownMenu.Content align="center" maxHeight={250}>
           <DropdownMenu.Item title="Mute" icon={makeIcon("volume-mute-outline")} onSelect={() => handleSelect("mute")} />
           <DropdownMenu.Item title="Video Call" icon={makeIcon("videocam-outline")} onSelect={() => handleSelect("video")} />
           <DropdownMenu.Item title="Search" icon={makeIcon("search-outline")} onSelect={() => handleSelect("search")} />

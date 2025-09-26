@@ -22,7 +22,6 @@ export type OverflowMenuSelectEvent = {
 };
 
 export type OverflowMenuViewProps = {
-  title?: string;
   items: OverflowMenuItem[];
   onItemSelected?: (event: { nativeEvent: OverflowMenuSelectEvent }) => void;
   style?: StyleProp<ViewStyle>;

@@ -41,7 +41,3 @@ android {
     abortOnError false
   }
 }
-
-dependencies {
-  implementation "androidx.appcompat:appcompat:${safeExtGet('appCompatVersion', '1.7.0')}"
-}

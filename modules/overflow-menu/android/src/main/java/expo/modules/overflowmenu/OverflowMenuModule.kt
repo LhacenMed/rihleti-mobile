@@ -8,7 +8,7 @@ class OverflowMenuModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("OverflowMenu")
 
-    // Optional: keep simple example API
+    // Optional: example constants and functions retained from template
     Constant("PI") { Math.PI }
     Events("onChange")
     Function("hello") { "Hello world! 👋" }
@@ -17,15 +17,12 @@ class OverflowMenuModule : Module() {
     }
 
     View(OverflowMenuView::class) {
-      // View events
+      // Event emitted when a menu item is selected
       Events("onItemSelected")
 
-      // Props
+      // Prop to set the menu items
       Prop("items") { view: OverflowMenuView, items: List<Map<String, Any?>>? ->
         view.setItems(items ?: emptyList())
-      }
-      Prop("title") { view: OverflowMenuView, title: String? ->
-        view.setTitle(title)
       }
     }
   }

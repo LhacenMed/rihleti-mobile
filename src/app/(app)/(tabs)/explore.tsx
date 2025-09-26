@@ -2,7 +2,7 @@ import React from "react";
 import {
   Text,
   View,
-  Button,
+  // Button,
   TouchableOpacity,
   ToastAndroid,
   ToastAndroidStatic,
@@ -15,6 +15,8 @@ import Modal from "@/components/ui/modal";
 import * as Progress from "react-native-progress";
 import SafeContainer from "@/components/SafeContainer";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Button } from "react-native-paper";
+import HelloModule from "modules/hello-module/src/HelloModule";
 
 // Helper function to show the logout confirmation modal
 const showLogoutModal = (onConfirmLogout: () => void) => {
@@ -108,7 +110,7 @@ const Explore = () => {
 
   const showToastAndroid = () => {
     ToastAndroid.show(
-      "Hello world!, Hello world!, Hello world!, Hello world!, Hello world!, Hello world!, Hello world!, Hello world!, Hello world!, Hello world!",
+      "Hello world!",
       ToastAndroid.SHORT
     );
   };
@@ -118,24 +120,36 @@ const Explore = () => {
       <View className="flex-1 bg-background">
         <View className="flex-1 items-center justify-center p-5">
           <Text className="mb-4 text-lg text-foreground">Explore Screen</Text>
-          <Button onPress={navigateToTrips} title="View My Trips" />
-          <Button onPress={navigateToSplash} title="Open splash" />
-          <Button onPress={navigateToWelcomeScreen} title="Open welcome screen" />
-          <Button onPress={navigateToLoginScreenTest} title="Open Login screen (test)" />
-          <Button onPress={navigateToSettingsScreenTest} title="Open Settings screen (test)" />
-          <Button onPress={navigateToRecording} title="Open recording screen" />
-          <Button onPress={navigateToAudio} title="Open audio screen" />
-          <Button onPress={navigateToAudioAV} title="Open audio-av screen" />
-          <Button onPress={navigateToVoiceRecorder} title="Open voice recorder screen" />
+          <Button onPress={navigateToTrips}>View My Trips</Button>
+          <Button onPress={navigateToSplash}>Open splash</Button>
+          <Button onPress={navigateToWelcomeScreen}>Open welcome screen</Button>
+          <Button onPress={navigateToLoginScreenTest}>Open Login screen (test)</Button>
+          <Button onPress={navigateToSettingsScreenTest}>Open Settings screen (test)</Button>
+          <Button onPress={navigateToRecording}>Open recording screen</Button>
+          <Button onPress={navigateToAudio}>Open audio screen</Button>
+          <Button onPress={navigateToAudioAV}>Open audio-av screen</Button>
+          <Button onPress={navigateToVoiceRecorder}>Open voice recorder screen</Button>
+          <Button
+            onPress={() => {
+              const value = HelloModule.hello();
+              console.log("Native module says: ", value)
+            }}
+            // mode="contained"
+            // dark
+            // compact
+            // loading
+          >
+            Open Expo Module
+          </Button>
           <TouchableOpacity
             onPress={clearOnboarding}
             className="mb-12 mt-12 rounded-md bg-destructive p-3"
           >
             <Text className="text-center text-destructive-foreground">Clear Onboarding</Text>
           </TouchableOpacity>
-          <Button onPress={showToastAndroid} title="Show android toast" />
-          <Button onPress={showLogoutConfirmation} title="Logout" />
-          <Button onPress={showLogoutConfirmation} title="Open Modal" />
+          <Button onPress={showToastAndroid}>Show android toast</Button>
+          <Button onPress={showLogoutConfirmation}>Logout</Button>
+          <Button onPress={showLogoutConfirmation}>Open Modal</Button>
           {/* <ProgressBarAndroid styleAttr="Horizontal" indeterminate={true} /> */}
           {/* <Progress.Bar indeterminate={true} width={200} />
           <Progress.Circle indeterminate={true} size={60} style={{ marginTop: 20 }} /> */}

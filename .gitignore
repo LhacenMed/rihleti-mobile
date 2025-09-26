@@ -12,11 +12,6 @@ web-build/
 .env
 pnpm-lock.yaml
 
-
-
-ios
-android
-
 # macOS
 .DS_Store
 

@@ -22,7 +22,7 @@ export const DropdownMenuExample = () => {
             <Ionicons name="ellipsis-vertical" size={20} color="white" />
           </View>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content align="center" maxHeight={250}>
+        <DropdownMenu.Content align="end" maxHeight={250}>
           <DropdownMenu.Item title="Mute" icon={makeIcon("volume-mute-outline")} onSelect={() => handleSelect("mute")} />
           <DropdownMenu.Item title="Video Call" icon={makeIcon("videocam-outline")} onSelect={() => handleSelect("video")} />
           <DropdownMenu.Item title="Search" icon={makeIcon("search-outline")} onSelect={() => handleSelect("search")} />

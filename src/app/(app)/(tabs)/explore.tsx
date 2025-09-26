@@ -16,7 +16,7 @@ import * as Progress from "react-native-progress";
 import SafeContainer from "@/components/SafeContainer";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-paper";
-import HelloModule from "modules/hello-module/src/HelloModule";
+import overflowMenu from "modules/overflow-menu";
 
 // Helper function to show the logout confirmation modal
 const showLogoutModal = (onConfirmLogout: () => void) => {
@@ -131,13 +131,9 @@ const Explore = () => {
           <Button onPress={navigateToVoiceRecorder}>Open voice recorder screen</Button>
           <Button
             onPress={() => {
-              const value = HelloModule.hello();
-              console.log("Native module says: ", value)
+              const value = overflowMenu.hello();
+              console.log("Native module says:", value)
             }}
-            // mode="contained"
-            // dark
-            // compact
-            // loading
           >
             Open Expo Module
           </Button>

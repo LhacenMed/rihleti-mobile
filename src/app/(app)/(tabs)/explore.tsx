@@ -89,6 +89,10 @@ const Explore = () => {
     router.push("/overflow-menu-example");
   };
 
+  const navigateToCascadeMenuExample = () => {
+    router.push("/cascade-menu-example");
+  };
+
   const clearOnboarding = async () => {
     try {
       // await AsyncStorage.removeItem("@viewedOnboarding");
@@ -134,10 +138,11 @@ const Explore = () => {
           <Button onPress={navigateToAudioAV}>Open audio-av screen</Button>
           <Button onPress={navigateToVoiceRecorder}>Open voice recorder screen</Button>
           <Button onPress={navigateToOverflowMenuExample}>Open Overflow Menu example</Button>
+          <Button onPress={navigateToCascadeMenuExample}>Open Cascade Menu example</Button>
           <Button
             onPress={() => {
               const value = overflowMenu.hello();
-              console.log("Native module says:", value)
+              console.log("Native module says:", value);
             }}
           >
             Open Expo Module

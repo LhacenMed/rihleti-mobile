@@ -112,10 +112,13 @@ export default {
             //     projectId: "6943ba63-1c3c-445f-8702-6f99899439b5",
             // },
             // eas: {
-            //     projectId: "fc452bc0-0445-447b-a43b-416976fdaa69",
+            //     projectId: "fc452bc0-0445-447b-a43b-416976fdaa69", //lhacenmed4
+            // },
+            // eas: {
+            //     projectId: "dad1c25f-1072-47ef-87db-0f8164e1e933", //lhacenmed5
             // },
             eas: {
-                projectId: "dad1c25f-1072-47ef-87db-0f8164e1e933",
+                projectId: "9d8e1608-1c32-409b-b2ca-62a58688bd77", //lhacenmed6
             },
         },
     },

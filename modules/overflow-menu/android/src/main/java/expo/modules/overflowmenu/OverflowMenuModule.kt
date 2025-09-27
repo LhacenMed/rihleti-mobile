@@ -24,6 +24,11 @@ class OverflowMenuModule : Module() {
       Prop("items") { view: OverflowMenuView, items: List<Map<String, Any?>>? ->
         view.setItems(items ?: emptyList())
       }
+
+      // Changing this prop triggers the menu to open. Value is ignored.
+      Prop("openRequestId") { view: OverflowMenuView, _: Double? ->
+        view.showMenu()
+      }
     }
   }
 }

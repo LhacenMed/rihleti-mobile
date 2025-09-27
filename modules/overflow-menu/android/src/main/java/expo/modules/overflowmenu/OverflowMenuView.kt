@@ -15,6 +15,7 @@ private data class MenuItemSpec(
   val id: String?,
   val title: String,
   val enabled: Boolean = true,
+  val iconName: String? = null,
 )
 
 class OverflowMenuView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
@@ -23,20 +24,10 @@ class OverflowMenuView(context: Context, appContext: AppContext) : ExpoView(cont
 
   private var items: List<MenuItemSpec> = emptyList()
 
-  // Simple visual anchor: a centered vertical-ellipsis character.
-  private val anchorView: TextView = TextView(context).apply {
-    text = "\u22EE" // ⋮ vertical ellipsis
-    setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-    isClickable = false
-    isFocusable = false
-    layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-    gravity = Gravity.CENTER
-  }
 
   init {
     isClickable = true
     isFocusable = true
-    addView(anchorView)
 
     setOnClickListener {
       showMenu()
@@ -48,17 +39,27 @@ class OverflowMenuView(context: Context, appContext: AppContext) : ExpoView(cont
       val id = (map["id"] as? String) ?: (map["id"] as? Number)?.toString()
       val title = (map["title"] as? String) ?: ""
       val enabled = (map["enabled"] as? Boolean) ?: true
-      MenuItemSpec(id = id, title = title, enabled = enabled)
+      val iconName = (map["icon"] as? String)
+      MenuItemSpec(id = id, title = title, enabled = enabled, iconName = iconName)
     }
   }
 
-  private fun showMenu() {
+  fun showMenu() {
     if (items.isEmpty()) return
     val popup = PopupMenu(context, this)
     items.forEachIndexed { index, item ->
       val menuItem = popup.menu.add(Menu.NONE, index, index, item.title)
       menuItem.isEnabled = item.enabled
+      // Set icon if provided
+      item.iconName?.let { name ->
+        val resId = context.resources.getIdentifier(name, "drawable", context.packageName)
+        if (resId != 0) {
+          menuItem.setIcon(resId)
+        }
+      }
     }
+    // Best-effort to force icons to display in the popup menu
+    tryForceShowMenuIcons(popup)
     popup.setOnMenuItemClickListener { menuItem ->
       val idx = menuItem.itemId
       val item = items.getOrNull(idx)
@@ -73,5 +74,18 @@ class OverflowMenuView(context: Context, appContext: AppContext) : ExpoView(cont
       true
     }
     popup.show()
+  }
+
+  private fun tryForceShowMenuIcons(popup: PopupMenu) {
+    try {
+      val fields = popup.javaClass.getDeclaredField("mPopup")
+      fields.isAccessible = true
+      val menuPopupHelper = fields.get(popup)
+      val classPopupHelper = menuPopupHelper.javaClass
+      val setForceIcons = classPopupHelper.getDeclaredMethod("setForceShowIcon", Boolean::class.javaPrimitiveType)
+      setForceIcons.invoke(menuPopupHelper, true)
+    } catch (_: Exception) {
+      // Ignore; icons may simply not be displayed depending on device/OS.
+    }
   }
 }

@@ -15,6 +15,7 @@ import { Bars3BottomLeftIcon } from "react-native-heroicons/solid";
 import { useTheme } from "@/contexts/ThemeContext";
 import { showSearchModal } from "@/components/blocks/search-modal";
 import { DropdownMenu } from "@/components/ui/dropdown/index";
+import { PopupMenu } from "@/components/ui/popup-menu";
 
 type TripsScreenProps = {
   route: {
@@ -202,6 +203,93 @@ export default function TripsScreen({ route }: TripsScreenProps) {
     );
   };
 
+  const items = [
+    {
+      id: "open",
+      title: "Open",
+      icon: { resource: "ic_menu_view" },
+      useCustomRow: true,
+      onSelect: () => console.log("Open selected"),
+    },
+    {
+      id: "edit",
+      title: "Edit",
+      items: [
+        {
+          id: "rename",
+          title: "Rename",
+          icon: { resource: "ic_menu_edit" },
+          useCustomRow: true,
+          onSelect: () => console.log("Rename selected"),
+        },
+        {
+          id: "move",
+          title: "Move to…",
+          items: [
+            { id: "folder1", title: "Folder 1", onSelect: () => console.log("Move to Folder 1") },
+            { id: "folder2", title: "Folder 2", onSelect: () => console.log("Move to Folder 2") },
+          ],
+        },
+      ],
+    },
+    {
+      id: "share",
+      title: "Share",
+      icon: { resource: "ic_menu_share" },
+      useCustomRow: true,
+      onSelect: () => console.log("Share selected"),
+    },
+    {
+      id: "delete",
+      title: "Delete",
+      icon: { resource: "ic_delete" },
+      useCustomRow: true,
+      enabled: true,
+      onSelect: () => console.log("Delete selected"),
+    },
+  ];
+
+  // Right options
+  const RightOptions = () => (
+    <>
+      {/* <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <View className="">
+            <Ionicons name="ellipsis-vertical" size={20} color="white" />
+          </View>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content align="end" maxHeight={250}>
+          <DropdownMenu.Item
+            title="Mute"
+            icon={makeIcon("volume-mute-outline")}
+            onSelect={() => handleSelect("mute")}
+          />
+          <DropdownMenu.Item
+            title="Video Call"
+            icon={makeIcon("videocam-outline")}
+            onSelect={() => handleSelect("video")}
+          />
+          <DropdownMenu.Item
+            title="Search"
+            icon={makeIcon("search-outline")}
+            onSelect={() => handleSelect("search")}
+          />
+        </DropdownMenu.Content>
+      </DropdownMenu.Root> */}
+      <PopupMenu
+        items={items}
+        style={{ textSizeSp: 15, itemPaddingHorizontalDp: 12, forceCustomRow: true }}
+        onDismiss={() => {
+          console.log("Dismissed");
+        }}
+      >
+        <Button compact>
+          <Ionicons name="ellipsis-vertical" size={20} color="white" />
+        </Button>
+      </PopupMenu>
+    </>
+  );
+
   return (
     <SafeContainer
       className="px-4"
@@ -209,32 +297,7 @@ export default function TripsScreen({ route }: TripsScreenProps) {
         titleComponent: <TripTitleComponent />,
         bottomComponent: <TripsFilter />,
         rightOptions: true,
-        rightComponent: (
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <View className="">
-                <Ionicons name="ellipsis-vertical" size={20} color="white" />
-              </View>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content align="end" maxHeight={250}>
-              <DropdownMenu.Item
-                title="Mute"
-                icon={makeIcon("volume-mute-outline")}
-                onSelect={() => handleSelect("mute")}
-              />
-              <DropdownMenu.Item
-                title="Video Call"
-                icon={makeIcon("videocam-outline")}
-                onSelect={() => handleSelect("video")}
-              />
-              <DropdownMenu.Item
-                title="Search"
-                icon={makeIcon("search-outline")}
-                onSelect={() => handleSelect("search")}
-              />
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-        ),
+        rightComponent: <RightOptions />,
         showBackButton: true,
         onBackPress: () => router.back(),
       }}

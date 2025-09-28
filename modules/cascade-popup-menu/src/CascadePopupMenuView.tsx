@@ -1,10 +1,10 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
-import { findNodeHandle } from 'react-native'
+import { findNodeHandle, Platform, View } from 'react-native'
 import { requireNativeViewManager } from 'expo-modules-core'
 import type { CascadePopupMenuViewProps } from './CascadePopupMenu.types'
 import { showMenu as showMenuModule } from './CascadePopupMenuModule'
 
-const NativeView: any = requireNativeViewManager('CascadePopupMenuView')
+const NativeView: any = Platform.OS === 'web' ? View : requireNativeViewManager('CascadePopupMenuView')
 
 export type CascadePopupMenuViewHandle = {
   /** Imperatively open the popup anchored to this view (or anchorTag prop if provided). */

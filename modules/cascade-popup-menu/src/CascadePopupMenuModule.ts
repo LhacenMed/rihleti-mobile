@@ -1,8 +1,17 @@
 import { requireNativeModule } from 'expo-modules-core'
+import { Platform } from 'react-native'
 import type { ShowOptions, OnItemSelectedEvent } from './CascadePopupMenu.types'
 
 // Native module name must match Kotlin Module Name("CascadePopupMenu")
-const NativeModule = requireNativeModule<any>('CascadePopupMenu')
+const isWeb = Platform.OS === 'web'
+const NativeModule: any = isWeb
+  ? {
+      showMenu: async () => {
+        // No-op on web; keep API shape for SSR/export
+      },
+      addListener: (_event: string, _listener: any) => ({ remove() {} }),
+    }
+  : requireNativeModule<any>('CascadePopupMenu')
 
 export async function showMenu(options: ShowOptions): Promise<void> {
   const { anchorTag, menu, style } = options
